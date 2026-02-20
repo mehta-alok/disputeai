@@ -2,7 +2,7 @@
 
 > AI-Powered Hotel Chargeback Defense Platform. Protects hotel revenue through intelligent fraud detection, automated evidence collection, and AI-driven dispute management.
 
-AccuDefend is a full-stack SaaS platform purpose-built for the hospitality industry. It automates the chargeback representment process by collecting PMS evidence, analyzing fraud signals with AI, and managing disputes across 51 payment and hotel system integrations.
+AccuDefend is a full-stack SaaS platform purpose-built for the hospitality industry. It automates the chargeback representment process by collecting PMS evidence, analyzing fraud signals with AI, and managing disputes across 59 payment and hotel system integrations.
 
 ## Core Capabilities
 
@@ -10,7 +10,7 @@ AccuDefend is a full-stack SaaS platform purpose-built for the hospitality indus
 - Automated evidence collection from Property Management Systems (7 evidence types)
 - Arbitration workflow for lost cases (filing, document upload, deadline tracking)
 - 30 PMS integrations with two-way reservation sync
-- 21 dispute processor adapters (Visa VROL, Mastercom, Ethoca, Verifi, Stripe, etc.)
+- 29 dispute processor adapters with portal sign-in and two-way sync (Visa VROL, Mastercom, Ethoca, Verifi, Stripe, Chase, Fiserv, etc.)
 - 6 OTA integrations (Booking.com, Expedia, Airbnb, Hotels.com, Hotel Engine, Agoda)
 - 8 autonomous AI agents for fraud analysis, evidence processing, security scanning
 - Role-based access control (Admin, Manager, Staff) with property-level isolation
@@ -51,7 +51,7 @@ Key Services:
 - `services/fraudDetection.js` - Weighted fraud scoring engine
 - `services/autoclerkEmulator.js` - Built-in PMS emulator for demo
 - `services/pmsIntegration.js` - 30 PMS adapter orchestration
-- `services/disputeCompanies.js` - 21 dispute processor adapters
+- `services/disputeCompanies.js` - 29 dispute processor adapters
 - `services/reservationMatcher.js` - Reservation-to-case matching
 
 ### Frontend (Port 3000)
@@ -65,7 +65,7 @@ Pages:
 - `Analytics.jsx` - Charts, trends, performance reports
 - `Reservations.jsx` - PMS reservation search and management
 - `PMSIntegration.jsx` - PMS system connections (30 adapters)
-- `DisputeIntegration.jsx` - Dispute processor management (21 adapters)
+- `DisputeIntegration.jsx` - Dispute processor management (29 adapters) with portal sign-in and configure modal
 - `OTAIntegration.jsx` - OTA channel connections (6 integrations)
 - `Settings.jsx` - System configuration
 - `Tutorial.jsx` - Interactive onboarding
@@ -103,12 +103,15 @@ Boutique: Little Hotelier, Frontdesk Anywhere, WebRezPro, ThinkReservations, Res
 Vacation Rental: Guesty, Hostaway, Lodgify, Escapia
 Brand-Specific: Marriott GXP, Hilton OnQ, Hyatt Opera, IHG Concerto, Best Western BWR
 
-## Dispute Processors (21)
+## Dispute Processors (29)
+
+All companies include portal sign-in links, API configuration modal, and two-way sync badges.
 
 Prevention Networks: Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink
+Hospitality Services: StaySettle, Win Chargebacks, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
 Card Network Portals: Visa VROL, Mastercom, AMEX Merchant, Discover Dispute
-Merchant Processors: Elavon, Fiserv, Worldpay, Chase Merchant, Global Payments, TSYS, Square, Stripe, Authorize.net
-Third-Party Services: Chargebacks911, Kount, Midigator, Signifyd, Riskified
+Merchant Processors: Chase Merchant, Stripe Disputes, Elavon, Fiserv, Global Payments, TSYS, Square, Authorize.net, Worldpay
+Fraud Prevention: Kount, Signifyd
 
 ## Security
 

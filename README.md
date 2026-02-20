@@ -19,7 +19,7 @@ Protecting hotel revenue through intelligent fraud detection, automated evidence
 
 - **8 AI Agents** -- Autonomous fraud analysis, evidence processing, dispute strategy, security scanning, and more
 - **30 PMS Integrations** -- Two-way sync with Opera, Mews, Cloudbeds, and 27 others (AutoClerk built-in emulator)
-- **21 Dispute Processor Adapters** -- Visa VROL, Mastercom, Ethoca, Verifi, Stripe, Elavon, and more
+- **29 Dispute Processor Adapters** -- Visa VROL, Mastercom, Ethoca, Verifi, Stripe, Elavon, Chase, Fiserv, and more with portal sign-in and two-way sync
 - **6 OTA Integrations** -- Booking.com, Expedia, Airbnb, Hotels.com, Hotel Engine, Agoda with real-time monitoring
 - **Real-Time Reservation Search** -- Full-text search across all guest, booking, and payment fields
 - **Automated Evidence Collection** -- 7 evidence types (ID scan, signatures, folio, key card logs, CCTV, correspondence, cancellation policy)
@@ -104,7 +104,7 @@ Hotel.Chargeback.Fraud_OMNI/
 │   │   ├── autoclerkEmulator.js # AutoClerk PMS emulator
 │   │   ├── fraudDetection.js  #   AI fraud analysis engine
 │   │   ├── pmsIntegration.js  #   30 PMS adapters
-│   │   ├── disputeCompanies.js #  21 dispute processor adapters
+│   │   ├── disputeCompanies.js #  29 dispute processor adapters
 │   │   ├── reservationMatcher.js # Reservation-to-case matching
 │   │   └── queue/             #   BullMQ job queue & workers
 │   ├── middleware/            # Auth, validation middleware
@@ -247,7 +247,7 @@ All configuration is managed through environment variables. Copy `.env.example` 
 
 ---
 
-## 51 Integrations
+## 59 Integrations
 
 ### PMS Adapters (30)
 
@@ -265,19 +265,24 @@ Guesty, Hostaway, Lodgify, Escapia
 **Brand-Specific PMS (5)**:
 Marriott GXP (Bonvoy), Hilton OnQ (Honors), Hyatt Opera (World of Hyatt), IHG Concerto (One Rewards), Best Western (BWR)
 
-### Dispute Processors (21)
+### Dispute Processors (29)
+
+All dispute companies include portal sign-in links, API configuration modal, and two-way sync status.
 
 **Hospitality Prevention Networks (3)**:
 Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink
+
+**Hospitality-Specific Services (11)**:
+StaySettle, Win Chargebacks, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
 
 **Card Network Portals (4)**:
 Visa VROL, Mastercom, AMEX Merchant, Discover Dispute
 
 **Merchant Processor Portals (9)**:
-Elavon, Fiserv, Worldpay, Chase Merchant, Global Payments, TSYS, Square, Stripe, Authorize.net
+Chase Merchant Services, Stripe Disputes, Elavon, Fiserv, Global Payments, TSYS, Square, Authorize.net, Worldpay
 
-**Third-Party Chargeback Services (5)**:
-Chargebacks911, Kount, Midigator, Signifyd, Riskified
+**Third-Party Fraud Prevention (2)**:
+Kount, Signifyd
 
 ---
 
