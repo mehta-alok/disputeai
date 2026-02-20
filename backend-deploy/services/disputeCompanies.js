@@ -30,6 +30,7 @@ const DISPUTE_COMPANIES = {
     category: 'hospitality',
     twoWaySync: true,
     logo: '🔗',
+    portalUrl: 'https://portal.merlink.com',
     features: [
       'Real-time Dispute Alerts',
       'Two-Way Case Sync',
@@ -53,6 +54,7 @@ const DISPUTE_COMPANIES = {
     category: 'hospitality',
     twoWaySync: true,
     logo: '🏨',
+    portalUrl: 'https://app.staysettle.com',
     features: [
       'Autopilot Dispute Resolution',
       'PMS Integration (Cloudbeds, Oracle, Mews)',
@@ -73,6 +75,7 @@ const DISPUTE_COMPANIES = {
     category: 'hospitality',
     twoWaySync: true,
     logo: '🏆',
+    portalUrl: 'https://portal.winchargebacks.com',
     features: [
       'AI-Powered Platform',
       'Booking System Integration',
@@ -93,6 +96,7 @@ const DISPUTE_COMPANIES = {
     category: 'hospitality',
     twoWaySync: true,
     logo: '🧙',
+    portalUrl: 'https://portal.chargebackgurus.com',
     features: [
       'Early Alert System',
       'Analytics Dashboard',
@@ -108,6 +112,7 @@ const DISPUTE_COMPANIES = {
   },
   CHARGEBACKHELP: {
     name: 'ChargebackHelp',
+    portalUrl: 'https://app.chargebackhelp.com',
     fullName: 'ChargebackHelp',
     type: 'dispute_management',
     category: 'hospitality',
@@ -129,6 +134,7 @@ const DISPUTE_COMPANIES = {
   },
   CLEARVIEW: {
     name: 'Clearview',
+    portalUrl: 'https://portal.clearviewmc.net',
     fullName: 'Clearview / Chargeback Shield',
     type: 'dispute_management',
     category: 'hospitality',
@@ -157,6 +163,7 @@ const DISPUTE_COMPANIES = {
     category: 'network',
     twoWaySync: true,
     logo: '💳',
+    portalUrl: 'https://portal.verifi.com',
     features: [
       'Visa CDRN Alerts',
       'RDR (Rapid Dispute Resolution)',
@@ -177,6 +184,7 @@ const DISPUTE_COMPANIES = {
     category: 'network',
     twoWaySync: true,
     logo: '🔴',
+    portalUrl: 'https://portal.ethoca.com',
     features: [
       'Consumer Clarity',
       'Alerts Service',
@@ -201,6 +209,7 @@ const DISPUTE_COMPANIES = {
     category: 'general',
     twoWaySync: true,
     logo: '🚨',
+    portalUrl: 'https://app.chargebacks911.com',
     features: [
       'Chargeback Alerts',
       'Prevention Tools',
@@ -222,6 +231,7 @@ const DISPUTE_COMPANIES = {
     category: 'general',
     twoWaySync: true,
     logo: '🔒',
+    portalUrl: 'https://app.riskified.com',
     features: [
       'Debt Recovery',
       'Dispute Automation',
@@ -242,6 +252,7 @@ const DISPUTE_COMPANIES = {
     category: 'general',
     twoWaySync: true,
     logo: '💥',
+    portalUrl: 'https://app.chargeblast.com',
     features: [
       'Real-time Alerts',
       'Evidence Compilation',
@@ -262,6 +273,7 @@ const DISPUTE_COMPANIES = {
     category: 'general',
     twoWaySync: true,
     logo: '📊',
+    portalUrl: 'https://portal.midigator.com',
     features: [
       'Dispute Intelligence',
       'Automated Responses',
@@ -282,6 +294,7 @@ const DISPUTE_COMPANIES = {
     category: 'general',
     twoWaySync: true,
     logo: '✈️',
+    portalUrl: 'https://portal.cavupayments.com',
     features: [
       'Hospitality Focus',
       'Real-time Alerts',
@@ -302,6 +315,7 @@ const DISPUTE_COMPANIES = {
     category: 'general',
     twoWaySync: true,
     logo: '🎯',
+    portalUrl: 'https://merchant.tailoredpay.com',
     features: [
       'Fraud Prevention',
       'Chargeback Management',
@@ -314,6 +328,228 @@ const DISPUTE_COMPANIES = {
     webhookEndpoint: '/api/webhooks/tailoredpay',
     apiBaseUrl: process.env.TAILOREDPAY_API_URL || 'https://api.tailoredpay.com/v1',
     description: 'Fraud prevention + chargeback management as part of high-risk merchant payment services'
+  },
+
+  // =========================================================================
+  // CARD NETWORK PORTALS
+  // =========================================================================
+  VISA_VROL: {
+    name: 'Visa VROL',
+    fullName: 'Visa Resolve Online',
+    type: 'card_network',
+    category: 'network',
+    twoWaySync: true,
+    logo: '🔵',
+    portalUrl: 'https://www.visaonline.com',
+    features: ['Visa Resolve Online Portal', 'Dispute Case Management', 'Evidence Upload', 'Response Deadlines', 'Transaction Detail Inquiry'],
+    requiredConfig: ['merchantId', 'acquirerBIN', 'username', 'password'],
+    optionalConfig: ['autoNotify'],
+    apiBaseUrl: 'https://api.visa.com/vrol/v1',
+    description: 'Visa official dispute resolution portal for managing chargebacks and pre-arbitration cases'
+  },
+  MASTERCOM: {
+    name: 'Mastercom',
+    fullName: 'Mastercard Mastercom',
+    type: 'card_network',
+    category: 'network',
+    twoWaySync: true,
+    logo: '🔴',
+    portalUrl: 'https://mastercom.mastercard.com',
+    features: ['Mastercard Dispute Portal', 'Case Management', 'Evidence Submission', 'Chargeback Tracking', 'Pre-Compliance Filing'],
+    requiredConfig: ['merchantId', 'acquirerICA', 'username', 'password'],
+    optionalConfig: ['autoResponse'],
+    apiBaseUrl: 'https://api.mastercard.com/mastercom/v1',
+    description: 'Mastercard official dispute management system for chargeback representment and case tracking'
+  },
+  AMEX_MERCHANT: {
+    name: 'Amex Merchant',
+    fullName: 'American Express Merchant Portal',
+    type: 'card_network',
+    category: 'network',
+    twoWaySync: false,
+    logo: '💠',
+    portalUrl: 'https://merchant.americanexpress.com',
+    features: ['American Express Disputes', 'Merchant Dashboard', 'Evidence Upload', 'Inquiry Response', 'Transaction Search'],
+    requiredConfig: ['merchantId', 'username', 'password'],
+    optionalConfig: ['notificationEmail'],
+    apiBaseUrl: 'https://api.americanexpress.com/disputes/v1',
+    description: 'American Express merchant portal for dispute management and evidence submission'
+  },
+  DISCOVER_DISPUTE: {
+    name: 'Discover Disputes',
+    fullName: 'Discover Dispute Portal',
+    type: 'card_network',
+    category: 'network',
+    twoWaySync: false,
+    logo: '🟠',
+    portalUrl: 'https://merchantcenter.discovernetwork.com',
+    features: ['Discover Dispute Portal', 'Case Tracking', 'Response Filing', 'Evidence Management', 'Chargeback Reporting'],
+    requiredConfig: ['merchantId', 'username', 'password'],
+    optionalConfig: ['autoAlerts'],
+    apiBaseUrl: 'https://api.discover.com/disputes/v1',
+    description: 'Discover Network dispute management portal for chargeback response and tracking'
+  },
+
+  // =========================================================================
+  // MERCHANT PROCESSOR PORTALS
+  // =========================================================================
+  CHASE_MERCHANT: {
+    name: 'Chase Merchant Services',
+    fullName: 'Chase Paymentech',
+    type: 'processor',
+    category: 'processor',
+    twoWaySync: true,
+    logo: '🏦',
+    portalUrl: 'https://merchant.chase.com',
+    features: ['Merchant Portal', 'Dispute Management', 'Transaction Lookup', 'Evidence Upload', 'Chargeback Alerts'],
+    requiredConfig: ['merchantId', 'terminalId', 'username', 'password'],
+    optionalConfig: ['autoNotify'],
+    apiBaseUrl: 'https://api.chase.com/merchant/v1',
+    description: 'Chase Paymentech merchant services portal for dispute management and transaction lookup'
+  },
+  STRIPE_DISPUTES: {
+    name: 'Stripe Disputes',
+    fullName: 'Stripe Dispute Management',
+    type: 'processor',
+    category: 'processor',
+    twoWaySync: true,
+    logo: '🟣',
+    portalUrl: 'https://dashboard.stripe.com/disputes',
+    features: ['Stripe Dashboard', 'Automated Evidence Submission', 'Dispute Alerts via Webhook', 'Transaction Search', 'Evidence Templates'],
+    requiredConfig: ['secretKey', 'webhookSecret'],
+    optionalConfig: ['autoSubmitEvidence'],
+    apiBaseUrl: 'https://api.stripe.com/v1',
+    description: 'Stripe integrated dispute management with automatic evidence submission and webhook alerts'
+  },
+  ELAVON: {
+    name: 'Elavon',
+    fullName: 'Elavon Merchant Services',
+    type: 'processor',
+    category: 'processor',
+    twoWaySync: true,
+    logo: '🔷',
+    portalUrl: 'https://merchantconnect.elavon.com',
+    features: ['Merchant Connect Portal', 'Dispute Management', 'Evidence Upload', 'Transaction Search', 'Chargeback Reports'],
+    requiredConfig: ['merchantId', 'userId', 'pin'],
+    optionalConfig: ['autoNotify'],
+    apiBaseUrl: 'https://api.elavon.com/v1',
+    description: 'Elavon merchant services portal for dispute management, evidence submission and reporting'
+  },
+  FISERV: {
+    name: 'Fiserv',
+    fullName: 'Fiserv Dispute Management',
+    type: 'processor',
+    category: 'processor',
+    twoWaySync: true,
+    logo: '🟢',
+    portalUrl: 'https://merchantaccess.fiserv.com',
+    features: ['ClientLine Portal', 'Dispute Tracking', 'Evidence Management', 'Transaction Search', 'Analytics'],
+    requiredConfig: ['merchantId', 'apiKey'],
+    optionalConfig: ['webhookUrl'],
+    apiBaseUrl: 'https://api.fiserv.com/disputes/v1',
+    description: 'Fiserv (First Data) dispute management via ClientLine portal with analytics and tracking'
+  },
+  GLOBAL_PAYMENTS: {
+    name: 'Global Payments',
+    fullName: 'Global Payments Dispute Center',
+    type: 'processor',
+    category: 'processor',
+    twoWaySync: true,
+    logo: '🌐',
+    portalUrl: 'https://merchantportal.globalpayments.com',
+    features: ['Merchant Portal', 'Dispute Center', 'Evidence Upload', 'Real-time Alerts', 'Reporting'],
+    requiredConfig: ['merchantId', 'apiKey', 'apiSecret'],
+    optionalConfig: ['webhookUrl'],
+    apiBaseUrl: 'https://api.globalpayments.com/v1',
+    description: 'Global Payments merchant portal for dispute center access and evidence management'
+  },
+  TSYS: {
+    name: 'TSYS',
+    fullName: 'TSYS Merchant Solutions',
+    type: 'processor',
+    category: 'processor',
+    twoWaySync: true,
+    logo: '🔶',
+    portalUrl: 'https://merchantaccess.tsys.com',
+    features: ['Merchant Access', 'Dispute Management', 'Evidence Submission', 'Transaction Lookup', 'Reporting'],
+    requiredConfig: ['merchantId', 'apiKey'],
+    optionalConfig: ['autoNotify'],
+    apiBaseUrl: 'https://api.tsys.com/v1',
+    description: 'TSYS merchant solutions portal for dispute management and transaction lookup'
+  },
+  SQUARE: {
+    name: 'Square',
+    fullName: 'Square Dispute Management',
+    type: 'processor',
+    category: 'processor',
+    twoWaySync: true,
+    logo: '⬜',
+    portalUrl: 'https://squareup.com/dashboard/disputes',
+    features: ['Square Dashboard', 'Dispute Management', 'Evidence Upload', 'Automated Alerts', 'Transaction History'],
+    requiredConfig: ['accessToken'],
+    optionalConfig: ['webhookUrl', 'autoSubmit'],
+    apiBaseUrl: 'https://connect.squareup.com/v2',
+    description: 'Square payment processing dispute management via dashboard and API'
+  },
+  AUTHORIZE_NET: {
+    name: 'Authorize.net',
+    fullName: 'Authorize.net Dispute Center',
+    type: 'processor',
+    category: 'processor',
+    twoWaySync: false,
+    logo: '🟤',
+    portalUrl: 'https://account.authorize.net',
+    features: ['Merchant Interface', 'Dispute Center', 'Transaction Search', 'Evidence Upload', 'Chargeback Alerts'],
+    requiredConfig: ['loginId', 'transactionKey'],
+    optionalConfig: ['webhookUrl'],
+    apiBaseUrl: 'https://api.authorize.net/xml/v1',
+    description: 'Authorize.net merchant interface for dispute management and evidence submission'
+  },
+  WORLDPAY: {
+    name: 'Worldpay',
+    fullName: 'Worldpay Dispute Management',
+    type: 'processor',
+    category: 'processor',
+    twoWaySync: true,
+    logo: '🌍',
+    portalUrl: 'https://merchantportal.worldpay.com',
+    features: ['Merchant Portal', 'Dispute Tracking', 'Evidence Management', 'Real-time Alerts', 'Analytics'],
+    requiredConfig: ['merchantId', 'apiKey'],
+    optionalConfig: ['webhookSecret'],
+    apiBaseUrl: 'https://api.worldpay.com/v1',
+    description: 'Worldpay (FIS) merchant dispute management portal with real-time tracking'
+  },
+
+  // =========================================================================
+  // THIRD-PARTY CHARGEBACK SERVICES
+  // =========================================================================
+  KOUNT: {
+    name: 'Kount',
+    fullName: 'Kount (Equifax)',
+    type: 'dispute_management',
+    category: 'general',
+    twoWaySync: true,
+    logo: '🛡️',
+    portalUrl: 'https://portal.kount.com',
+    features: ['AI Fraud Prevention', 'Dispute Management', 'Identity Trust', 'Risk Assessment', 'Chargeback Prevention'],
+    requiredConfig: ['apiKey', 'merchantId'],
+    optionalConfig: ['riskThreshold'],
+    apiBaseUrl: 'https://api.kount.com/v1',
+    description: 'Kount (Equifax) AI-driven fraud prevention and dispute management platform'
+  },
+  SIGNIFYD: {
+    name: 'Signifyd',
+    fullName: 'Signifyd Chargeback Protection',
+    type: 'dispute_management',
+    category: 'general',
+    twoWaySync: true,
+    logo: '✅',
+    portalUrl: 'https://app.signifyd.com',
+    features: ['Guaranteed Fraud Protection', 'Chargeback Recovery', 'Automated Representment', 'Decision Intelligence', 'Revenue Optimization'],
+    requiredConfig: ['apiKey', 'teamId'],
+    optionalConfig: ['autoDecision'],
+    apiBaseUrl: 'https://api.signifyd.com/v2',
+    description: 'Signifyd guaranteed fraud protection with automated chargeback recovery and representment'
   }
 };
 

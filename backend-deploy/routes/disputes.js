@@ -15,6 +15,10 @@ router.get('/companies', authenticateToken, async (req, res) => {
       category: company.category,
       features: company.features || [],
       status: company.status || 'available',
+      twoWaySync: company.twoWaySync || false,
+      portalUrl: company.portalUrl || null,
+      description: company.description || '',
+      requiredConfig: company.requiredConfig || [],
       integration: company.integration || {}
     }));
     res.json({ success: true, companies });
