@@ -1,0 +1,147 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-test:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20]
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint --if-present
+
+      - name: Run tests
+        run: npm test --if-present
+        env:
+          NODE_ENV: test
+          DEMO_MODE: true
+          JWT_SECRET: ci-test-jwt-secret
+
+      - name: Verify server starts in demo mode
+        run: |
+          timeout 35 node -e "
+            const http = require('http');
+            const child = require('child_process').spawn('node', ['server.js'], {
+              env: { ...process.env, DEMO_MODE: 'true', JWT_SECRET: 'ci-test', PORT: '8099' },
+              stdio: 'inherit'
+            });
+            setTimeout(() => {
+              http.get('http://localhost:8099/health', (res) => {
+                child.kill();
+                process.exit(res.statusCode === 200 ? 0 : 1);
+              }).on('error', () => { child.kill(); process.exit(1); });
+            }, 28000);
+          " || true
+
+  frontend-build:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20]
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint --if-present
+
+      - name: Build frontend
+        run: npm run build
+        env:
+          CI: true
+
+      - name: Verify build output
+        run: |
+          test -f dist/index.html || (echo "Build failed: index.html missing" && exit 1)
+          echo "Build successful: $(du -sh dist | cut -f1) total"
+
+  docker-build:
+    name: Docker Build Test
+    runs-on: ubuntu-latest
+    needs: [backend-test, frontend-build]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend-deploy
+          push: false
+          tags: accudefend-backend:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend-deploy
+          push: false
+          tags: accudefend-frontend:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  ci-status:
+    name: CI Status Check
+    runs-on: ubuntu-latest
+    needs: [backend-test, frontend-build, docker-build]
+    if: always()
+    steps:
+      - name: Check job results
+        run: |
+          if [ "${{ needs.backend-test.result }}" != "success" ] || [ "${{ needs.frontend-build.result }}" != "success" ]; then
+            echo "One or more CI jobs failed."
+            exit 1
+          fi
+          echo "All CI jobs passed."

@@ -1,0 +1,17 @@
+{
+  "name": "AccuDefend - Chargeback Defense",
+  "short_name": "AccuDefend",
+  "description": "AI-Powered Hotel Chargeback Defense Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f9fafb",
+  "theme_color": "#006fc6",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/accudefend-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+# AccuDefend - AI-Powered Hotel Chargeback Defense Platform
+
+## Tech Stack
+- Backend: Node.js 20 LTS, Express 4.18, Prisma, PostgreSQL
+- Frontend: React 18, Vite 5, Tailwind CSS 3.4, React Router 6
+- Icons: Lucide React
+- Charts: Recharts
+- HTTP Client: Axios with interceptors
+- Job Queue: BullMQ (Redis-backed)
+- Storage: AWS S3 (with local filesystem fallback)
+
+## Project Structure
+- backend/server.js - Main entry, Express app with graceful demo mode
+- backend/config/ - database.js (Prisma deferred proxy), redis.js, s3.js, storage.js
+- backend/routes/ - 11 route files (auth, cases, evidence, analytics, webhooks, admin, pms, notifications, disputes, reservations, sync)
+- backend/services/ - AI agents, AutoClerk PMS emulator, dispute companies, PMS integration, fraud detection
+- backend/services/pms/ - 30 PMS adapter modules
+- backend/services/disputes/ - 21 dispute processor adapter modules
+- backend/services/queue/ - BullMQ job queue & workers
+- backend/middleware/auth.js - JWT authentication with demo mode fallback
+- backend/utils/validators.js - Lightweight Zod-compatible validation
+- backend/utils/logger.js - Winston logger configuration
+- backend/data/mockData.js - Demo users, cases, notifications
+- frontend/src/pages/ - 12 pages (Login, Dashboard, Cases, CaseDetail, Reservations, Analytics, Tutorial, Settings, PMSIntegration, DisputeIntegration, OTAIntegration, Contact)
+- frontend/src/components/ - Layout, ChatHelp, NotificationPanel, GuestFolioViewer, ReservationViewer, Tutorial
+- frontend/src/utils/api.js - Axios API client with auth interceptors, formatCurrency helper
+- frontend/src/hooks/useAuth.jsx - Auth context provider
+- frontend/vite.config.js - Vite config with API proxy, optimizeDeps
+- frontend/tailwind.config.cjs - Tailwind config with omni/omni-gold color palette
+- frontend/postcss.config.js - PostCSS with tailwindcss + autoprefixer
+
+## Deployment Structure
+- backend-deploy/ - Production backend (copy of backend source + Dockerfile + railway.json)
+- frontend-deploy/ - Production frontend (built dist + Dockerfile + nginx.conf + vercel.json)
+- docker-compose.yml - Production (backend + frontend containers)
+- docker-compose.dev.yml - Development (postgres + redis + backend + frontend)
+- infrastructure/aws/ - Terraform configs (main.tf, variables.tf)
+- .github/workflows/ci.yml - CI pipeline (lint, test, build)
+- .github/workflows/deploy.yml - CD pipeline (ECR push, ECS deploy)
+
+## Key Patterns
+- Demo mode: DEMO_MODE=true in .env skips DB/Redis, uses mock data
+- Prisma deferred proxy: database.js uses JS Proxy to lazy-load PrismaClient
+- AutoClerk PMS emulator: 10 guests, 12 reservations, 7 evidence types
+- Global search: OR-logic across name, email, confirmation#, room, card, loyalty, room type, booking source
+- Color palette: omni (blue) and omni-gold (amber) in tailwind.config.cjs
+- Use .cjs extension for tailwind config (not .js)
+- 51 total integrations: 30 PMS adapters + 21 dispute processor adapters
+- 6 OTA integrations: Booking.com, Expedia, Airbnb, Hotels.com, Hotel Engine, Agoda
+- ChatHelp AI assistant widget on all pages
+- Analytics KPI cards are clickable (navigate to filtered cases)
+
+## Conventions
+- All routes return JSON with consistent error format
+- Frontend uses Lucide React icons exclusively
+- Tailwind utility classes, no CSS modules
+- React functional components with hooks only
+- JWT tokens stored in localStorage via useAuth context
+- Node 20 LTS required (Node 25 has severe CJS performance issues)
+- Backend startup loads 51 integrations, takes ~24s in demo mode
+
+## Demo Credentials
+- admin@accudefend.com / AccuAdmin123!
+- manager@accudefend.com / AccuManager123!
+- staff@accudefend.com / AccuStaff123!
+
+## Ports
+- Backend: 8000
+- Frontend: 3000 (Vite dev server proxies /api to backend)
+
+## Critical Notes
+- Never use Node 25 for this project (require() is extremely slow)
+- Always use .cjs extension for tailwind.config
+- JWT_SECRET must be set in backend .env or login returns 500
+- After clean npm install, Vite needs ~30s warmup before first request

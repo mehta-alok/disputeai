@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude Code
+.claude/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uploads (evidence storage)
+backend/uploads/
+!backend/uploads/.gitkeep
+
+# Prisma
+backend/prisma/migrations/
+
+# Test coverage
+coverage/
+
+# Temp files
+*.tmp
+*.temp
+
+# Vite cache
+frontend/.vite/
+
+# Deploy folder dependencies and lockfiles
+backend-deploy/node_modules/
+backend-deploy/package-lock.json
+frontend-deploy/node_modules/
+
+# Generated .docx documentation (tracked alongside .md source files)
+# *.docx  -- now tracked; regenerated from .md via python-docx

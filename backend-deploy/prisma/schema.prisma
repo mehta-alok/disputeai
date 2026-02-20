@@ -1,0 +1,1101 @@
+// =============================================================================
+// ACCUDEFEND - Hotel Chargeback Defense
+// Prisma Database Schema
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  STAFF
+  READONLY
+}
+
+enum ChargebackStatus {
+  PENDING
+  IN_REVIEW
+  SUBMITTED
+  WON
+  LOST
+  EXPIRED
+  CANCELLED
+}
+
+enum EvidenceType {
+  ID_SCAN
+  AUTH_SIGNATURE
+  CHECKOUT_SIGNATURE
+  FOLIO
+  RESERVATION_CONFIRMATION
+  CANCELLATION_POLICY
+  CANCELLATION_POLICY_VIOLATION
+  KEY_CARD_LOG
+  CCTV_FOOTAGE
+  CORRESPONDENCE
+  INCIDENT_REPORT
+  DAMAGE_PHOTOS
+  DAMAGE_ASSESSMENT
+  POLICE_REPORT
+  NO_SHOW_DOCUMENTATION
+  OTHER
+}
+
+enum ProviderType {
+  PAYMENT_PROCESSOR
+  PMS
+  HOSPITALITY
+}
+
+enum TimelineEventType {
+  ALERT
+  SYSTEM
+  AI
+  USER_ACTION
+  SUCCESS
+  WARNING
+  ERROR
+  WON
+  LOST
+  INFO
+}
+
+enum AIRecommendation {
+  AUTO_SUBMIT
+  REVIEW_RECOMMENDED
+  GATHER_MORE_EVIDENCE
+  UNLIKELY_TO_WIN
+}
+
+// =============================================================================
+// USER & AUTHENTICATION
+// =============================================================================
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  firstName     String    @map("first_name")
+  lastName      String    @map("last_name")
+  role          UserRole  @default(STAFF)
+  isActive      Boolean   @default(true) @map("is_active")
+  lastLogin     DateTime? @map("last_login")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  propertyId    String?   @map("property_id")
+  property      Property? @relation(fields: [propertyId], references: [id])
+  sessions      Session[]
+  caseNotes     CaseNote[]
+  auditLogs     AuditLog[]
+
+  // Backlog Relations
+  assignedItems BacklogItem[] @relation("BacklogAssignee")
+  createdItems  BacklogItem[] @relation("BacklogCreator")
+
+  // Document Relations
+  uploadedDocuments SupportingDocument[]
+
+  // Notification Relations
+  notifications     Notification[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  refreshToken String   @map("refresh_token")
+  expiresAt    DateTime @map("expires_at")
+  ipAddress    String?  @map("ip_address")
+  userAgent    String?  @map("user_agent")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([refreshToken])
+  @@map("sessions")
+}
+
+// =============================================================================
+// PROPERTY (HOTEL)
+// =============================================================================
+
+model Property {
+  id          String   @id @default(uuid())
+  name        String
+  address     String?
+  city        String?
+  state       String?
+  country     String   @default("US")
+  postalCode  String?  @map("postal_code")
+  timezone    String   @default("America/New_York")
+  currency    String   @default("USD")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  users        User[]
+  chargebacks  Chargeback[]
+  analytics    AnalyticsSnapshot[]
+  reservations Reservation[]
+
+  @@map("properties")
+}
+
+// =============================================================================
+// PAYMENT PROVIDER
+// =============================================================================
+
+model Provider {
+  id            String       @id @default(uuid())
+  name          String
+  type          ProviderType
+  credentials   Json?        // Encrypted provider-specific config
+  webhookSecret String?      @map("webhook_secret")
+  enabled       Boolean      @default(true)
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  chargebacks   Chargeback[]
+  webhookEvents WebhookEvent[]
+
+  @@map("providers")
+}
+
+// =============================================================================
+// CHARGEBACK (CENTRAL CASE ENTITY)
+// =============================================================================
+
+model Chargeback {
+  id                  String           @id @default(uuid())
+  caseNumber          String           @unique @map("case_number") // CB-2025-0001
+  status              ChargebackStatus @default(PENDING)
+
+  // Guest Information
+  guestName           String           @map("guest_name")
+  guestEmail          String?          @map("guest_email")
+  guestPhone          String?          @map("guest_phone")
+
+  // Financial Details
+  amount              Decimal          @db.Decimal(10, 2)
+  currency            String           @default("USD")
+  transactionId       String           @map("transaction_id")
+  cardLastFour        String?          @map("card_last_four")
+  cardBrand           String?          @map("card_brand")
+
+  // Dispute Details
+  reasonCode          String           @map("reason_code")
+  reasonDescription   String?          @map("reason_description")
+  disputeDate         DateTime         @map("dispute_date")
+  dueDate             DateTime?        @map("due_date")
+  processorDisputeId  String?          @map("processor_dispute_id")
+
+  // Stay Information
+  checkInDate         DateTime         @map("check_in_date")
+  checkOutDate        DateTime         @map("check_out_date")
+  roomNumber          String?          @map("room_number")
+  roomType            String?          @map("room_type")
+  confirmationNumber  String?          @map("confirmation_number")
+
+  // AI Analysis
+  confidenceScore     Int?             @map("confidence_score") // 0-100
+  fraudIndicators     Json?            @map("fraud_indicators")
+  recommendation      AIRecommendation?
+  aiAnalysis          Json?            @map("ai_analysis")
+
+  // Timestamps
+  createdAt           DateTime         @default(now()) @map("created_at")
+  updatedAt           DateTime         @updatedAt @map("updated_at")
+  resolvedAt          DateTime?        @map("resolved_at")
+
+  // Relations
+  propertyId          String           @map("property_id")
+  property            Property         @relation(fields: [propertyId], references: [id])
+  providerId          String           @map("provider_id")
+  provider            Provider         @relation(fields: [providerId], references: [id])
+  reservationId       String?          @map("reservation_id")
+  reservation         Reservation?     @relation(fields: [reservationId], references: [id])
+  evidence            Evidence[]
+  timeline            TimelineEvent[]
+  notes               CaseNote[]
+  submissions         DisputeSubmission[]
+
+  @@index([status])
+  @@index([propertyId])
+  @@index([providerId])
+  @@index([reservationId])
+  @@index([createdAt])
+  @@index([dueDate])
+  @@map("chargebacks")
+}
+
+// =============================================================================
+// EVIDENCE
+// =============================================================================
+
+model Evidence {
+  id            String       @id @default(uuid())
+  type          EvidenceType
+  fileName      String       @map("file_name")
+  s3Key         String       @map("s3_key")
+  mimeType      String       @map("mime_type")
+  fileSize      Int          @map("file_size") // bytes
+  description   String?
+  extractedText String?      @map("extracted_text") // OCR results
+  verified      Boolean      @default(false)
+  verifiedAt    DateTime?    @map("verified_at")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  // Relations
+  chargebackId  String       @map("chargeback_id")
+  chargeback    Chargeback   @relation(fields: [chargebackId], references: [id], onDelete: Cascade)
+
+  @@index([chargebackId])
+  @@index([type])
+  @@map("evidence")
+}
+
+// =============================================================================
+// TIMELINE EVENT (AUDIT HISTORY)
+// =============================================================================
+
+model TimelineEvent {
+  id           String            @id @default(uuid())
+  eventType    TimelineEventType @map("event_type")
+  title        String
+  description  String?
+  metadata     Json?
+  createdAt    DateTime          @default(now()) @map("created_at")
+
+  // Relations
+  chargebackId String            @map("chargeback_id")
+  chargeback   Chargeback        @relation(fields: [chargebackId], references: [id], onDelete: Cascade)
+
+  @@index([chargebackId])
+  @@index([eventType])
+  @@map("timeline_events")
+}
+
+// =============================================================================
+// CASE NOTE
+// =============================================================================
+
+model CaseNote {
+  id           String     @id @default(uuid())
+  content      String
+  isInternal   Boolean    @default(true) @map("is_internal")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  chargebackId String     @map("chargeback_id")
+  chargeback   Chargeback @relation(fields: [chargebackId], references: [id], onDelete: Cascade)
+  userId       String     @map("user_id")
+  user         User       @relation(fields: [userId], references: [id])
+
+  @@index([chargebackId])
+  @@map("case_notes")
+}
+
+// =============================================================================
+// DISPUTE SUBMISSION
+// =============================================================================
+
+model DisputeSubmission {
+  id           String     @id @default(uuid())
+  submittedAt  DateTime   @default(now()) @map("submitted_at")
+  status       String     // pending, success, failed
+  requestJson  Json?      @map("request_json")
+  responseJson Json?      @map("response_json")
+  errorMessage String?    @map("error_message")
+  createdAt    DateTime   @default(now()) @map("created_at")
+
+  // Relations
+  chargebackId String     @map("chargeback_id")
+  chargeback   Chargeback @relation(fields: [chargebackId], references: [id], onDelete: Cascade)
+
+  @@index([chargebackId])
+  @@map("dispute_submissions")
+}
+
+// =============================================================================
+// WEBHOOK EVENT
+// =============================================================================
+
+model WebhookEvent {
+  id           String   @id @default(uuid())
+  eventType    String   @map("event_type")
+  payload      Json
+  signature    String?
+  processed    Boolean  @default(false)
+  processedAt  DateTime? @map("processed_at")
+  errorMessage String?  @map("error_message")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Relations
+  providerId   String   @map("provider_id")
+  provider     Provider @relation(fields: [providerId], references: [id])
+
+  @@index([providerId])
+  @@index([eventType])
+  @@index([processed])
+  @@map("webhook_events")
+}
+
+// =============================================================================
+// ANALYTICS SNAPSHOT
+// =============================================================================
+
+model AnalyticsSnapshot {
+  id            String   @id @default(uuid())
+  date          DateTime @db.Date
+  totalCases    Int      @default(0) @map("total_cases")
+  pendingCases  Int      @default(0) @map("pending_cases")
+  wonCases      Int      @default(0) @map("won_cases")
+  lostCases     Int      @default(0) @map("lost_cases")
+  totalAmount   Decimal  @default(0) @db.Decimal(12, 2) @map("total_amount")
+  recoveredAmt  Decimal  @default(0) @db.Decimal(12, 2) @map("recovered_amount")
+  winRate       Decimal? @db.Decimal(5, 2) @map("win_rate")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  // Relations
+  propertyId    String?  @map("property_id")
+  property      Property? @relation(fields: [propertyId], references: [id])
+
+  @@unique([date, propertyId])
+  @@index([date])
+  @@map("analytics_snapshots")
+}
+
+// =============================================================================
+// AUDIT LOG
+// =============================================================================
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  action      String
+  entityType  String   @map("entity_type")
+  entityId    String   @map("entity_id")
+  oldValues   Json?    @map("old_values")
+  newValues   Json?    @map("new_values")
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Relations
+  userId      String?  @map("user_id")
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+// =============================================================================
+// SYSTEM CONFIG
+// =============================================================================
+
+model SystemConfig {
+  key         String   @id
+  value       Json
+  description String?
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  updatedBy   String?  @map("updated_by")
+
+  @@map("system_config")
+}
+
+// =============================================================================
+// TECHNICAL BACKLOG
+// =============================================================================
+
+enum BacklogStatus {
+  OPEN
+  IN_PROGRESS
+  IN_REVIEW
+  TESTING
+  DONE
+  BLOCKED
+  CANCELLED
+}
+
+enum BacklogPriority {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum BacklogCategory {
+  BUG
+  FEATURE
+  ENHANCEMENT
+  TECH_DEBT
+  SECURITY
+  PERFORMANCE
+  DOCUMENTATION
+  INFRASTRUCTURE
+}
+
+model BacklogItem {
+  id              String          @id @default(uuid())
+  title           String
+  description     String
+  status          BacklogStatus   @default(OPEN)
+  priority        BacklogPriority @default(MEDIUM)
+  category        BacklogCategory
+  storyPoints     Int?            @map("story_points")
+
+  // Relationships
+  epicId          String?         @map("epic_id")
+  epic            BacklogEpic?    @relation(fields: [epicId], references: [id])
+  sprintId        String?         @map("sprint_id")
+  sprint          Sprint?         @relation(fields: [sprintId], references: [id])
+  assigneeId      String?         @map("assignee_id")
+  assignee        User?           @relation("BacklogAssignee", fields: [assigneeId], references: [id])
+  createdById     String          @map("created_by_id")
+  createdBy       User            @relation("BacklogCreator", fields: [createdById], references: [id])
+
+  // AI Agent Metadata
+  aiGenerated     Boolean         @default(false) @map("ai_generated")
+  aiAgentId       String?         @map("ai_agent_id")
+  aiAgent         AIAgent?        @relation(fields: [aiAgentId], references: [id])
+  aiConfidence    Decimal?        @db.Decimal(5, 2) @map("ai_confidence")
+  aiReasoning     String?         @map("ai_reasoning")
+
+  // Acceptance Criteria & Notes
+  acceptanceCriteria Json?        @map("acceptance_criteria")
+  technicalNotes  String?         @map("technical_notes")
+
+  // Metadata
+  labels          String[]
+  estimatedHours  Decimal?        @db.Decimal(6, 2) @map("estimated_hours")
+  actualHours     Decimal?        @db.Decimal(6, 2) @map("actual_hours")
+  dueDate         DateTime?       @map("due_date")
+  completedAt     DateTime?       @map("completed_at")
+
+  // Timestamps
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  // Relations
+  comments        BacklogComment[]
+  dependencies    BacklogDependency[] @relation("DependentItem")
+  blockedBy       BacklogDependency[] @relation("BlockingItem")
+  activities      BacklogActivity[]
+  attachments     BacklogAttachment[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([category])
+  @@index([epicId])
+  @@index([sprintId])
+  @@index([assigneeId])
+  @@index([aiAgentId])
+  @@map("backlog_items")
+}
+
+model BacklogEpic {
+  id              String          @id @default(uuid())
+  title           String
+  description     String
+  status          BacklogStatus   @default(OPEN)
+  priority        BacklogPriority @default(MEDIUM)
+  startDate       DateTime?       @map("start_date")
+  targetDate      DateTime?       @map("target_date")
+  progress        Int             @default(0)
+
+  // Relations
+  items           BacklogItem[]
+  createdById     String          @map("created_by_id")
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  @@map("backlog_epics")
+}
+
+model Sprint {
+  id              String          @id @default(uuid())
+  name            String
+  goal            String?
+  startDate       DateTime        @map("start_date")
+  endDate         DateTime        @map("end_date")
+  status          String          @default("planned") // planned, active, completed
+  velocity        Int?
+
+  // Relations
+  items           BacklogItem[]
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  @@map("sprints")
+}
+
+model BacklogComment {
+  id              String          @id @default(uuid())
+  content         String
+
+  // Relations
+  backlogItemId   String          @map("backlog_item_id")
+  backlogItem     BacklogItem     @relation(fields: [backlogItemId], references: [id], onDelete: Cascade)
+  authorId        String?         @map("author_id")
+  aiAgentId       String?         @map("ai_agent_id")
+  aiAgent         AIAgent?        @relation(fields: [aiAgentId], references: [id])
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  @@index([backlogItemId])
+  @@map("backlog_comments")
+}
+
+model BacklogDependency {
+  id              String          @id @default(uuid())
+  dependencyType  String          @map("dependency_type") // blocks, relates_to, duplicates
+
+  // Relations
+  dependentItemId String          @map("dependent_item_id")
+  dependentItem   BacklogItem     @relation("DependentItem", fields: [dependentItemId], references: [id], onDelete: Cascade)
+  blockingItemId  String          @map("blocking_item_id")
+  blockingItem    BacklogItem     @relation("BlockingItem", fields: [blockingItemId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+
+  @@unique([dependentItemId, blockingItemId])
+  @@map("backlog_dependencies")
+}
+
+model BacklogActivity {
+  id              String          @id @default(uuid())
+  action          String          // created, updated, status_changed, assigned, commented, etc.
+  field           String?         // Field that was changed
+  oldValue        String?         @map("old_value")
+  newValue        String?         @map("new_value")
+
+  // Relations
+  backlogItemId   String          @map("backlog_item_id")
+  backlogItem     BacklogItem     @relation(fields: [backlogItemId], references: [id], onDelete: Cascade)
+  userId          String?         @map("user_id")
+  aiAgentId       String?         @map("ai_agent_id")
+  aiAgent         AIAgent?        @relation(fields: [aiAgentId], references: [id])
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+
+  @@index([backlogItemId])
+  @@map("backlog_activities")
+}
+
+model BacklogAttachment {
+  id              String          @id @default(uuid())
+  fileName        String          @map("file_name")
+  s3Key           String          @map("s3_key")
+  mimeType        String          @map("mime_type")
+  fileSize        Int             @map("file_size")
+
+  // Relations
+  backlogItemId   String          @map("backlog_item_id")
+  backlogItem     BacklogItem     @relation(fields: [backlogItemId], references: [id], onDelete: Cascade)
+  uploadedById    String?         @map("uploaded_by_id")
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+
+  @@index([backlogItemId])
+  @@map("backlog_attachments")
+}
+
+// =============================================================================
+// AI AGENTS
+// =============================================================================
+
+enum AIAgentType {
+  BACKLOG_MANAGER       // Creates and prioritizes backlog items
+  CODE_REVIEWER         // Reviews PRs and suggests improvements
+  DOCUMENTATION_AGENT   // Generates and updates documentation
+  TEST_GENERATOR        // Creates test cases
+  SECURITY_SCANNER      // Scans for vulnerabilities
+  PERFORMANCE_MONITOR   // Monitors and suggests optimizations
+  DISPUTE_ANALYZER      // Analyzes chargeback disputes
+  EVIDENCE_PROCESSOR    // Processes and validates evidence
+}
+
+enum AIAgentStatus {
+  IDLE
+  RUNNING
+  PAUSED
+  ERROR
+  DISABLED
+}
+
+model AIAgent {
+  id              String          @id @default(uuid())
+  name            String
+  type            AIAgentType
+  description     String?
+  status          AIAgentStatus   @default(IDLE)
+
+  // Configuration
+  config          Json?           // Agent-specific configuration
+  schedule        String?         // Cron expression for scheduled runs
+  priority        Int             @default(5) // 1-10, higher = more priority
+
+  // Capabilities
+  capabilities    String[]        // List of capabilities/permissions
+  modelProvider   String          @default("anthropic") @map("model_provider")
+  modelName       String          @default("claude-3-sonnet") @map("model_name")
+  maxTokens       Int             @default(4096) @map("max_tokens")
+  temperature     Decimal         @default(0.7) @db.Decimal(3, 2)
+
+  // Statistics
+  totalRuns       Int             @default(0) @map("total_runs")
+  successfulRuns  Int             @default(0) @map("successful_runs")
+  failedRuns      Int             @default(0) @map("failed_runs")
+  avgDuration     Decimal?        @db.Decimal(10, 2) @map("avg_duration_ms")
+  lastRunAt       DateTime?       @map("last_run_at")
+  lastErrorAt     DateTime?       @map("last_error_at")
+  lastError       String?         @map("last_error")
+
+  // Relations
+  runs            AIAgentRun[]
+  backlogItems    BacklogItem[]
+  comments        BacklogComment[]
+  activities      BacklogActivity[]
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  @@index([type])
+  @@index([status])
+  @@map("ai_agents")
+}
+
+model AIAgentRun {
+  id              String          @id @default(uuid())
+  status          String          // running, completed, failed, cancelled
+  trigger         String          // scheduled, manual, webhook, event
+
+  // Input/Output
+  input           Json?
+  output          Json?
+
+  // Metrics
+  startedAt       DateTime        @default(now()) @map("started_at")
+  completedAt     DateTime?       @map("completed_at")
+  durationMs      Int?            @map("duration_ms")
+  tokensUsed      Int?            @map("tokens_used")
+  cost            Decimal?        @db.Decimal(10, 6)
+
+  // Error handling
+  errorMessage    String?         @map("error_message")
+  errorStack      String?         @map("error_stack")
+  retryCount      Int             @default(0) @map("retry_count")
+
+  // Relations
+  agentId         String          @map("agent_id")
+  agent           AIAgent         @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  @@index([agentId])
+  @@index([status])
+  @@index([startedAt])
+  @@map("ai_agent_runs")
+}
+
+// =============================================================================
+// THIRD-PARTY INTEGRATIONS
+// =============================================================================
+
+model Integration {
+  id              String          @id @default(uuid())
+  name            String
+  type            String          // stripe, adyen, shift4, elavon, slack, jira, github
+  status          String          @default("inactive") // active, inactive, error
+
+  // Configuration (encrypted)
+  config          Json?
+  credentials     Json?           // Encrypted API keys, tokens, etc.
+  webhookUrl      String?         @map("webhook_url")
+  webhookSecret   String?         @map("webhook_secret")
+
+  // OAuth tokens (if applicable)
+  accessToken     String?         @map("access_token")
+  refreshToken    String?         @map("refresh_token")
+  tokenExpiresAt  DateTime?       @map("token_expires_at")
+
+  // Sync settings
+  syncEnabled     Boolean         @default(true) @map("sync_enabled")
+  lastSyncAt      DateTime?       @map("last_sync_at")
+  lastSyncStatus  String?         @map("last_sync_status")
+  syncErrors      Int             @default(0) @map("sync_errors")
+
+  // Relations
+  events          IntegrationEvent[]
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+
+  @@index([type])
+  @@index([status])
+  @@map("integrations")
+}
+
+model IntegrationEvent {
+  id              String          @id @default(uuid())
+  eventType       String          @map("event_type")
+  direction       String          // inbound, outbound
+  payload         Json
+
+  // Processing
+  processed       Boolean         @default(false)
+  processedAt     DateTime?       @map("processed_at")
+  response        Json?
+  errorMessage    String?         @map("error_message")
+  retryCount      Int             @default(0) @map("retry_count")
+
+  // Relations
+  integrationId   String          @map("integration_id")
+  integration     Integration     @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime        @default(now()) @map("created_at")
+
+  @@index([integrationId])
+  @@index([eventType])
+  @@index([processed])
+  @@map("integration_events")
+}
+
+// =============================================================================
+// SUPPORTING DOCUMENTS
+// =============================================================================
+
+enum DocumentCategory {
+  TEMPLATE
+  POLICY
+  SAMPLE
+  TRAINING
+  LEGAL
+  GENERAL
+}
+
+model SupportingDocument {
+  id              String            @id @default(uuid())
+  filename        String
+  originalName    String            @map("original_name")
+  category        DocumentCategory  @default(GENERAL)
+  description     String?
+  size            Int               // bytes
+  mimeType        String            @map("mime_type")
+  storageKey      String            @map("storage_key")
+  storageUrl      String?           @map("storage_url")
+  storageType     String            @default("local") @map("storage_type") // local or s3
+
+  // Relations
+  uploadedById    String?           @map("uploaded_by_id")
+  uploadedBy      User?             @relation(fields: [uploadedById], references: [id])
+
+  // Timestamps
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  @@index([category])
+  @@index([uploadedById])
+  @@map("supporting_documents")
+}
+
+// =============================================================================
+// NOTIFICATIONS
+// =============================================================================
+
+enum NotificationType {
+  NEW_CHARGEBACK
+  CASE_UPDATE
+  DEADLINE_WARNING
+  AI_ANALYSIS_COMPLETE
+  SUBMISSION_RESULT
+  SYSTEM_ALERT
+  PMS_SYNC_COMPLETE
+  RESERVATION_MATCHED
+  EVIDENCE_AUTO_COLLECTED
+  SYNC_ERROR
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Notification {
+  id              String              @id @default(uuid())
+  type            NotificationType
+  priority        NotificationPriority @default(MEDIUM)
+  title           String
+  message         String
+  link            String?             // Optional link to navigate to
+  isRead          Boolean             @default(false) @map("is_read")
+  readAt          DateTime?           @map("read_at")
+  metadata        Json?               // Additional data like caseId, amount, etc.
+
+  // Relations
+  userId          String              @map("user_id")
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Timestamps
+  createdAt       DateTime            @default(now()) @map("created_at")
+  expiresAt       DateTime?           @map("expires_at")
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+// =============================================================================
+// PMS RESERVATION (Two-Way Sync)
+// =============================================================================
+
+model Reservation {
+  id                  String    @id @default(uuid())
+  pmsReservationId    String    @map("pms_reservation_id")
+  confirmationNumber  String    @map("confirmation_number")
+  status              String    // confirmed, checked_in, checked_out, cancelled, no_show
+
+  // Guest info
+  guestName           String    @map("guest_name")
+  guestEmail          String?   @map("guest_email")
+  guestPhone          String?   @map("guest_phone")
+
+  // Stay details
+  checkInDate         DateTime  @map("check_in_date")
+  checkOutDate        DateTime  @map("check_out_date")
+  actualCheckIn       DateTime? @map("actual_check_in")
+  actualCheckOut      DateTime? @map("actual_check_out")
+  roomNumber          String?   @map("room_number")
+  roomType            String?   @map("room_type")
+  adults              Int       @default(1)
+  children            Int       @default(0)
+
+  // Financial
+  totalAmount         Decimal   @db.Decimal(10, 2) @map("total_amount")
+  currency            String    @default("USD")
+  rateCode            String?   @map("rate_code")
+  rateAmount          Decimal?  @db.Decimal(10, 2) @map("rate_amount")
+
+  // Payment
+  cardLastFour        String?   @map("card_last_four")
+  cardBrand           String?   @map("card_brand")
+  paymentMethod       String?   @map("payment_method")
+
+  // Booking metadata
+  bookingDate         DateTime? @map("booking_date")
+  bookingSource       String?   @map("booking_source") // Direct, OTA, GDS, etc.
+  specialRequests     String?   @map("special_requests")
+  loyaltyNumber       String?   @map("loyalty_number")
+
+  // Raw PMS data (full response stored for reference)
+  rawPmsData          Json?     @map("raw_pms_data")
+
+  // Sync tracking
+  lastSyncedAt        DateTime  @map("last_synced_at")
+  syncSource          String    @map("sync_source") // pms type e.g. OPERA_CLOUD, MEWS
+
+  // Timestamps
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  propertyId          String    @map("property_id")
+  property            Property  @relation(fields: [propertyId], references: [id])
+  guestProfileId      String?   @map("guest_profile_id")
+  guestProfile        GuestProfile? @relation(fields: [guestProfileId], references: [id])
+  folioItems          GuestFolioItem[]
+  chargebacks         Chargeback[]
+
+  @@unique([confirmationNumber, propertyId])
+  @@index([cardLastFour])
+  @@index([guestName])
+  @@index([checkInDate])
+  @@index([checkOutDate])
+  @@index([propertyId])
+  @@index([syncSource])
+  @@map("reservations")
+}
+
+// =============================================================================
+// GUEST FOLIO ITEMS (Itemized billing from PMS)
+// =============================================================================
+
+model GuestFolioItem {
+  id              String    @id @default(uuid())
+  pmsFolioId      String?   @map("pms_folio_id")
+  category        String    // room, tax, incidental, food_beverage, payment, adjustment
+  description     String
+  amount          Decimal   @db.Decimal(10, 2)
+  currency        String    @default("USD")
+  postDate        DateTime  @map("post_date")
+  transactionCode String?   @map("transaction_code")
+
+  // Payment-specific fields
+  cardLastFour    String?   @map("card_last_four")
+  authCode        String?   @map("auth_code")
+
+  // Sync tracking
+  rawPmsData      Json?     @map("raw_pms_data")
+  lastSyncedAt    DateTime  @map("last_synced_at")
+
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  reservationId   String    @map("reservation_id")
+  reservation     Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@index([reservationId])
+  @@index([category])
+  @@index([postDate])
+  @@map("guest_folio_items")
+}
+
+// =============================================================================
+// GUEST PROFILE (Master guest record with flags)
+// =============================================================================
+
+model GuestProfile {
+  id                 String    @id @default(uuid())
+  pmsGuestId         String?   @map("pms_guest_id")
+
+  firstName          String    @map("first_name")
+  lastName           String    @map("last_name")
+  email              String?
+  phone              String?
+  address            String?
+  city               String?
+  state              String?
+  country            String?
+  postalCode         String?   @map("postal_code")
+
+  // Loyalty
+  loyaltyNumber      String?   @map("loyalty_number")
+  loyaltyTier        String?   @map("loyalty_tier")
+
+  // Flags
+  isVip              Boolean   @default(false) @map("is_vip")
+  isFlagged          Boolean   @default(false) @map("is_flagged")
+  flagReason         String?   @map("flag_reason")
+  flaggedAt          DateTime? @map("flagged_at")
+  chargebackCount    Int       @default(0) @map("chargeback_count")
+  totalDisputeAmount Decimal?  @db.Decimal(12, 2) @map("total_dispute_amount")
+
+  // ID verification
+  idType             String?   @map("id_type")
+  idVerified         Boolean   @default(false) @map("id_verified")
+
+  rawPmsData         Json?     @map("raw_pms_data")
+  lastSyncedAt       DateTime? @map("last_synced_at")
+  syncSource         String?   @map("sync_source")
+
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  reservations       Reservation[]
+
+  @@index([lastName, firstName])
+  @@index([email])
+  @@index([loyaltyNumber])
+  @@index([isFlagged])
+  @@map("guest_profiles")
+}
+
+// =============================================================================
+// RATE INFO (Rate codes and policies from PMS)
+// =============================================================================
+
+model RateInfo {
+  id                    String    @id @default(uuid())
+  pmsRateId             String?   @map("pms_rate_id")
+  rateCode              String    @map("rate_code")
+  rateName              String    @map("rate_name")
+  description           String?
+  amount                Decimal   @db.Decimal(10, 2)
+  currency              String    @default("USD")
+  rateType              String?   @map("rate_type") // BAR, corporate, package, group, promo
+  cancellationPolicy    String?   @map("cancellation_policy")
+  cancellationDeadline  DateTime? @map("cancellation_deadline")
+  isRefundable          Boolean   @default(true) @map("is_refundable")
+  restrictions          Json?
+  packages              Json?     // Included items (breakfast, parking, etc.)
+
+  syncSource            String    @map("sync_source")
+  lastSyncedAt          DateTime  @map("last_synced_at")
+  rawPmsData            Json?     @map("raw_pms_data")
+
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  propertyId            String    @map("property_id")
+
+  @@unique([rateCode, propertyId, syncSource])
+  @@index([rateCode])
+  @@index([propertyId])
+  @@map("rate_info")
+}
+
+// =============================================================================
+// SYNC LOG (Track all sync operations)
+// =============================================================================
+
+model SyncLog {
+  id                String    @id @default(uuid())
+  integrationId     String    @map("integration_id")
+  syncType          String    @map("sync_type")   // full, incremental, webhook, manual
+  direction         String    // inbound, outbound
+  entityType        String    @map("entity_type") // reservation, folio, guest, rate, chargeback, evidence
+  status            String    // started, completed, failed, partial
+
+  recordsProcessed  Int       @default(0) @map("records_processed")
+  recordsCreated    Int       @default(0) @map("records_created")
+  recordsUpdated    Int       @default(0) @map("records_updated")
+  recordsFailed     Int       @default(0) @map("records_failed")
+
+  startedAt         DateTime  @default(now()) @map("started_at")
+  completedAt       DateTime? @map("completed_at")
+  durationMs        Int?      @map("duration_ms")
+
+  errorMessage      String?   @map("error_message")
+  errorDetails      Json?     @map("error_details")
+
+  metadata          Json?
+
+  @@index([integrationId])
+  @@index([syncType])
+  @@index([status])
+  @@index([startedAt])
+  @@map("sync_logs")
+}
+
+// =============================================================================
+// NOTIFICATION TYPE UPDATE
+// =============================================================================
+
+// Note: Added RESERVATION_MATCHED and EVIDENCE_AUTO_COLLECTED to NotificationType enum above

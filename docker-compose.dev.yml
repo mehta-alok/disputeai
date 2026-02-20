@@ -1,0 +1,89 @@
+# AccuDefend - Development Docker Compose
+# Usage: docker compose -f docker-compose.dev.yml up -d
+#
+# Option 1: Run just DB + Redis, run backend/frontend natively
+#   docker compose -f docker-compose.dev.yml up -d postgres redis
+#
+# Option 2: Run everything in Docker
+#   docker compose -f docker-compose.dev.yml up --build
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: accudefend-postgres
+    environment:
+      POSTGRES_USER: accudefend_user
+      POSTGRES_PASSWORD: accudefend_password
+      POSTGRES_DB: accudefend_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - accudefend_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U accudefend_user -d accudefend_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: accudefend-redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - accudefend_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../backend-deploy/Dockerfile.dev
+    container_name: accudefend-backend-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=development
+      - PORT=8000
+      - DATABASE_URL=postgresql://accudefend_user:accudefend_password@postgres:5432/accudefend_db?schema=public
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=dev-jwt-secret-not-for-production
+      - JWT_REFRESH_SECRET=dev-refresh-secret-not-for-production
+      - JWT_ACCESS_EXPIRY=24h
+      - JWT_REFRESH_EXPIRY=7d
+      - DEMO_MODE=false
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: accudefend-frontend-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  accudefend_pgdata:
+  accudefend_redisdata:
