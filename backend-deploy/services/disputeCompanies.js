@@ -30,7 +30,7 @@ const DISPUTE_COMPANIES = {
     category: 'hospitality',
     twoWaySync: true,
     logo: '🔗',
-    portalUrl: 'https://portal.merlink.com',
+    portalUrl: 'https://www.merlinkdrs.com/Default.aspx',
     features: [
       'Real-time Dispute Alerts',
       'Two-Way Case Sync',
