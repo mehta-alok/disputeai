@@ -12,7 +12,7 @@
     "@aws-sdk/s3-request-presigner": "^3.700.0",
     "@prisma/client": "^5.22.0",
     "axios": "^1.7.9",
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.3",
     "bullmq": "^5.34.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
