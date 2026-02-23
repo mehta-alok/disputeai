@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Static File Server
+ * DisputeAI - Static File Server
  * Serves the built frontend and proxies /api to the backend
  */
 
@@ -94,7 +94,7 @@ const server = createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`\n  AccuDefend Frontend Server`);
+  console.log(`\n  DisputeAI Frontend Server`);
   console.log(`  ➜  Local:   http://localhost:${PORT}/`);
   console.log(`  ➜  API proxy: ${BACKEND_URL}`);
   console.log(`  ➜  Serving:  ${DIST_DIR}\n`);

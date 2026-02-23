@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Database Configuration
+ * DisputeAI - Database Configuration
  * Uses deferred loading to avoid Node.js v25 hanging on require('@prisma/client')
  * Falls back gracefully to demo mode when database is unavailable
  */

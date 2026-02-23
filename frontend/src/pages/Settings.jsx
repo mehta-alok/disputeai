@@ -107,7 +107,7 @@ const DEMO_USERS = [
   {
     id: 1,
     name: 'Admin User',
-    email: 'admin@accudefend.com',
+    email: 'admin@disputeai.com',
     role: 'ADMIN',
     status: 'active',
     lastLogin: '2026-02-16T08:30:00Z',
@@ -116,7 +116,7 @@ const DEMO_USERS = [
   {
     id: 2,
     name: 'Sarah Johnson',
-    email: 'sarah.johnson@accudefend.com',
+    email: 'sarah.johnson@disputeai.com',
     role: 'MANAGER',
     status: 'active',
     lastLogin: '2026-02-15T14:20:00Z',
@@ -125,7 +125,7 @@ const DEMO_USERS = [
   {
     id: 3,
     name: 'Mike Chen',
-    email: 'mike.chen@accudefend.com',
+    email: 'mike.chen@disputeai.com',
     role: 'STAFF',
     status: 'active',
     lastLogin: '2026-02-14T09:45:00Z',
@@ -165,7 +165,7 @@ const DEMO_SESSIONS = [
 
 const DEMO_AUDIT_LOG = [
   { id: 1, action: 'Settings updated', user: 'Admin User', timestamp: '2026-02-16T09:00:00Z', details: 'Updated notification preferences' },
-  { id: 2, action: 'User invited', user: 'Admin User', timestamp: '2026-02-15T16:30:00Z', details: 'Invited mike.chen@accudefend.com as STAFF' },
+  { id: 2, action: 'User invited', user: 'Admin User', timestamp: '2026-02-15T16:30:00Z', details: 'Invited mike.chen@disputeai.com as STAFF' },
   { id: 3, action: 'API key regenerated', user: 'Admin User', timestamp: '2026-02-14T11:00:00Z', details: 'Regenerated primary API key' },
   { id: 4, action: 'AI model changed', user: 'Sarah Johnson', timestamp: '2026-02-13T14:20:00Z', details: 'Changed from GPT-4 to Claude 3 Opus' },
   { id: 5, action: 'Password changed', user: 'Admin User', timestamp: '2026-02-12T08:45:00Z', details: 'Password updated successfully' },
@@ -755,9 +755,9 @@ function AIDefenseTab() {
 function IntegrationsTab() {
   const [apiKeyVisible, setApiKeyVisible] = useState(false);
   const [apiKey] = useState('accd_sk_live_4f8b2c1d9e3a7f6b5c8d2e1a0f9b3c7d');
-  const [webhookUrl, setWebhookUrl] = useState('https://hooks.accudefend.com/webhook/disputes');
+  const [webhookUrl, setWebhookUrl] = useState('https://hooks.disputeai.com/webhook/disputes');
   const [s3Config, setS3Config] = useState({
-    bucket: 'accudefend-evidence',
+    bucket: 'disputeai-evidence',
     region: 'us-east-1',
   });
   const [saving, setSaving] = useState(false);
@@ -1012,7 +1012,7 @@ function UserManagementTab() {
     <div className="space-y-6">
       <SectionCard
         title="Team Members"
-        description="Manage who has access to AccuDefend"
+        description="Manage who has access to DisputeAI"
         icon={Users}
         actions={
           <button
@@ -1649,7 +1649,7 @@ export default function Settings() {
                 Settings
               </h1>
               <p className="mt-1 text-sm text-gray-500">
-                Manage your AccuDefend configuration and preferences
+                Manage your DisputeAI configuration and preferences
               </p>
             </div>
             {user && (

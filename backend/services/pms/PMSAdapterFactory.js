@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * PMS Adapter Factory
  *
  * Central factory for creating PMS adapter instances.
@@ -433,8 +433,8 @@ const PMS_METADATA = {
  * @param {Object} config  - Adapter configuration.
  * @param {string} [config.baseUrl]         - Override default API base URL.
  * @param {Object}  config.credentials      - Decrypted PMS credentials.
- * @param {string} [config.propertyId]      - AccuDefend property ID.
- * @param {string} [config.integrationId]   - AccuDefend Integration row ID.
+ * @param {string} [config.propertyId]      - DisputeAI property ID.
+ * @param {string} [config.integrationId]   - DisputeAI Integration row ID.
  * @param {Object} [config.httpOptions]     - Override httpClientFactory options.
  * @returns {BasePMSAdapter} Concrete adapter instance (not yet authenticated).
  * @throws {Error} If pmsType is not supported.

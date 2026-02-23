@@ -1,4 +1,4 @@
-# AccuDefend - System Architecture & Customer Flows
+# DisputeAI - System Architecture & Customer Flows
 
 **Version:** 4.0
 **Last Updated:** February 2026
@@ -305,9 +305,9 @@ Reservations:
 | Environment | URL | Purpose |
 |-------------|-----|---------|
 | Local | http://localhost:3000 | Developer machines |
-| Development | https://dev.accudefend.com | Dev testing |
-| Staging | https://staging.accudefend.com | QA/UAT |
-| Production | https://app.accudefend.com | Live system |
+| Development | https://dev.disputeai.com | Dev testing |
+| Staging | https://staging.disputeai.com | QA/UAT |
+| Production | https://app.disputeai.com | Live system |
 
 ### Docker Configuration
 
@@ -344,4 +344,4 @@ Reservations:
 
 ---
 
-*© 2026 AccuDefend. All rights reserved.*
+*© 2026 DisputeAI. All rights reserved.*

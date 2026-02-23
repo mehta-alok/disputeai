@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Riskified E-Commerce Fraud Prevention Adapter
  *
  * Implements two-way integration with Riskified's fraud prevention and
@@ -101,7 +101,7 @@ const RISKIFIED_REASON_CODES = {
   }
 };
 
-// Riskified portal status -> AccuDefend internal status
+// Riskified portal status -> DisputeAI internal status
 const STATUS_MAP_FROM_RISKIFIED = {
   'new': 'PENDING',
   'open': 'PENDING',
@@ -124,7 +124,7 @@ const STATUS_MAP_FROM_RISKIFIED = {
   'guaranteed_covered': 'RESOLVED'
 };
 
-// AccuDefend status -> Riskified portal status
+// DisputeAI status -> Riskified portal status
 const STATUS_MAP_TO_RISKIFIED = {
   'PENDING': 'open',
   'IN_REVIEW': 'review',
@@ -246,7 +246,7 @@ class RiskifiedAdapter extends BaseDisputeAdapter {
    * Enriches with decision data and guarantee status when available.
    *
    * @param {Object} disputeData - Raw chargeback data from Riskified
-   * @returns {Promise<Object>} Normalized dispute object in AccuDefend format
+   * @returns {Promise<Object>} Normalized dispute object in DisputeAI format
    */
   async receiveDispute(disputeData) {
     logger.info(`[Riskified] Receiving chargeback: ${disputeData.chargebackId || disputeData.id}`);
@@ -885,7 +885,7 @@ class RiskifiedAdapter extends BaseDisputeAdapter {
   // ===========================================================================
 
   /**
-   * Normalize a Riskified chargeback into AccuDefend's standard format.
+   * Normalize a Riskified chargeback into DisputeAI's standard format.
    *
    * @param {Object} portalData - Raw chargeback data from Riskified
    * @returns {Object} Normalized dispute object
@@ -926,10 +926,10 @@ class RiskifiedAdapter extends BaseDisputeAdapter {
   }
 
   /**
-   * Map a Riskified status string to AccuDefend internal status.
+   * Map a Riskified status string to DisputeAI internal status.
    *
    * @param {string} portalStatus - Status value from Riskified
-   * @returns {string} AccuDefend status
+   * @returns {string} DisputeAI status
    */
   normalizeDisputeStatus(portalStatus) {
     if (!portalStatus) return 'PENDING';

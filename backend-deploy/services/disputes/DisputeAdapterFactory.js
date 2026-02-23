@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Dispute Adapter Factory
+ * DisputeAI - Dispute Adapter Factory
  * Loads and manages all dispute/payment processor adapters
  */
 const fs = require('fs');

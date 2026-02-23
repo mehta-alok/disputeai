@@ -1,4 +1,4 @@
-# AccuDefend - System Design Document
+# DisputeAI - System Design Document
 
 ## AI-Powered Chargeback Defense Platform
 
@@ -32,7 +32,7 @@
 
 ### 1.1 Purpose
 
-AccuDefend is an AI-powered chargeback defense system specifically designed for the hospitality industry. It automates the collection, organization, and analysis of evidence to fight fraudulent chargebacks, significantly improving win rates and reducing revenue loss.
+DisputeAI is an AI-powered chargeback defense system specifically designed for the hospitality industry. It automates the collection, organization, and analysis of evidence to fight fraudulent chargebacks, significantly improving win rates and reducing revenue loss.
 
 ### 1.2 Key Features
 
@@ -60,7 +60,7 @@ AccuDefend is an AI-powered chargeback defense system specifically designed for 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                              ACCUDEFEND PLATFORM                             │
+│                              DISPUTEAI PLATFORM                             │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
 │  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐                │
@@ -672,7 +672,7 @@ For LOST cases, staff can file arbitration through a 3-step modal:
 
 ### 8.1 Overview
 
-AccuDefend includes a comprehensive built-in tutorial and help system designed to onboard new users and provide contextual assistance throughout the application.
+DisputeAI includes a comprehensive built-in tutorial and help system designed to onboard new users and provide contextual assistance throughout the application.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -706,7 +706,7 @@ AccuDefend includes a comprehensive built-in tutorial and help system designed t
 
 | Step | Title | Description |
 |------|-------|-------------|
-| 1 | Welcome | Introduction to AccuDefend platform |
+| 1 | Welcome | Introduction to DisputeAI platform |
 | 2 | Dashboard Overview | Real-time metrics and KPIs |
 | 3 | Managing Cases | Case list, filtering, and navigation |
 | 4 | Uploading Evidence | Evidence requirements and file upload |
@@ -781,7 +781,7 @@ import { Tutorial, HelpButton, HelpPanel } from './Tutorial';
 
 // Auto-launch for first-time users
 useEffect(() => {
-  const tutorialComplete = localStorage.getItem('accudefend_tutorial_complete');
+  const tutorialComplete = localStorage.getItem('disputeai_tutorial_complete');
   if (!tutorialComplete) {
     setShowTutorial(true);
   }
@@ -803,7 +803,7 @@ useEffect(() => {
 
 | Key | Storage | Purpose |
 |-----|---------|---------|
-| `accudefend_tutorial_complete` | localStorage | Tracks if user completed tutorial |
+| `disputeai_tutorial_complete` | localStorage | Tracks if user completed tutorial |
 
 ---
 
@@ -811,7 +811,7 @@ useEffect(() => {
 
 ### 9.1 AWS Multi-Region Architecture
 
-AccuDefend is deployed on AWS with a multi-region architecture for high availability and disaster recovery.
+DisputeAI is deployed on AWS with a multi-region architecture for high availability and disaster recovery.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
@@ -880,13 +880,13 @@ AccuDefend is deployed on AWS with a multi-region architecture for high availabi
 ### 9.3 S3 Bucket Structure
 
 ```
-accudefend-evidence-production-us-east-1/
+disputeai-evidence-production-us-east-1/
 ├── chargebacks/
 │   └── {chargebackId}/
 │       └── {evidenceType}/
 │           └── {timestamp}-{uuid}-{filename}
 │
-accudefend-backlog-production/
+disputeai-backlog-production/
 ├── attachments/
 │   └── {backlogItemId}/
 │       └── {filename}
@@ -894,7 +894,7 @@ accudefend-backlog-production/
 │   └── {date}/
 │       └── backlog-export.json
 │
-accudefend-ai-models-production/
+disputeai-ai-models-production/
 ├── models/
 │   └── {modelVersion}/
 │       └── model.bin
@@ -1067,7 +1067,7 @@ await IntegrationService.syncIntegration(integration.id);
 
 ### 11.1 Backlog Architecture
 
-AccuDefend includes a comprehensive technical backlog system for managing development tasks, bug fixes, and improvements.
+DisputeAI includes a comprehensive technical backlog system for managing development tasks, bug fixes, and improvements.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
@@ -1162,7 +1162,7 @@ const item = await backlogService.createItem({
 
 ### 12.1 Agent Architecture
 
-AccuDefend employs autonomous AI agents to manage various aspects of the system.
+DisputeAI employs autonomous AI agents to manage various aspects of the system.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
@@ -1365,7 +1365,7 @@ The system tracks comprehensive metrics for each agent:
 │                           WEBHOOK FLOW                                       │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                              │
-│   Payment Processor                    AccuDefend                           │
+│   Payment Processor                    DisputeAI                           │
 │   ─────────────────                    ──────────                           │
 │                                                                              │
 │   ┌─────────────┐                      ┌─────────────┐                      │
@@ -1438,10 +1438,10 @@ The system tracks comprehensive metrics for each agent:
 # Application
 NODE_ENV=production
 PORT=8000
-APP_NAME=AccuDefend
+APP_NAME=DisputeAI
 
 # Database
-DATABASE_URL=postgresql://user:pass@host:5432/accudefend
+DATABASE_URL=postgresql://user:pass@host:5432/disputeai
 
 # Redis
 REDIS_URL=redis://host:6379
@@ -1455,7 +1455,7 @@ JWT_REFRESH_EXPIRY=7d
 AWS_ACCESS_KEY_ID=<your-access-key>
 AWS_SECRET_ACCESS_KEY=<your-secret-key>
 AWS_REGION=us-east-1
-AWS_S3_BUCKET=accudefend-evidence
+AWS_S3_BUCKET=disputeai-evidence
 
 # Payment Providers
 STRIPE_SECRET_KEY=sk_live_...
@@ -1465,7 +1465,7 @@ ADYEN_HMAC_KEY=...
 
 # Security
 BCRYPT_SALT_ROUNDS=12
-CORS_ORIGINS=https://app.accudefend.com
+CORS_ORIGINS=https://app.disputeai.com
 ```
 
 ### 14.5 Docker Deployment
@@ -1490,7 +1490,7 @@ services:
       - postgres
       - redis
     environment:
-      - DATABASE_URL=postgresql://user:pass@postgres:5432/accudefend
+      - DATABASE_URL=postgresql://user:pass@postgres:5432/disputeai
       - REDIS_URL=redis://redis:6379
 
   postgres:
@@ -1500,7 +1500,7 @@ services:
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=pass
-      - POSTGRES_DB=accudefend
+      - POSTGRES_DB=disputeai
 
   redis:
     image: redis:7-alpine
@@ -1577,7 +1577,7 @@ volumes:
 ### 15.3 File Structure
 
 ```
-accudefend/
+disputeai/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
@@ -1666,7 +1666,7 @@ accudefend/
 ├── start-frontend.sh                   # Frontend-only startup script
 ├── DEPLOYMENT.md                       # Deployment guide
 ├── README.md                           # Project documentation
-└── AccuDefend_System_Design.md         # System architecture
+└── DisputeAI_System_Design.md         # System architecture
 ```
 
 ### 15.4 Quick Start Commands
@@ -1689,8 +1689,8 @@ npm run dev
 # Backend API: http://localhost:8000
 
 # Login
-# Email: admin@accudefend.com
-# Password: AccuAdmin123!
+# Email: admin@disputeai.com
+# Password: DisputeAdmin123!
 ```
 
 ---
@@ -1699,11 +1699,11 @@ npm run dev
 
 | Field | Value |
 |-------|-------|
-| Author | AccuDefend Engineering |
+| Author | DisputeAI Engineering |
 | Version | 2.0.0 |
 | Status | Production Ready |
 | Last Review | February 2026 |
 
 ---
 
-*© 2026 AccuDefend. All rights reserved.*
+*© 2026 DisputeAI. All rights reserved.*

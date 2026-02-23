@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * PMS Integration Service
  * Connects to Property Management Systems to fetch evidence directly
  */

@@ -1,9 +1,9 @@
 /**
- * AccuDefend Hotels Chargeback Defense System
+ * DisputeAI Hotels Chargeback Defense System
  * Main Server Entry Point
  *
  * AI-powered chargeback dispute management platform
- * for AccuDefend Hotels & Resorts
+ * for DisputeAI Hotels & Resorts
  */
 
 require('dotenv').config();
@@ -103,7 +103,7 @@ const authLimiter = rateLimit({
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
-    service: 'AccuDefend Chargeback Defense API',
+    service: 'DisputeAI Chargeback Defense API',
     version: process.env.npm_package_version || '1.0.0',
     timestamp: new Date().toISOString()
   });
@@ -122,7 +122,7 @@ app.get('/ready', async (req, res) => {
 
     res.status(200).json({
       status: 'ready',
-      service: 'AccuDefend Chargeback Defense API',
+      service: 'DisputeAI Chargeback Defense API',
       checks: {
         database: 'connected',
         redis: 'connected',
@@ -163,7 +163,7 @@ app.use('/api/sync', syncRoutes);
 // API documentation redirect
 app.get('/api', (req, res) => {
   res.json({
-    service: 'AccuDefend Chargeback Defense API',
+    service: 'DisputeAI Chargeback Defense API',
     version: 'v1',
     documentation: '/api/docs',
     endpoints: {
@@ -191,7 +191,7 @@ app.use((req, res) => {
   res.status(404).json({
     error: 'Not Found',
     message: `Cannot ${req.method} ${req.path}`,
-    service: 'AccuDefend Chargeback Defense API'
+    service: 'DisputeAI Chargeback Defense API'
   });
 });
 
@@ -222,7 +222,7 @@ app.use((err, req, res, next) => {
 
 async function startServer() {
   try {
-    logger.info('Starting AccuDefend Chargeback Defense System...');
+    logger.info('Starting DisputeAI Chargeback Defense System...');
 
     let dbConnected = false;
     let redisConnected = false;
@@ -311,7 +311,7 @@ async function startServer() {
       logger.info(`
 ╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
-║     AccuDefend CHARGEBACK DEFENSE SYSTEM                      ║
+║     DisputeAI CHARGEBACK DEFENSE SYSTEM                      ║
 ║     AI-Powered Dispute Management Platform                    ║
 ║                                                               ║
 ║     Server running on port ${PORT}                              ║

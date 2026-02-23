@@ -1,5 +1,5 @@
 /**
- * AccuDefend - OTA Integration Page
+ * DisputeAI - OTA Integration Page
  * Two-way integration with Online Travel Agencies
  * Allows guests to access chargebacks, reservations via OTA portal
  */
@@ -227,7 +227,7 @@ export default function OTAIntegration() {
           </div>
           <div className="flex items-start gap-2">
             <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
-            <p className="text-blue-800">Reservation syncs to AccuDefend via AutoClerk PMS</p>
+            <p className="text-blue-800">Reservation syncs to DisputeAI via AutoClerk PMS</p>
           </div>
           <div className="flex items-start gap-2">
             <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
@@ -338,7 +338,7 @@ export default function OTAIntegration() {
         </div>
         <div className="card-body space-y-4">
           <p className="text-sm text-gray-600">
-            When two-way sync is active, AccuDefend receives real-time updates from connected OTAs on disputes, potential fraud, and booking anomalies.
+            When two-way sync is active, DisputeAI receives real-time updates from connected OTAs on disputes, potential fraud, and booking anomalies.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -1,4 +1,4 @@
-# AccuDefend MVP - Product Document
+# DisputeAI MVP - Product Document
 
 **Version:** 5.0
 **Last Updated:** February 14, 2026
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-AccuDefend (formerly Chargeback Defense MVP) is an enterprise-grade, AI-powered platform designed to help hotels defend against credit card chargebacks by automatically collecting evidence, generating dispute packages, and submitting responses to payment processors. The system reduces chargeback losses by 60-80% through automation and AI-powered decision making.
+DisputeAI (formerly Chargeback Defense MVP) is an enterprise-grade, AI-powered platform designed to help hotels defend against credit card chargebacks by automatically collecting evidence, generating dispute packages, and submitting responses to payment processors. The system reduces chargeback losses by 60-80% through automation and AI-powered decision making.
 
 ### Key Metrics
 
@@ -87,11 +87,11 @@ Hotels lose $5,000-$50,000+ annually to chargebacks due to:
 
 | Email | Password | Role |
 |-------|----------|------|
-| admin@accudefend.com | AccuAdmin123! | Admin |
-| demo@accudefend.com | Demo2024! | Admin |
-| alok@accudefend.com | Alok@123 | Admin |
-| manager.atlanta@accudefend.com | AccuAdmin123! | Manager |
-| staff.atlanta@accudefend.com | AccuAdmin123! | Staff |
+| admin@disputeai.com | DisputeAdmin123! | Admin |
+| demo@disputeai.com | Demo2024! | Admin |
+| alok@disputeai.com | Alok@123 | Admin |
+| manager.atlanta@disputeai.com | DisputeAdmin123! | Manager |
+| staff.atlanta@disputeai.com | DisputeAdmin123! | Staff |
 
 ### 1. Automated Evidence Collection
 
@@ -385,7 +385,7 @@ For lost cases eligible for arbitration:
 ## Project Structure
 
 ```
-accudefend/
+disputeai/
 ├── backend/
 │   ├── config/                # Database, Redis, S3 configuration
 │   ├── controllers/           # Document & notification handlers
@@ -440,9 +440,9 @@ accudefend/
 | Environment | URL | Purpose |
 |-------------|-----|---------|
 | Local | http://localhost:3000 | Developer machines |
-| Development | https://dev.accudefend.com | Dev server testing |
-| Staging | https://staging.accudefend.com | QA/UAT testing |
-| Production | https://app.accudefend.com | Live system |
+| Development | https://dev.disputeai.com | Dev server testing |
+| Staging | https://staging.disputeai.com | QA/UAT testing |
+| Production | https://app.disputeai.com | Live system |
 
 ---
 
@@ -460,7 +460,7 @@ accudefend/
 
 ### Workflow 2: Automatic Chargeback Response
 1. Guest files chargeback with their bank
-2. Payment processor sends webhook to AccuDefend
+2. Payment processor sends webhook to DisputeAI
 3. System automatically (within 2-5 minutes):
    - Creates case record
    - Retrieves evidence from storage
@@ -538,4 +538,4 @@ accudefend/
 
 ---
 
-*© 2026 AccuDefend. All rights reserved.*
+*© 2026 DisputeAI. All rights reserved.*

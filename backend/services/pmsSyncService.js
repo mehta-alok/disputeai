@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Two-Way PMS Sync Service
  * Bi-directional synchronization with Property Management Systems
  * Supports real-time webhooks, scheduled polling, and event-driven updates
@@ -10,8 +10,8 @@ const EventEmitter = require('events');
 
 // Sync direction types
 const SYNC_DIRECTION = {
-  PMS_TO_ACCUDEFEND: 'pms_to_accudefend',
-  ACCUDEFEND_TO_PMS: 'accudefend_to_pms',
+  PMS_TO_DISPUTEAI: 'pms_to_disputeai',
+  DISPUTEAI_TO_PMS: 'disputeai_to_pms',
   BIDIRECTIONAL: 'bidirectional'
 };
 
@@ -337,7 +337,7 @@ class PMSSyncService extends EventEmitter {
 
     console.log(`[PMS Sync] Pushing ${eventType} to ${pmsType}`);
 
-    // Transform AccuDefend data to PMS-specific format
+    // Transform DisputeAI data to PMS-specific format
     const pmsPayload = this.transformOutboundEvent(pmsType, eventType, data);
 
     // Simulate API call to PMS
@@ -380,7 +380,7 @@ class PMSSyncService extends EventEmitter {
         title: 'Chargeback Received',
         content: syncPayload.notes,
         priority: 'high',
-        createdBy: 'AccuDefend System'
+        createdBy: 'DisputeAI System'
       });
     }
 

@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// AccuDefend - Vite Configuration
+// DisputeAI - Vite Configuration
 // Note: On Node.js v25, first startup takes ~60-90s for dep optimization
 export default defineConfig({
   plugins: [

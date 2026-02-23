@@ -1,12 +1,12 @@
 /**
- * AccuDefend - Conflict Resolver
+ * DisputeAI - Conflict Resolver
  *
  * Handles data conflicts between PMS/dispute portal data
- * and local AccuDefend data during two-way sync.
+ * and local DisputeAI data during two-way sync.
  *
  * Authority rules:
  *   - PMS is authoritative for: reservation data, folio data, guest profiles, rates
- *   - AccuDefend is authoritative for: dispute status, evidence, AI analysis, notes
+ *   - DisputeAI is authoritative for: dispute status, evidence, AI analysis, notes
  *   - Conflicts on shared fields are logged for human review
  */
 
@@ -68,7 +68,7 @@ class ConflictResolver {
 
   /**
    * Resolve a chargeback/dispute data conflict.
-   * AccuDefend is authoritative for most fields.
+   * DisputeAI is authoritative for most fields.
    *
    * @param {Object} localData - Current chargeback record
    * @param {Object} incomingData - Incoming dispute portal data
@@ -103,19 +103,19 @@ class ConflictResolver {
           localValue: localStatus,
           incomingValue: incomingStatus,
           resolution: 'local_wins',
-          authority: 'AccuDefend',
+          authority: 'DisputeAI',
           reason: 'Status regression prevented'
         });
       }
     }
 
-    // AccuDefend-authoritative fields — local always wins
-    const accudefendFields = [
+    // DisputeAI-authoritative fields — local always wins
+    const disputeaiFields = [
       'confidenceScore', 'fraudIndicators', 'recommendation', 'aiAnalysis',
       'reservationId' // Our reservation link
     ];
 
-    for (const field of accudefendFields) {
+    for (const field of disputeaiFields) {
       if (incomingData[field] !== undefined && localData[field] !== undefined) {
         if (String(localData[field]) !== String(incomingData[field])) {
           conflicts.push({
@@ -123,7 +123,7 @@ class ConflictResolver {
             localValue: localData[field],
             incomingValue: incomingData[field],
             resolution: 'local_wins',
-            authority: 'AccuDefend'
+            authority: 'DisputeAI'
           });
         }
         // Keep local value
@@ -160,7 +160,7 @@ class ConflictResolver {
 
   /**
    * Resolve a guest profile conflict.
-   * PMS is authoritative for personal info; AccuDefend is authoritative for flags.
+   * PMS is authoritative for personal info; DisputeAI is authoritative for flags.
    */
   async resolveGuestProfile(localData, incomingData, integrationId) {
     const conflicts = [];
@@ -180,7 +180,7 @@ class ConflictResolver {
       }
     }
 
-    // AccuDefend-authoritative (chargeback flags)
+    // DisputeAI-authoritative (chargeback flags)
     const accuFields = ['isFlagged', 'flagReason', 'flaggedAt', 'chargebackCount', 'totalDisputeAmount'];
     for (const field of accuFields) {
       if (incomingData[field] !== undefined && localData[field] !== undefined) {
@@ -190,7 +190,7 @@ class ConflictResolver {
             localValue: localData[field],
             incomingValue: incomingData[field],
             resolution: 'local_wins',
-            authority: 'AccuDefend'
+            authority: 'DisputeAI'
           });
         }
       }

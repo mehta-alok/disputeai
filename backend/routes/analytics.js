@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Analytics Routes
+ * DisputeAI - Analytics Routes
  * Dashboard data and trends
  */
 

@@ -119,7 +119,7 @@ jobs:
         with:
           context: ./backend-deploy
           push: false
-          tags: accudefend-backend:test
+          tags: disputeai-backend:test
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -128,7 +128,7 @@ jobs:
         with:
           context: ./frontend-deploy
           push: false
-          tags: accudefend-frontend:test
+          tags: disputeai-frontend:test
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

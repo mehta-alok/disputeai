@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Base PMS Adapter (Abstract)
  *
  * Every concrete PMS adapter (Opera Cloud, Mews, Cloudbeds, AutoClerk, etc.)
@@ -8,7 +8,7 @@
  *
  * Design contract:
  *  - Inbound methods (get*) fetch data FROM the PMS and return it in
- *    normalized, canonical AccuDefend shapes.
+ *    normalized, canonical DisputeAI shapes.
  *  - Outbound methods (push*) send data TO the PMS (notes, flags, alerts).
  *  - Normalization methods convert raw PMS responses into canonical objects.
  *  - Webhook methods handle registration, deregistration, payload parsing,
@@ -26,8 +26,8 @@ class BasePMSAdapter {
    * @param {string} config.pmsType         - Adapter identifier (OPERA_CLOUD, MEWS, etc.).
    * @param {string} config.baseUrl         - Root URL of the PMS API.
    * @param {Object} config.credentials     - Decrypted credentials object.
-   * @param {string} config.propertyId      - AccuDefend property ID.
-   * @param {string} [config.integrationId] - AccuDefend Integration row ID.
+   * @param {string} config.propertyId      - DisputeAI property ID.
+   * @param {string} [config.integrationId] - DisputeAI Integration row ID.
    * @param {Object} [config.httpOptions]   - Override options for httpClientFactory.
    */
   constructor(config) {

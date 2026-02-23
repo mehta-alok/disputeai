@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Fiserv (formerly First Data) Dispute Adapter
  *
  * Implements two-way integration with Fiserv's dispute management platform:
@@ -42,7 +42,7 @@ const FISERV_REASON_CODES = {
   'F29':  { code: 'F29',  category: 'FRAUD', description: 'Card Not Present (Amex)' }
 };
 
-// Fiserv portal status -> AccuDefend internal status
+// Fiserv portal status -> DisputeAI internal status
 const STATUS_MAP_FROM_FISERV = {
   'new': 'PENDING',
   'open': 'PENDING',
@@ -469,7 +469,7 @@ class FiservAdapter extends BaseDisputeAdapter {
       events,
       active: true,
       signingSecret: webhookSecret,
-      description: 'AccuDefend chargeback integration'
+      description: 'DisputeAI chargeback integration'
     };
 
     const response = await this._withRetry(() =>
@@ -493,7 +493,7 @@ class FiservAdapter extends BaseDisputeAdapter {
   // ===========================================================================
 
   /**
-   * Normalize a Fiserv dispute into AccuDefend's standard format.
+   * Normalize a Fiserv dispute into DisputeAI's standard format.
    *
    * @param {Object} portalData - Raw dispute data from Fiserv
    * @returns {Object} Normalized dispute object
@@ -532,7 +532,7 @@ class FiservAdapter extends BaseDisputeAdapter {
   }
 
   /**
-   * Map a Fiserv status string to AccuDefend internal status.
+   * Map a Fiserv status string to DisputeAI internal status.
    */
   normalizeDisputeStatus(portalStatus) {
     if (!portalStatus) return 'PENDING';

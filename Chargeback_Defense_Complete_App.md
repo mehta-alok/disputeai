@@ -1,8 +1,8 @@
-# AccuDefend - Complete Application Overview
+# DisputeAI - Complete Application Overview
 
 **Version:** 3.0
 **Last Updated:** February 2026
-**Platform:** AccuDefend (formerly Chargeback Defense OMNI)
+**Platform:** DisputeAI (formerly Chargeback Defense OMNI)
 
 ---
 
@@ -102,7 +102,7 @@
 
 - Dedicated tutorial walkthrough
 - 8-step guided onboarding:
-  1. Welcome - Introduction to AccuDefend
+  1. Welcome - Introduction to DisputeAI
   2. Dashboard Overview - Understanding metrics and KPIs
   3. Managing Cases - Navigating and filtering
   4. Uploading Evidence - Adding documentation
@@ -210,4 +210,4 @@ frontend/src/
 
 ---
 
-*© 2026 AccuDefend. All rights reserved.*
+*© 2026 DisputeAI. All rights reserved.*

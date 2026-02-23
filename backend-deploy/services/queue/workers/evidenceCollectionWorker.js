@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Auto Evidence Collection Worker
+ * DisputeAI - Auto Evidence Collection Worker
  *
  * The core business logic feature: When a new chargeback comes in,
  * automatically search PMS for the matching reservation, fetch
@@ -324,7 +324,7 @@ function _extractPmsType(type) {
 }
 
 /**
- * Map PMS document types to AccuDefend evidence types.
+ * Map PMS document types to DisputeAI evidence types.
  */
 function _mapDocTypeToEvidenceType(docType) {
   const mapping = {

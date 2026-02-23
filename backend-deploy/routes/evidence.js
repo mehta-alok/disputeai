@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Evidence Routes
+ * DisputeAI - Evidence Routes
  * Manages evidence collection, storage, and retrieval
  */
 

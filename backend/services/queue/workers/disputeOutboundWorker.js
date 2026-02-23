@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Dispute Outbound Worker
+ * DisputeAI - Dispute Outbound Worker
  *
  * Sends evidence packages, representment responses, and status
  * updates TO dispute portals (Verifi, Ethoca, Merlink).

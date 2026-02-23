@@ -1,4 +1,4 @@
-# Competitive Analysis - AccuDefend
+# Competitive Analysis - DisputeAI
 
 **Version:** 4.0
 **Analysis Period:** Q4 2025 - Q1 2026
@@ -14,7 +14,7 @@
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | January 28, 2026 | Aalok Mehta | Initial competitive analysis and SWOT |
-| 2.0 | February 13, 2026 | Aalok Mehta | Renamed product to AccuDefend. Updated tech stack to actual implementation (React 18/Vite 5/Tailwind, Node.js 20/Express 4/Prisma 5, PostgreSQL 16/Redis 7, AWS ECS Fargate/Aurora/Terraform IaC). Updated PMS integrations from 2-3 planned to 12 implemented. Updated payment processors to 4 (Stripe, Adyen, Shift4, Elavon) with real-time webhooks. Added dispute company integrations (Merlink 2-way sync). Updated feature comparison to reflect 9 frontend pages, 9 API route files, 8 service modules, 2 controllers, Docker containerization, JWT auth with refresh tokens. Updated SWOT to reflect current state: removed mobile app claim (web-only), added dispute company integration as opportunity, noted actual implemented features in strengths. |
+| 2.0 | February 13, 2026 | Aalok Mehta | Renamed product to DisputeAI. Updated tech stack to actual implementation (React 18/Vite 5/Tailwind, Node.js 20/Express 4/Prisma 5, PostgreSQL 16/Redis 7, AWS ECS Fargate/Aurora/Terraform IaC). Updated PMS integrations from 2-3 planned to 12 implemented. Updated payment processors to 4 (Stripe, Adyen, Shift4, Elavon) with real-time webhooks. Added dispute company integrations (Merlink 2-way sync). Updated feature comparison to reflect 9 frontend pages, 9 API route files, 8 service modules, 2 controllers, Docker containerization, JWT auth with refresh tokens. Updated SWOT to reflect current state: removed mobile app claim (web-only), added dispute company integration as opportunity, noted actual implemented features in strengths. |
 | 3.0 | February 13, 2026 | Aalok Mehta | Expanded PMS integrations from 12 to 30 systems across 4 categories (Enterprise 15, Boutique/Independent 6, Vacation Rental 4, Brand-Specific 5). Added 21 dispute/chargeback adapters with full two-way sync (Prevention 3, Card Networks 4, Merchant Processors 9, Third-Party 5). Total integrations now 51. Added brand-specific loyalty integration (Marriott Bonvoy, Hilton Honors, World of Hyatt, IHG One Rewards, Best Western Rewards). Updated all competitive analysis sections, feature matrix, SWOT, and key takeaways to reflect expanded platform. |
 | 4.0 | February 14, 2026 | Aalok Mehta | Updated route count to 10, standardized PMS/adapter names, Node.js v25 compatibility noted |
 
@@ -61,7 +61,7 @@ The hotel chargeback defense market is fragmented with no clear category leader.
                          HIGH
                           |
                           |
-            AccuDefend  * |
+            DisputeAI  * |
                           |
                           |  Chargebacks911
                           |  *
@@ -78,7 +78,7 @@ Generic Solutions     *---+------------- Hotel-Specific
 
 ### Key Findings
 
-**AccuDefend Strengths:**
+**DisputeAI Strengths:**
 
 - Only fully automated hotel-specific solution
 - 30 PMS integrations implemented (competitors have 0-1), 51 total integrations
@@ -132,7 +132,7 @@ Category 4: PMS Built-in Features
 +- Protel (minimal features)
 
 Category 5: Our Solution
-+- AccuDefend (hotel-specific, fully automated, web application)
++- DisputeAI (hotel-specific, fully automated, web application)
 ```
 
 ---
@@ -446,7 +446,7 @@ Category 5: Our Solution
 
 **Hotels Using Stripe:** ~35% of independent hotels, ~45% of boutique hotel groups, most common for properties under 150 rooms
 
-**AccuDefend Integration Status:** Fully supported with real-time webhooks
+**DisputeAI Integration Status:** Fully supported with real-time webhooks
 
 **Competitive Threat: Low** -- Stripe keeps dispute tools basic intentionally, focus is payment processing, welcomes third-party solutions.
 
@@ -469,7 +469,7 @@ Category 5: Our Solution
 
 **Hotels Using Adyen:** ~25% of mid-size to large hotels, major chains (Marriott, Hilton use Adyen), international hotels prefer Adyen
 
-**AccuDefend Integration Status:** Fully supported with real-time webhooks
+**DisputeAI Integration Status:** Fully supported with real-time webhooks
 
 **Competitive Threat: Medium** -- Better dispute tools than Stripe, could enhance automation, unlikely to build hotel-specific features.
 
@@ -492,7 +492,7 @@ Category 5: Our Solution
 
 **Hotels Using Shift4:** ~40% of full-service hotels, ~30% of casino hotels, strong in hospitality market
 
-**AccuDefend Integration Status:** Fully supported with real-time webhooks
+**DisputeAI Integration Status:** Fully supported with real-time webhooks
 
 **Competitive Threat: Low** -- Dispute tools are very basic, focus is payment processing + PMS integration, hospitality focus but not dispute-focused.
 
@@ -517,7 +517,7 @@ Category 5: Our Solution
 
 **Hotels Using Elavon:** ~15% of hotels (declining), older properties (legacy contracts), regional chains
 
-**AccuDefend Integration Status:** Fully supported with real-time webhooks
+**DisputeAI Integration Status:** Fully supported with real-time webhooks
 
 **Competitive Threat: Very Low** -- Dated technology, minimal investment in innovation, losing market share to Stripe/Adyen.
 
@@ -540,9 +540,9 @@ Total > 100% due to multi-processor setups.
 
 ## PMS Integration Landscape
 
-### AccuDefend - Implemented PMS Integrations (30 Systems)
+### DisputeAI - Implemented PMS Integrations (30 Systems)
 
-AccuDefend currently supports 30 PMS integrations across 4 categories, far exceeding any competitor in the chargeback defense space. Combined with 21 dispute/chargeback adapters, AccuDefend offers 51 total integrations.
+DisputeAI currently supports 30 PMS integrations across 4 categories, far exceeding any competitor in the chargeback defense space. Combined with 21 dispute/chargeback adapters, DisputeAI offers 51 total integrations.
 
 #### Enterprise PMS (15 Systems)
 
@@ -596,7 +596,7 @@ AccuDefend currently supports 30 PMS integrations across 4 categories, far excee
 
 **Brand-Specific Loyalty Integration:** Marriott Bonvoy, Hilton Honors, World of Hyatt, IHG One Rewards, Best Western Rewards
 
-### AccuDefend - Dispute/Chargeback Adapters (21 Systems)
+### DisputeAI - Dispute/Chargeback Adapters (21 Systems)
 
 All adapters implement full two-way sync with webhooks.
 
@@ -643,7 +643,7 @@ All adapters implement full two-way sync with webhooks.
 
 **Competitors Using Opera:** Chargeback Gurus (beta integration), Canary Technologies (full integration), RevPar Guru
 
-**AccuDefend Integration:** Implemented
+**DisputeAI Integration:** Implemented
 
 **Partnership Opportunity:** Oracle Hospitality has partner program, could list in Opera marketplace, co-marketing opportunities
 
@@ -666,7 +666,7 @@ All adapters implement full two-way sync with webhooks.
 
 **Competitors Using Mews:** Canary Technologies, NoMadly (limited), RevPar Guru
 
-**AccuDefend Integration:** Implemented
+**DisputeAI Integration:** Implemented
 
 **Partnership Opportunity:** Mews has open marketplace, developer-friendly culture, co-marketing willing, could become preferred partner
 
@@ -689,7 +689,7 @@ All adapters implement full two-way sync with webhooks.
 
 **Competitors Using Cloudbeds:** Canary Technologies, NoMadly, multiple revenue management tools
 
-**AccuDefend Integration:** Implemented
+**DisputeAI Integration:** Implemented
 
 ---
 
@@ -710,7 +710,7 @@ All adapters implement full two-way sync with webhooks.
 
 **Competitors Using AutoClerk:** Limited third-party integrations, few major players integrated, open to partnerships
 
-**AccuDefend Integration:** Implemented
+**DisputeAI Integration:** Implemented
 
 **Partnership Opportunity: HIGH** -- Actively seeking integration partners, less saturated than Opera/Mews, direct access to independent hotel owners, could become preferred chargeback partner, open to co-marketing opportunities
 
@@ -733,7 +733,7 @@ All adapters implement full two-way sync with webhooks.
 
 **Integration Difficulty: Medium-Hard** -- Legacy system, less modern than Opera Cloud, German-language documentation challenges, limited webhooks (may need polling)
 
-**AccuDefend Integration:** Implemented
+**DisputeAI Integration:** Implemented
 
 ---
 
@@ -750,7 +750,7 @@ All adapters implement full two-way sync with webhooks.
 
 **Integration Difficulty: Easy** -- Built for integrations, developer-first company, excellent support
 
-**AccuDefend Integration:** Implemented
+**DisputeAI Integration:** Implemented
 
 **Partnership Opportunity: VERY HIGH** -- API-first culture, actively seeks partners, could be early adopter, small but growing fast
 
@@ -770,7 +770,7 @@ Apaleo:         ===                           2%
 Others:         ================             16%
 ```
 
-**AccuDefend PMS Coverage:** With 30 PMS integrations and 21 dispute/chargeback adapters (51 total integrations) implemented, AccuDefend covers the vast majority of the hotel PMS market across enterprise, boutique/independent, vacation rental, and brand-specific segments, including all top-tier systems and many mid-tier/niche systems that competitors have not addressed.
+**DisputeAI PMS Coverage:** With 30 PMS integrations and 21 dispute/chargeback adapters (51 total integrations) implemented, DisputeAI covers the vast majority of the hotel PMS market across enterprise, boutique/independent, vacation rental, and brand-specific segments, including all top-tier systems and many mid-tier/niche systems that competitors have not addressed.
 
 ---
 
@@ -778,7 +778,7 @@ Others:         ================             16%
 
 ### Core Features
 
-| Feature | AccuDefend | Chargebacks911 | Chargeback Gurus | Stripe Native | Adyen Native | Shift4 Native |
+| Feature | DisputeAI | Chargebacks911 | Chargeback Gurus | Stripe Native | Adyen Native | Shift4 Native |
 |---------|-----------|----------------|------------------|---------------|--------------|---------------|
 | Automation Level | 95% auto | 10% auto | 40% auto | 5% auto | 20% auto | 0% auto |
 | Hotel-Specific | Yes | No | Partial | No | No | Partial |
@@ -797,7 +797,7 @@ Others:         ================             16%
 | Role-Based Access | 4 roles | Basic | Basic | N/A | N/A | N/A |
 | Interactive Tutorial | Yes | No | No | No | No | No |
 
-### AccuDefend Technical Architecture
+### DisputeAI Technical Architecture
 
 | Component | Technology |
 |-----------|-----------|
@@ -811,7 +811,7 @@ Others:         ================             16%
 | **AI Scoring** | Weighted confidence (40% reason code, 35% evidence, 25% indicators) |
 | **Deployment** | AWS multi-region with Terraform IaC |
 
-### AccuDefend Application Structure
+### DisputeAI Application Structure
 
 | Layer | Components | Count |
 |-------|-----------|-------|
@@ -821,7 +821,7 @@ Others:         ================             16%
 | **Service Modules** | fraudDetection, aiAgents, backlog, pmsIntegration, pmsSyncService, integrations, aiDefenseConfig, disputeCompanies | 8 |
 | **Controllers** | documentsController, notificationsController | 2 |
 
-### Additional AccuDefend Capabilities
+### Additional DisputeAI Capabilities
 
 - **4-tier recommendation system** for dispute handling decisions
 - **Comprehensive audit trail** for all case actions
@@ -835,17 +835,17 @@ Others:         ================             16%
 
 | Provider | Setup Fee | Monthly Fee | Per-Case Fee | Performance Fee | Total Cost (20 cases/mo) |
 |----------|-----------|-------------|-------------|-----------------|--------------------------|
-| AccuDefend | $0 | $599 | $0 | $0 | $599/mo |
+| DisputeAI | $0 | $599 | $0 | $0 | $599/mo |
 | Chargebacks911 | $500 | $500 | $25-50 | 10-15% of recovered | $1,500-2,000/mo |
 | Chargeback Gurus | $0 | $299 | $15 | 0% | $599/mo |
 | Stripe Native | $0 | $0 | $15 | 0% | $300/mo |
 | Adyen Native | $0 | $0 | Included | 0% | $0/mo |
 | Shift4 Native | $0 | $0 | Included | 0% | $0/mo |
 
-> **Note:** Processor native tools have zero direct cost but result in lower win rates (20-30% vs. AccuDefend's 85%+ target), meaning more revenue lost to chargebacks.
+> **Note:** Processor native tools have zero direct cost but result in lower win rates (20-30% vs. DisputeAI's 85%+ target), meaning more revenue lost to chargebacks.
 
 **ROI Comparison (20 cases/mo @ $450 avg):**
-- **AccuDefend:** Recover ~$7,650/mo - $599 fee = **$7,051 net gain**
+- **DisputeAI:** Recover ~$7,650/mo - $599 fee = **$7,051 net gain**
 - **Chargebacks911:** Recover ~$6,750/mo - $1,750 fee = **$5,000 net gain**
 - **Stripe Native:** Recover ~$2,700/mo - $300 fee = **$2,400 net gain**
 
@@ -853,28 +853,28 @@ Others:         ================             16%
 
 ## Competitive Advantages
 
-### AccuDefend Unique Strengths
+### DisputeAI Unique Strengths
 
 #### 1. Only True Hotel-Specific Automation
 
 **Competitors:** Generic approach, manual processes
-**AccuDefend:** Built for hotels, automates 95% of workflow
+**DisputeAI:** Built for hotels, automates 95% of workflow
 
 **Why It Matters:**
 - Hotels have unique evidence requirements (ID scans, signatures)
 - Generic solutions don't collect evidence at check-in
 - Manual processes take 2-3 hours per case
-- AccuDefend takes 5 minutes of staff time
+- DisputeAI takes 5 minutes of staff time
 
 #### 2. 30 PMS Integrations + 21 Dispute Adapters (51 Total - Industry-Leading)
 
 **Competitors:** No PMS integration OR 1 basic integration (beta)
-**AccuDefend:** 30 PMS systems integrated across 4 categories: Enterprise (15), Boutique/Independent (6), Vacation Rental (4), Brand-Specific (5). Plus 21 dispute/chargeback adapters with full two-way sync.
+**DisputeAI:** 30 PMS systems integrated across 4 categories: Enterprise (15), Boutique/Independent (6), Vacation Rental (4), Brand-Specific (5). Plus 21 dispute/chargeback adapters with full two-way sync.
 
 **Why It Matters:**
 - Evidence must be collected DURING the stay
 - By the time chargeback arrives (30-90 days later), evidence is lost
-- AccuDefend captures evidence proactively across all major PMS platforms
+- DisputeAI captures evidence proactively across all major PMS platforms
 - Competitors rely on hotels to have saved documents
 - Brand-specific PMS integrations (Marriott GXP, Hilton OnQ, Hyatt Opera, IHG Concerto, Best Western) open the enterprise chain market
 - 21 dispute adapters ensure coverage across all card networks, processors, and third-party services
@@ -882,7 +882,7 @@ Others:         ================             16%
 #### 3. Multi-Processor Support with Real-Time Webhooks
 
 **Competitors:** Single processor OR require custom setup per processor
-**AccuDefend:** Stripe, Adyen, Shift4, Elavon with real-time webhook processing
+**DisputeAI:** Stripe, Adyen, Shift4, Elavon with real-time webhook processing
 
 **Why It Matters:**
 - Hotels often use multiple processors (US vs. international)
@@ -893,7 +893,7 @@ Others:         ================             16%
 #### 4. AI-Powered Weighted Confidence Scoring
 
 **Competitors:** Guess or always submit
-**AccuDefend:** Weighted scoring (40% reason code analysis, 35% evidence strength, 25% fraud indicators) with 4-tier recommendation system
+**DisputeAI:** Weighted scoring (40% reason code analysis, 35% evidence strength, 25% fraud indicators) with 4-tier recommendation system
 
 **Why It Matters:**
 - Not worth fighting cases with <50% win probability
@@ -904,7 +904,7 @@ Others:         ================             16%
 #### 5. 21 Dispute/Chargeback Adapters with Full Two-Way Sync
 
 **Competitors:** No dispute portal integrations
-**AccuDefend:** 21 adapters covering Prevention (3), Card Networks (4), Merchant Processors (9), and Third-Party (5) -- all with full two-way sync via webhooks
+**DisputeAI:** 21 adapters covering Prevention (3), Card Networks (4), Merchant Processors (9), and Third-Party (5) -- all with full two-way sync via webhooks
 
 **Why It Matters:**
 - Hotels using third-party dispute companies get unified workflow
@@ -916,7 +916,7 @@ Others:         ================             16%
 #### 6. Brand-Specific Loyalty Integration
 
 **Competitors:** No loyalty program integration
-**AccuDefend:** Marriott Bonvoy, Hilton Honors, World of Hyatt, IHG One Rewards, Best Western Rewards
+**DisputeAI:** Marriott Bonvoy, Hilton Honors, World of Hyatt, IHG One Rewards, Best Western Rewards
 
 **Why It Matters:**
 - Loyalty member status is strong evidence in dispute cases
@@ -927,7 +927,7 @@ Others:         ================             16%
 #### 7. 10-30 Day Response Time
 
 **Competitors:** 30-90 days (industry standard)
-**AccuDefend:** 10-30 days (more realistic for hotels)
+**DisputeAI:** 10-30 days (more realistic for hotels)
 
 **Why It Matters:**
 - Faster resolution = faster revenue recovery
@@ -937,7 +937,7 @@ Others:         ================             16%
 #### 8. Transparent Pricing
 
 **Competitors:** Complex fee structures, hidden costs
-**AccuDefend:** Simple monthly subscription, no per-case fees
+**DisputeAI:** Simple monthly subscription, no per-case fees
 
 **Why It Matters:**
 - Predictable costs
@@ -947,7 +947,7 @@ Others:         ================             16%
 #### 9. Node.js v25 Compatibility with Deferred Prisma Loading Pattern
 
 **Competitors:** Tied to older runtimes, slower to adopt modern Node.js features
-**AccuDefend:** Full Node.js v25 compatibility using deferred Prisma loading pattern for optimal startup performance
+**DisputeAI:** Full Node.js v25 compatibility using deferred Prisma loading pattern for optimal startup performance
 
 **Why It Matters:**
 - Leverages latest Node.js v25 performance improvements and security patches
@@ -1017,7 +1017,7 @@ Others:         ================             16%
 - Lock in key accounts with annual contracts
 - Superior product (they'd be playing catch-up)
 
-### AccuDefend Weaknesses
+### DisputeAI Weaknesses
 
 #### 1. Brand Recognition
 **Issue:** Unknown brand vs. established competitors
@@ -1120,7 +1120,7 @@ Others:         ================             16%
 
 #### 8. Leverage 21 Dispute/Chargeback Adapters
 
-**With 21 adapters already implemented** (Prevention, Card Networks, Merchant Processors, Third-Party), position AccuDefend as the definitive hub connecting hotels, processors, card networks, and dispute companies. All adapters feature full two-way sync with webhooks for real-time data flow.
+**With 21 adapters already implemented** (Prevention, Card Networks, Merchant Processors, Third-Party), position DisputeAI as the definitive hub connecting hotels, processors, card networks, and dispute companies. All adapters feature full two-way sync with webhooks for real-time data flow.
 
 ### Long-Term Strategy (12-24 Months)
 

@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Tutorial / Welcome Modal + Floating Help System
  */
 
@@ -22,16 +22,16 @@ import {
   MessageCircle
 } from 'lucide-react';
 
-const STORAGE_KEY = 'accudefend_tutorial_complete';
+const STORAGE_KEY = 'disputeai_tutorial_complete';
 
 /* ------------------------------------------------------------------ */
 /*  Tutorial steps                                                     */
 /* ------------------------------------------------------------------ */
 const STEPS = [
   {
-    title: 'Welcome to AccuDefend',
+    title: 'Welcome to DisputeAI',
     description:
-      'AccuDefend is an AI-powered chargeback defense platform designed for hotels. It automates evidence collection, generates compelling dispute responses, and integrates with your PMS, payment processors, and card networks to maximize your win rate.',
+      'DisputeAI is an AI-powered chargeback defense platform designed for hotels. It automates evidence collection, generates compelling dispute responses, and integrates with your PMS, payment processors, and card networks to maximize your win rate.',
     features: [
       'AI-powered evidence collection from PMS records',
       'Automated dispute response generation',
@@ -43,9 +43,9 @@ const STEPS = [
   {
     title: 'Getting Started - Demo Mode',
     description:
-      'AccuDefend is running in demo mode with sample data. You can explore all features without connecting a real PMS or payment processor.',
+      'DisputeAI is running in demo mode with sample data. You can explore all features without connecting a real PMS or payment processor.',
     features: [
-      'Demo login: admin@accudefend.com / AccuAdmin123!',
+      'Demo login: admin@disputeai.com / DisputeAdmin123!',
       'Browse sample cases with realistic hotel dispute data',
       'View reservation details and guest folios',
       'Explore the analytics dashboard',
@@ -111,7 +111,7 @@ function Tutorial() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Shield className="w-6 h-6" />
-              <span className="text-sm font-medium opacity-80">AccuDefend</span>
+              <span className="text-sm font-medium opacity-80">DisputeAI</span>
             </div>
             <button
               onClick={handleComplete}

@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Dispute Companies Integration Page
  *
  * Features:
@@ -105,7 +105,7 @@ function ConfigureModal({ company, onClose }) {
           {company.twoWaySync && (
             <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 rounded-lg text-sm text-emerald-700">
               <ArrowLeftRight className="w-4 h-4" />
-              Two-way sync enabled - disputes sync automatically between AccuDefend and {company.name}
+              Two-way sync enabled - disputes sync automatically between DisputeAI and {company.name}
             </div>
           )}
 

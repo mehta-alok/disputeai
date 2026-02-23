@@ -1,4 +1,4 @@
-# AccuDefend - Deployment Guide
+# DisputeAI - Deployment Guide
 
 ## Table of Contents
 1. [Prerequisites](#prerequisites)
@@ -33,8 +33,8 @@ Demo mode starts the application without PostgreSQL or Redis. The server auto-de
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/mehta-alok/accudefend.git
-cd accudefend
+git clone https://github.com/mehta-alok/disputeai.git
+cd disputeai
 
 # 2. Start the backend (port 8000)
 cd backend
@@ -52,9 +52,9 @@ npx vite --host --port 3000
 
 | Email | Password | Role |
 |-------|----------|------|
-| admin@accudefend.com | AccuAdmin123! | Admin |
-| manager@accudefend.com | AccuManager123! | Manager |
-| staff@accudefend.com | AccuStaff123! | Staff |
+| admin@disputeai.com | DisputeAdmin123! | Admin |
+| manager@disputeai.com | DisputeManager123! | Manager |
+| staff@disputeai.com | DisputeStaff123! | Staff |
 
 ### Access Points
 
@@ -230,12 +230,12 @@ CMD ["node", "server.js"]
 
 | Variable | Description | Default | Required (Production) |
 |----------|-------------|---------|----------------------|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://...@localhost:5432/accudefend_chargeback` | Yes |
+| `DATABASE_URL` | PostgreSQL connection string | `postgresql://...@localhost:5432/disputeai_chargeback` | Yes |
 | `DB_HOST` | Database host | `localhost` | No |
 | `DB_PORT` | Database port | `5432` | No |
-| `DB_NAME` | Database name | `accudefend_db` | No |
-| `DB_USER` | Database user | `accudefend` | No |
-| `DB_PASSWORD` | Database password | `accudefend_password` | No |
+| `DB_NAME` | Database name | `disputeai_db` | No |
+| `DB_USER` | Database user | `disputeai` | No |
+| `DB_PASSWORD` | Database password | `disputeai_password` | No |
 | `DB_SSL` | Enable SSL connections | `false` | No |
 | `DB_POOL_MIN` | Minimum connection pool size | `2` | No |
 | `DB_POOL_MAX` | Maximum connection pool size | `10` | No |
@@ -266,7 +266,7 @@ CMD ["node", "server.js"]
 | `AWS_REGION` | AWS region | `us-east-1` | No |
 | `AWS_ACCESS_KEY_ID` | AWS access key | _(none)_ | For S3 uploads |
 | `AWS_SECRET_ACCESS_KEY` | AWS secret key | _(none)_ | For S3 uploads |
-| `AWS_S3_BUCKET` | S3 bucket name for evidence files | `accudefend-chargeback-evidence` | For S3 uploads |
+| `AWS_S3_BUCKET` | S3 bucket name for evidence files | `disputeai-chargeback-evidence` | For S3 uploads |
 | `S3_BUCKET_REGION` | S3 bucket region | `us-east-1` | No |
 | `AWS_S3_PRESIGNED_EXPIRY` | Presigned URL expiry in seconds | `3600` | No |
 
@@ -305,7 +305,7 @@ CMD ["node", "server.js"]
 | `STRIPE_SECRET_KEY` | Stripe secret key | _(none)_ | For Stripe |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | _(none)_ | For Stripe webhooks |
 | `ADYEN_API_KEY` | Adyen API key | _(none)_ | For Adyen |
-| `ADYEN_MERCHANT_ACCOUNT` | Adyen merchant account ID | `AccuDefendHotels` | For Adyen |
+| `ADYEN_MERCHANT_ACCOUNT` | Adyen merchant account ID | `DisputeAIHotels` | For Adyen |
 | `ADYEN_HMAC_KEY` | Adyen HMAC key for webhook verification | _(none)_ | For Adyen webhooks |
 | `SHIFT4_SECRET_KEY` | Shift4 secret key | _(none)_ | For Shift4 |
 | `SHIFT4_WEBHOOK_SECRET` | Shift4 webhook signing secret | _(none)_ | For Shift4 webhooks |
@@ -315,8 +315,8 @@ CMD ["node", "server.js"]
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
 | `SENDGRID_API_KEY` | SendGrid API key | _(none)_ | For email notifications |
-| `EMAIL_FROM` | Sender email address | `noreply@accudefend.com` | No |
-| `EMAIL_FROM_NAME` | Sender display name | `AccuDefend System` | No |
+| `EMAIL_FROM` | Sender email address | `noreply@disputeai.com` | No |
+| `EMAIL_FROM_NAME` | Sender display name | `DisputeAI System` | No |
 
 ### Slack Integration
 

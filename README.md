@@ -1,6 +1,6 @@
 <div align="center">
 
-# AccuDefend
+# DisputeAI
 
 ### AI-Powered Hotel Chargeback Defense Platform
 
@@ -60,9 +60,9 @@ The application will be available at:
 
 | Role    | Email                        | Password         |
 |---------|------------------------------|------------------|
-| Admin   | admin@accudefend.com         | AccuAdmin123!    |
-| Manager | manager@accudefend.com       | AccuManager123!  |
-| Staff   | staff@accudefend.com         | AccuStaff123!    |
+| Admin   | admin@disputeai.com         | DisputeAdmin123!    |
+| Manager | manager@disputeai.com       | DisputeManager123!  |
+| Staff   | staff@disputeai.com         | DisputeStaff123!    |
 
 ---
 
@@ -222,7 +222,7 @@ All configuration is managed through environment variables. Copy `.env.example` 
 | `AWS_REGION`                | `us-east-1`                      | AWS region                               |
 | `AWS_ACCESS_KEY_ID`         | --                               | AWS access key for S3                    |
 | `AWS_SECRET_ACCESS_KEY`     | --                               | AWS secret key for S3                    |
-| `AWS_S3_BUCKET`             | `accudefend-chargeback-evidence` | S3 bucket for evidence storage           |
+| `AWS_S3_BUCKET`             | `disputeai-chargeback-evidence` | S3 bucket for evidence storage           |
 | `AWS_S3_PRESIGNED_EXPIRY`   | `3600`                           | Presigned URL expiry (seconds)           |
 | `AI_MODEL_PROVIDER`         | `ollama`                         | AI provider: `openai`, `anthropic`, `ollama` |
 | `AI_MODEL_NAME`             | `llama3`                         | Model name for selected provider         |
@@ -251,7 +251,7 @@ All configuration is managed through environment variables. Copy `.env.example` 
 
 ### PMS Adapters (30)
 
-AccuDefend connects to 30 Property Management Systems with full two-way synchronization (inbound: reservations, guest data; outbound: notes, flags, alerts).
+DisputeAI connects to 30 Property Management Systems with full two-way synchronization (inbound: reservations, guest data; outbound: notes, flags, alerts).
 
 **Enterprise PMS (15)**:
 AutoClerk (built-in emulator), Oracle Opera Cloud, Mews, Cloudbeds, Agilysys, Infor, Stayntouch, RoomKey, Maestro, Hotelogix, RMS Cloud, Protel, eZee, SIHOT, innRoad
@@ -288,7 +288,7 @@ Kount, Signifyd
 
 ## AI Agents
 
-AccuDefend employs 8 autonomous AI agents for continuous platform operations.
+DisputeAI employs 8 autonomous AI agents for continuous platform operations.
 
 | Agent                  | Purpose                                  | Trigger        |
 |------------------------|------------------------------------------|----------------|
@@ -359,6 +359,6 @@ MIT
 
 <div align="center">
 
-**AccuDefend** -- AI-Powered Hotel Chargeback Defense Platform
+**DisputeAI** -- AI-Powered Hotel Chargeback Defense Platform
 
 </div>

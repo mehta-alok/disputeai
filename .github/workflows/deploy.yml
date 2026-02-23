@@ -15,8 +15,8 @@ concurrency:
 env:
   AWS_REGION: us-east-1
   ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY }}
-  BACKEND_ECR_REPOSITORY: accudefend-backend
-  FRONTEND_ECR_REPOSITORY: accudefend-frontend
+  BACKEND_ECR_REPOSITORY: disputeai-backend
+  FRONTEND_ECR_REPOSITORY: disputeai-frontend
 
 jobs:
   set-environment:
@@ -33,14 +33,14 @@ jobs:
         run: |
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
             echo "environment=production" >> "$GITHUB_OUTPUT"
-            echo "ecs_cluster=accudefend-prod" >> "$GITHUB_OUTPUT"
-            echo "backend_service=accudefend-backend-prod" >> "$GITHUB_OUTPUT"
-            echo "frontend_service=accudefend-frontend-prod" >> "$GITHUB_OUTPUT"
+            echo "ecs_cluster=disputeai-prod" >> "$GITHUB_OUTPUT"
+            echo "backend_service=disputeai-backend-prod" >> "$GITHUB_OUTPUT"
+            echo "frontend_service=disputeai-frontend-prod" >> "$GITHUB_OUTPUT"
           else
             echo "environment=development" >> "$GITHUB_OUTPUT"
-            echo "ecs_cluster=accudefend-dev" >> "$GITHUB_OUTPUT"
-            echo "backend_service=accudefend-backend-dev" >> "$GITHUB_OUTPUT"
-            echo "frontend_service=accudefend-frontend-dev" >> "$GITHUB_OUTPUT"
+            echo "ecs_cluster=disputeai-dev" >> "$GITHUB_OUTPUT"
+            echo "backend_service=disputeai-backend-dev" >> "$GITHUB_OUTPUT"
+            echo "frontend_service=disputeai-frontend-dev" >> "$GITHUB_OUTPUT"
           fi
 
   build-and-push-backend:

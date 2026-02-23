@@ -1,9 +1,9 @@
-# AccuDefend - Product Requirements Document
+# DisputeAI - Product Requirements Document
 
 **Version:** 1.0
 **Date:** February 16, 2026
 **Status:** Phase 1 (MVP) - Active Development
-**Document Owner:** AccuDefend Product Team
+**Document Owner:** DisputeAI Product Team
 
 ---
 
@@ -26,11 +26,11 @@
 
 ## 1. Executive Summary
 
-AccuDefend is a SaaS platform that helps hotels and hospitality businesses defend against fraudulent chargebacks. The hotel industry loses billions of dollars annually to chargebacks, many of which are filed fraudulently or could be successfully disputed with proper evidence. AccuDefend addresses this by combining AI-powered analysis, automated evidence collection, and deep integrations with Property Management Systems (PMS) and dispute processors to maximize chargeback win rates.
+DisputeAI is a SaaS platform that helps hotels and hospitality businesses defend against fraudulent chargebacks. The hotel industry loses billions of dollars annually to chargebacks, many of which are filed fraudulently or could be successfully disputed with proper evidence. DisputeAI addresses this by combining AI-powered analysis, automated evidence collection, and deep integrations with Property Management Systems (PMS) and dispute processors to maximize chargeback win rates.
 
 The platform provides a unified dashboard where hotel teams can manage disputes end-to-end: from initial detection through evidence compilation to final resolution. Eight specialized AI agents analyze each case, score fraud likelihood, draft responses, and predict outcomes. Integration with 30 PMS platforms and 21 dispute processors ensures that evidence gathering and dispute filing are largely automated, reducing manual effort by over 90%.
 
-AccuDefend is currently in its MVP phase with a fully functional demo mode, a complete frontend application, and production-ready backend infrastructure.
+DisputeAI is currently in its MVP phase with a fully functional demo mode, a complete frontend application, and production-ready backend infrastructure.
 
 ---
 
@@ -57,7 +57,7 @@ Hotels face a disproportionate chargeback problem compared to other industries:
 
 ## 3. Solution Overview
 
-AccuDefend solves these problems through three core capabilities:
+DisputeAI solves these problems through three core capabilities:
 
 ### Intelligent Analysis
 
@@ -65,7 +65,7 @@ Eight specialized AI agents evaluate every incoming chargeback, scoring fraud li
 
 ### Automated Evidence Collection
 
-AccuDefend connects directly to PMS platforms to pull guest folios, registration cards, payment receipts, digital signatures, and key card access logs automatically. Evidence is compiled into processor-compliant packages without manual intervention.
+DisputeAI connects directly to PMS platforms to pull guest folios, registration cards, payment receipts, digital signatures, and key card access logs automatically. Evidence is compiled into processor-compliant packages without manual intervention.
 
 ### Streamlined Dispute Management
 
@@ -256,7 +256,7 @@ A unified case management dashboard tracks every dispute from detection to resol
 
 **Acceptance Criteria**:
 - Chat widget is accessible from all pages via a floating button.
-- AI assistant understands AccuDefend-specific terminology and workflows.
+- AI assistant understands DisputeAI-specific terminology and workflows.
 - Context-aware responses consider the user's current page and active case.
 - Chat history is maintained within the session.
 - Fallback to human support contact when the AI cannot resolve a query.
@@ -376,7 +376,7 @@ A unified case management dashboard tracks every dispute from detection to resol
 
 ### 6.4 Demo Mode
 
-AccuDefend supports a fully functional demo mode that operates without external dependencies (no database, no Redis, no S3). The server detects unavailable services at startup and gracefully degrades to in-memory mock data. This enables:
+DisputeAI supports a fully functional demo mode that operates without external dependencies (no database, no Redis, no S3). The server detects unavailable services at startup and gracefully degrades to in-memory mock data. This enables:
 
 - Sales demonstrations without infrastructure setup
 - Local development without running databases
@@ -389,7 +389,7 @@ AccuDefend supports a fully functional demo mode that operates without external 
 ### 7.1 Base URL
 
 ```
-Production: https://api.accudefend.com/api
+Production: https://api.disputeai.com/api
 Development: http://localhost:8000/api
 ```
 
@@ -651,8 +651,8 @@ All endpoints except `/api/auth/login` and `/api/auth/register` require a valid 
 
 | Field | Value |
 |-------|-------|
-| Email | `admin@accudefend.com` |
-| Password | `AccuAdmin123!` |
+| Email | `admin@disputeai.com` |
+| Password | `DisputeAdmin123!` |
 | Role | Admin |
 
 ### C. Environment Variables
@@ -684,4 +684,4 @@ All endpoints except `/api/auth/login` and `/api/auth/register` require a valid 
 
 ---
 
-*This document is maintained by the AccuDefend product team and updated with each major release. For questions or clarifications, contact the document owner.*
+*This document is maintained by the DisputeAI product team and updated with each major release. For questions or clarifications, contact the document owner.*

@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Database Seed Script
  */
 
@@ -9,7 +9,7 @@ const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🛡️ AccuDefend System - Seeding Database...\n');
+  console.log('🛡️ DisputeAI System - Seeding Database...\n');
 
   // ==========================================================================
   // CREATE PROPERTIES (DEMO HOTELS)
@@ -159,16 +159,16 @@ async function main() {
 
   console.log('Creating users...');
 
-  const passwordHash = await bcrypt.hash('AccuAdmin123!', 12);
+  const passwordHash = await bcrypt.hash('DisputeAdmin123!', 12);
   const demoPasswordHash = await bcrypt.hash('Demo2024!', 12);
   const alokPasswordHash = await bcrypt.hash('Alok@123', 12);
 
   const users = await Promise.all([
     prisma.user.upsert({
-      where: { email: 'admin@accudefend.com' },
+      where: { email: 'admin@disputeai.com' },
       update: {},
       create: {
-        email: 'admin@accudefend.com',
+        email: 'admin@disputeai.com',
         passwordHash,
         firstName: 'System',
         lastName: 'Administrator',
@@ -177,10 +177,10 @@ async function main() {
     }),
     // New Demo User
     prisma.user.upsert({
-      where: { email: 'demo@accudefend.com' },
+      where: { email: 'demo@disputeai.com' },
       update: {},
       create: {
-        email: 'demo@accudefend.com',
+        email: 'demo@disputeai.com',
         passwordHash: demoPasswordHash,
         firstName: 'Demo',
         lastName: 'User',
@@ -189,10 +189,10 @@ async function main() {
     }),
     // Alok User
     prisma.user.upsert({
-      where: { email: 'alok@accudefend.com' },
+      where: { email: 'alok@disputeai.com' },
       update: {},
       create: {
-        email: 'alok@accudefend.com',
+        email: 'alok@disputeai.com',
         passwordHash: alokPasswordHash,
         firstName: 'Alok',
         lastName: 'Mehta',
@@ -200,10 +200,10 @@ async function main() {
       }
     }),
     prisma.user.upsert({
-      where: { email: 'manager.atlanta@accudefend.com' },
+      where: { email: 'manager.atlanta@disputeai.com' },
       update: {},
       create: {
-        email: 'manager.atlanta@accudefend.com',
+        email: 'manager.atlanta@disputeai.com',
         passwordHash,
         firstName: 'Sarah',
         lastName: 'Johnson',
@@ -212,10 +212,10 @@ async function main() {
       }
     }),
     prisma.user.upsert({
-      where: { email: 'staff.atlanta@accudefend.com' },
+      where: { email: 'staff.atlanta@disputeai.com' },
       update: {},
       create: {
-        email: 'staff.atlanta@accudefend.com',
+        email: 'staff.atlanta@disputeai.com',
         passwordHash,
         firstName: 'Mike',
         lastName: 'Williams',
@@ -224,10 +224,10 @@ async function main() {
       }
     }),
     prisma.user.upsert({
-      where: { email: 'manager.dallas@accudefend.com' },
+      where: { email: 'manager.dallas@disputeai.com' },
       update: {},
       create: {
-        email: 'manager.dallas@accudefend.com',
+        email: 'manager.dallas@disputeai.com',
         passwordHash,
         firstName: 'Jennifer',
         lastName: 'Martinez',
@@ -534,7 +534,7 @@ async function main() {
   // ==========================================================================
 
   console.log('═══════════════════════════════════════════════════════════════');
-  console.log('  ACCUDEFEND SYSTEM - Seed Complete');
+  console.log('  DISPUTEAI SYSTEM - Seed Complete');
   console.log('═══════════════════════════════════════════════════════════════');
   console.log(`  Properties:    ${properties.length}`);
   console.log(`  Providers:     ${providers.length}`);
@@ -543,9 +543,9 @@ async function main() {
   console.log('═══════════════════════════════════════════════════════════════');
   console.log('\n  Login Credentials:');
   console.log('  ───────────────────────────────────────');
-  console.log('  Admin:    admin@accudefend.com / AccuAdmin123!');
-  console.log('  Demo:     demo@accudefend.com / Demo2024!');
-  console.log('  Alok:     alok@accudefend.com / Alok@123');
+  console.log('  Admin:    admin@disputeai.com / DisputeAdmin123!');
+  console.log('  Demo:     demo@disputeai.com / Demo2024!');
+  console.log('  Alok:     alok@disputeai.com / Alok@123');
   console.log('  ───────────────────────────────────────');
   console.log('\n');
 }

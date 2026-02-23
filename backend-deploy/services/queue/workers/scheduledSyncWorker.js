@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Scheduled Sync Worker
+ * DisputeAI - Scheduled Sync Worker
  *
  * Handles periodic sync jobs for PMS systems and dispute portals.
  * Fetches recent changes since the last sync and upserts data.
@@ -340,7 +340,7 @@ async function _syncDisputes(integration, portalType, syncType, syncLogId) {
 }
 
 /**
- * Map dispute portal status to AccuDefend ChargebackStatus.
+ * Map dispute portal status to DisputeAI ChargebackStatus.
  */
 function _mapDisputeStatus(portalStatus) {
   const mapping = {

@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Authentication Routes
  */
 
@@ -160,9 +160,9 @@ router.post('/login', async (req, res) => {
 
     if (!dbAvailable) {
       const demoCredentials = {
-        'admin@accudefend.com': { password: 'AccuAdmin123!', role: 'ADMIN', firstName: 'Admin', lastName: 'User' },
-        'manager@accudefend.com': { password: 'AccuManager123!', role: 'MANAGER', firstName: 'Hotel', lastName: 'Manager' },
-        'staff@accudefend.com': { password: 'AccuStaff123!', role: 'STAFF', firstName: 'Staff', lastName: 'Member' },
+        'admin@disputeai.com': { password: 'DisputeAdmin123!', role: 'ADMIN', firstName: 'Admin', lastName: 'User' },
+        'manager@disputeai.com': { password: 'DisputeManager123!', role: 'MANAGER', firstName: 'Hotel', lastName: 'Manager' },
+        'staff@disputeai.com': { password: 'DisputeStaff123!', role: 'STAFF', firstName: 'Staff', lastName: 'Member' },
       };
 
       const demoCred = demoCredentials[email.toLowerCase()];
@@ -195,7 +195,7 @@ router.post('/login', async (req, res) => {
           firstName: demoUser.firstName,
           lastName: demoUser.lastName,
           role: demoUser.role,
-          property: { id: 'demo-property-1', name: 'AccuDefend Demo Hotel' }
+          property: { id: 'demo-property-1', name: 'DisputeAI Demo Hotel' }
         },
         tokens: {
           accessToken,
@@ -468,7 +468,7 @@ router.get('/me', authenticateToken, async (req, res) => {
           role: req.user.role,
           lastLogin: new Date().toISOString(),
           createdAt: new Date('2026-01-01').toISOString(),
-          property: req.user.property || { id: 'demo-property-1', name: 'AccuDefend Demo Hotel', city: 'New York', state: 'NY' }
+          property: req.user.property || { id: 'demo-property-1', name: 'DisputeAI Demo Hotel', city: 'New York', state: 'NY' }
         }
       });
     }

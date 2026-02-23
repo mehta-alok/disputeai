@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# AccuDefend - Production Startup Script
+# DisputeAI - Production Startup Script
 # Starts the full stack with Docker
 
 set -e
 
 echo "=========================================="
-echo "  AccuDefend - Chargeback Defense Platform"
+echo "  DisputeAI - Chargeback Defense Platform"
 echo "  Production Environment Startup"
 echo "=========================================="
 echo ""
@@ -46,7 +46,7 @@ done
 
 echo ""
 echo "=========================================="
-echo -e "${GREEN}AccuDefend is Running!${NC}"
+echo -e "${GREEN}DisputeAI is Running!${NC}"
 echo "=========================================="
 echo ""
 echo "  Frontend:   http://localhost:3000"
@@ -54,8 +54,8 @@ echo "  Backend:    http://localhost:8000"
 echo "  Health:     http://localhost:8000/health"
 echo ""
 echo "  Demo Login:"
-echo "    Email:    admin@accudefend.com"
-echo "    Password: AccuAdmin123!"
+echo "    Email:    admin@disputeai.com"
+echo "    Password: DisputeAdmin123!"
 echo ""
 echo "  Commands:"
 echo "    View logs:      docker compose logs -f"

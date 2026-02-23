@@ -1,13 +1,13 @@
 /**
- * AccuDefend - Mock Data for Demo Mode
+ * DisputeAI - Mock Data for Demo Mode
  * Used when database is not available
  */
 
 const DEMO_USERS = [
   {
     id: 'usr_demo_admin',
-    email: 'admin@accudefend.com',
-    passwordHash: '$2a$12$LJ3D3bFgAMD/AUhGJg0Fqu9PI1Lmgk7uQ5kFP3yNxmfOmE.SZQHK', // AccuAdmin123!
+    email: 'admin@disputeai.com',
+    passwordHash: '$2a$12$LJ3D3bFgAMD/AUhGJg0Fqu9PI1Lmgk7uQ5kFP3yNxmfOmE.SZQHK', // DisputeAdmin123!
     firstName: 'Alex',
     lastName: 'Morrison',
     role: 'ADMIN',
@@ -22,7 +22,7 @@ const DEMO_USERS = [
   },
   {
     id: 'usr_demo_manager',
-    email: 'manager@accudefend.com',
+    email: 'manager@disputeai.com',
     passwordHash: '$2a$12$LJ3D3bFgAMD/AUhGJg0Fqu9PI1Lmgk7uQ5kFP3yNxmfOmE.SZQHK',
     firstName: 'Sarah',
     lastName: 'Chen',
@@ -38,7 +38,7 @@ const DEMO_USERS = [
   },
   {
     id: 'usr_demo_staff',
-    email: 'staff@accudefend.com',
+    email: 'staff@disputeai.com',
     passwordHash: '$2a$12$LJ3D3bFgAMD/AUhGJg0Fqu9PI1Lmgk7uQ5kFP3yNxmfOmE.SZQHK',
     firstName: 'Mike',
     lastName: 'Torres',

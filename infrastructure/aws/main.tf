@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AWS Cloud Infrastructure
+ * DisputeAI - AWS Cloud Infrastructure
  * Terraform Configuration for Multi-Region Deployment
  */
 
@@ -14,11 +14,11 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "accudefend-terraform-state"
+    bucket         = "disputeai-terraform-state"
     key            = "infrastructure/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true
-    dynamodb_table = "accudefend-terraform-locks"
+    dynamodb_table = "disputeai-terraform-locks"
   }
 }
 
@@ -31,7 +31,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project     = "AccuDefend"
+      Project     = "DisputeAI"
       Environment = var.environment
       ManagedBy   = "Terraform"
     }
@@ -44,7 +44,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project     = "AccuDefend"
+      Project     = "DisputeAI"
       Environment = var.environment
       ManagedBy   = "Terraform"
     }
@@ -57,7 +57,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project     = "AccuDefend"
+      Project     = "DisputeAI"
       Environment = var.environment
       ManagedBy   = "Terraform"
     }
@@ -111,7 +111,7 @@ variable "redis_node_type" {
 module "vpc_primary" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "accudefend-vpc-primary"
+  name = "disputeai-vpc-primary"
   cidr = "10.0.0.0/16"
 
   azs             = ["${var.primary_region}a", "${var.primary_region}b", "${var.primary_region}c"]
@@ -126,7 +126,7 @@ module "vpc_primary" {
   enable_dns_support   = true
 
   tags = {
-    Name = "accudefend-vpc-primary"
+    Name = "disputeai-vpc-primary"
   }
 }
 
@@ -140,7 +140,7 @@ module "vpc_secondary" {
     aws = aws.secondary
   }
 
-  name = "accudefend-vpc-secondary"
+  name = "disputeai-vpc-secondary"
   cidr = "10.1.0.0/16"
 
   azs             = ["${var.secondary_region}a", "${var.secondary_region}b"]
@@ -154,7 +154,7 @@ module "vpc_secondary" {
   enable_dns_support   = true
 
   tags = {
-    Name = "accudefend-vpc-secondary"
+    Name = "disputeai-vpc-secondary"
   }
 }
 
@@ -163,16 +163,16 @@ module "vpc_secondary" {
 # =============================================================================
 
 resource "aws_db_subnet_group" "primary" {
-  name       = "accudefend-db-subnet-primary"
+  name       = "disputeai-db-subnet-primary"
   subnet_ids = module.vpc_primary.private_subnets
 
   tags = {
-    Name = "AccuDefend DB Subnet Group"
+    Name = "DisputeAI DB Subnet Group"
   }
 }
 
 resource "aws_security_group" "rds" {
-  name        = "accudefend-rds-sg"
+  name        = "disputeai-rds-sg"
   description = "Security group for RDS PostgreSQL"
   vpc_id      = module.vpc_primary.vpc_id
 
@@ -191,16 +191,16 @@ resource "aws_security_group" "rds" {
   }
 
   tags = {
-    Name = "accudefend-rds-sg"
+    Name = "disputeai-rds-sg"
   }
 }
 
 resource "aws_rds_cluster" "primary" {
-  cluster_identifier     = "accudefend-db-primary"
+  cluster_identifier     = "disputeai-db-primary"
   engine                 = "aurora-postgresql"
   engine_version         = "15.4"
-  database_name          = "accudefend"
-  master_username        = "accudefend_admin"
+  database_name          = "disputeai"
+  master_username        = "disputeai_admin"
   master_password        = var.db_password
 
   db_subnet_group_name   = aws_db_subnet_group.primary.name
@@ -209,7 +209,7 @@ resource "aws_rds_cluster" "primary" {
   backup_retention_period   = 35
   preferred_backup_window   = "03:00-04:00"
   skip_final_snapshot       = false
-  final_snapshot_identifier = "accudefend-final-snapshot"
+  final_snapshot_identifier = "disputeai-final-snapshot"
 
   storage_encrypted = true
   kms_key_id        = aws_kms_key.database.arn
@@ -217,13 +217,13 @@ resource "aws_rds_cluster" "primary" {
   enabled_cloudwatch_logs_exports = ["postgresql"]
 
   tags = {
-    Name = "accudefend-db-primary"
+    Name = "disputeai-db-primary"
   }
 }
 
 resource "aws_rds_cluster_instance" "primary" {
   count                = 3
-  identifier           = "accudefend-db-${count.index}"
+  identifier           = "disputeai-db-${count.index}"
   cluster_identifier   = aws_rds_cluster.primary.id
   instance_class       = var.db_instance_class
   engine               = aws_rds_cluster.primary.engine
@@ -235,7 +235,7 @@ resource "aws_rds_cluster_instance" "primary" {
   monitoring_role_arn          = aws_iam_role.rds_monitoring.arn
 
   tags = {
-    Name = "accudefend-db-instance-${count.index}"
+    Name = "disputeai-db-instance-${count.index}"
   }
 }
 
@@ -246,7 +246,7 @@ resource "aws_rds_cluster_instance" "primary" {
 resource "aws_rds_cluster" "secondary" {
   provider = aws.secondary
 
-  cluster_identifier        = "accudefend-db-secondary"
+  cluster_identifier        = "disputeai-db-secondary"
   engine                    = "aurora-postgresql"
   engine_version            = "15.4"
   replication_source_identifier = aws_rds_cluster.primary.arn
@@ -258,7 +258,7 @@ resource "aws_rds_cluster" "secondary" {
   kms_key_id        = aws_kms_key.database_secondary.arn
 
   tags = {
-    Name = "accudefend-db-secondary"
+    Name = "disputeai-db-secondary"
   }
 
   depends_on = [aws_rds_cluster.primary]
@@ -269,12 +269,12 @@ resource "aws_rds_cluster" "secondary" {
 # =============================================================================
 
 resource "aws_elasticache_subnet_group" "main" {
-  name       = "accudefend-redis-subnet"
+  name       = "disputeai-redis-subnet"
   subnet_ids = module.vpc_primary.private_subnets
 }
 
 resource "aws_security_group" "redis" {
-  name        = "accudefend-redis-sg"
+  name        = "disputeai-redis-sg"
   description = "Security group for Redis cluster"
   vpc_id      = module.vpc_primary.vpc_id
 
@@ -293,13 +293,13 @@ resource "aws_security_group" "redis" {
   }
 
   tags = {
-    Name = "accudefend-redis-sg"
+    Name = "disputeai-redis-sg"
   }
 }
 
 resource "aws_elasticache_replication_group" "main" {
-  replication_group_id       = "accudefend-redis"
-  description                = "Redis cluster for AccuDefend"
+  replication_group_id       = "disputeai-redis"
+  description                = "Redis cluster for DisputeAI"
   node_type                  = var.redis_node_type
   num_cache_clusters         = 3
   port                       = 6379
@@ -319,7 +319,7 @@ resource "aws_elasticache_replication_group" "main" {
   snapshot_window            = "04:00-05:00"
 
   tags = {
-    Name = "accudefend-redis"
+    Name = "disputeai-redis"
   }
 }
 
@@ -328,10 +328,10 @@ resource "aws_elasticache_replication_group" "main" {
 # =============================================================================
 
 resource "aws_s3_bucket" "evidence_primary" {
-  bucket = "accudefend-evidence-${var.environment}-${var.primary_region}"
+  bucket = "disputeai-evidence-${var.environment}-${var.primary_region}"
 
   tags = {
-    Name        = "AccuDefend Evidence Storage - Primary"
+    Name        = "DisputeAI Evidence Storage - Primary"
     DataClass   = "Confidential"
     Compliance  = "PCI-DSS"
   }
@@ -409,10 +409,10 @@ resource "aws_s3_bucket_replication_configuration" "evidence_primary" {
 # Secondary S3 Bucket (DR)
 resource "aws_s3_bucket" "evidence_secondary" {
   provider = aws.secondary
-  bucket   = "accudefend-evidence-${var.environment}-${var.secondary_region}"
+  bucket   = "disputeai-evidence-${var.environment}-${var.secondary_region}"
 
   tags = {
-    Name        = "AccuDefend Evidence Storage - Secondary"
+    Name        = "DisputeAI Evidence Storage - Secondary"
     DataClass   = "Confidential"
     Compliance  = "PCI-DSS"
   }
@@ -420,19 +420,19 @@ resource "aws_s3_bucket" "evidence_secondary" {
 
 # Backlog Storage Bucket
 resource "aws_s3_bucket" "backlog" {
-  bucket = "accudefend-backlog-${var.environment}"
+  bucket = "disputeai-backlog-${var.environment}"
 
   tags = {
-    Name = "AccuDefend Technical Backlog Storage"
+    Name = "DisputeAI Technical Backlog Storage"
   }
 }
 
 # AI Models Bucket
 resource "aws_s3_bucket" "ai_models" {
-  bucket = "accudefend-ai-models-${var.environment}"
+  bucket = "disputeai-ai-models-${var.environment}"
 
   tags = {
-    Name = "AccuDefend AI Models Storage"
+    Name = "DisputeAI AI Models Storage"
   }
 }
 
@@ -441,7 +441,7 @@ resource "aws_s3_bucket" "ai_models" {
 # =============================================================================
 
 resource "aws_ecs_cluster" "main" {
-  name = "accudefend-cluster"
+  name = "disputeai-cluster"
 
   setting {
     name  = "containerInsights"
@@ -461,12 +461,12 @@ resource "aws_ecs_cluster" "main" {
   }
 
   tags = {
-    Name = "accudefend-cluster"
+    Name = "disputeai-cluster"
   }
 }
 
 resource "aws_security_group" "ecs" {
-  name        = "accudefend-ecs-sg"
+  name        = "disputeai-ecs-sg"
   description = "Security group for ECS tasks"
   vpc_id      = module.vpc_primary.vpc_id
 
@@ -492,13 +492,13 @@ resource "aws_security_group" "ecs" {
   }
 
   tags = {
-    Name = "accudefend-ecs-sg"
+    Name = "disputeai-ecs-sg"
   }
 }
 
 # ECS Task Definition - Backend API
 resource "aws_ecs_task_definition" "backend" {
-  family                   = "accudefend-backend"
+  family                   = "disputeai-backend"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 1024
@@ -552,13 +552,13 @@ resource "aws_ecs_task_definition" "backend" {
   ])
 
   tags = {
-    Name = "accudefend-backend-task"
+    Name = "disputeai-backend-task"
   }
 }
 
 # ECS Task Definition - AI Agent Service
 resource "aws_ecs_task_definition" "ai_agent" {
-  family                   = "accudefend-ai-agent"
+  family                   = "disputeai-ai-agent"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 2048
@@ -604,13 +604,13 @@ resource "aws_ecs_task_definition" "ai_agent" {
   ])
 
   tags = {
-    Name = "accudefend-ai-agent-task"
+    Name = "disputeai-ai-agent-task"
   }
 }
 
 # ECS Service - Backend
 resource "aws_ecs_service" "backend" {
-  name            = "accudefend-backend"
+  name            = "disputeai-backend"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.backend.arn
   desired_count   = 3
@@ -639,7 +639,7 @@ resource "aws_ecs_service" "backend" {
   }
 
   tags = {
-    Name = "accudefend-backend-service"
+    Name = "disputeai-backend-service"
   }
 }
 
@@ -648,7 +648,7 @@ resource "aws_ecs_service" "backend" {
 # =============================================================================
 
 resource "aws_security_group" "alb" {
-  name        = "accudefend-alb-sg"
+  name        = "disputeai-alb-sg"
   description = "Security group for ALB"
   vpc_id      = module.vpc_primary.vpc_id
 
@@ -674,12 +674,12 @@ resource "aws_security_group" "alb" {
   }
 
   tags = {
-    Name = "accudefend-alb-sg"
+    Name = "disputeai-alb-sg"
   }
 }
 
 resource "aws_lb" "main" {
-  name               = "accudefend-alb"
+  name               = "disputeai-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
@@ -694,12 +694,12 @@ resource "aws_lb" "main" {
   }
 
   tags = {
-    Name = "accudefend-alb"
+    Name = "disputeai-alb"
   }
 }
 
 resource "aws_lb_target_group" "backend" {
-  name        = "accudefend-backend-tg"
+  name        = "disputeai-backend-tg"
   port        = 8000
   protocol    = "HTTP"
   vpc_id      = module.vpc_primary.vpc_id
@@ -718,7 +718,7 @@ resource "aws_lb_target_group" "backend" {
   }
 
   tags = {
-    Name = "accudefend-backend-tg"
+    Name = "disputeai-backend-tg"
   }
 }
 
@@ -732,7 +732,7 @@ resource "aws_kms_key" "database" {
   enable_key_rotation     = true
 
   tags = {
-    Name = "accudefend-db-key"
+    Name = "disputeai-db-key"
   }
 }
 
@@ -742,7 +742,7 @@ resource "aws_kms_key" "s3" {
   enable_key_rotation     = true
 
   tags = {
-    Name = "accudefend-s3-key"
+    Name = "disputeai-s3-key"
   }
 }
 
@@ -752,7 +752,7 @@ resource "aws_kms_key" "ecs" {
   enable_key_rotation     = true
 
   tags = {
-    Name = "accudefend-ecs-key"
+    Name = "disputeai-ecs-key"
   }
 }
 
@@ -761,32 +761,32 @@ resource "aws_kms_key" "ecs" {
 # =============================================================================
 
 resource "aws_cloudwatch_log_group" "backend" {
-  name              = "/ecs/accudefend-backend"
+  name              = "/ecs/disputeai-backend"
   retention_in_days = 90
   kms_key_id        = aws_kms_key.cloudwatch.arn
 
   tags = {
-    Name = "accudefend-backend-logs"
+    Name = "disputeai-backend-logs"
   }
 }
 
 resource "aws_cloudwatch_log_group" "ai_agent" {
-  name              = "/ecs/accudefend-ai-agent"
+  name              = "/ecs/disputeai-ai-agent"
   retention_in_days = 90
   kms_key_id        = aws_kms_key.cloudwatch.arn
 
   tags = {
-    Name = "accudefend-ai-agent-logs"
+    Name = "disputeai-ai-agent-logs"
   }
 }
 
 resource "aws_cloudwatch_log_group" "ecs" {
-  name              = "/ecs/accudefend-cluster"
+  name              = "/ecs/disputeai-cluster"
   retention_in_days = 90
   kms_key_id        = aws_kms_key.cloudwatch.arn
 
   tags = {
-    Name = "accudefend-ecs-logs"
+    Name = "disputeai-ecs-logs"
   }
 }
 
@@ -795,72 +795,72 @@ resource "aws_cloudwatch_log_group" "ecs" {
 # =============================================================================
 
 resource "aws_secretsmanager_secret" "database_url" {
-  name        = "accudefend/database-url"
+  name        = "disputeai/database-url"
   description = "PostgreSQL connection string"
   kms_key_id  = aws_kms_key.secrets.arn
 
   tags = {
-    Name = "accudefend-database-url"
+    Name = "disputeai-database-url"
   }
 }
 
 resource "aws_secretsmanager_secret" "redis_url" {
-  name        = "accudefend/redis-url"
+  name        = "disputeai/redis-url"
   description = "Redis connection string"
   kms_key_id  = aws_kms_key.secrets.arn
 
   tags = {
-    Name = "accudefend-redis-url"
+    Name = "disputeai-redis-url"
   }
 }
 
 resource "aws_secretsmanager_secret" "jwt_secret" {
-  name        = "accudefend/jwt-secret"
+  name        = "disputeai/jwt-secret"
   description = "JWT signing secret"
   kms_key_id  = aws_kms_key.secrets.arn
 
   tags = {
-    Name = "accudefend-jwt-secret"
+    Name = "disputeai-jwt-secret"
   }
 }
 
 resource "aws_secretsmanager_secret" "stripe_key" {
-  name        = "accudefend/stripe-secret-key"
+  name        = "disputeai/stripe-secret-key"
   description = "Stripe API secret key"
   kms_key_id  = aws_kms_key.secrets.arn
 
   tags = {
-    Name = "accudefend-stripe-key"
+    Name = "disputeai-stripe-key"
   }
 }
 
 resource "aws_secretsmanager_secret" "stripe_webhook" {
-  name        = "accudefend/stripe-webhook-secret"
+  name        = "disputeai/stripe-webhook-secret"
   description = "Stripe webhook signing secret"
   kms_key_id  = aws_kms_key.secrets.arn
 
   tags = {
-    Name = "accudefend-stripe-webhook"
+    Name = "disputeai-stripe-webhook"
   }
 }
 
 resource "aws_secretsmanager_secret" "openai_key" {
-  name        = "accudefend/openai-api-key"
+  name        = "disputeai/openai-api-key"
   description = "OpenAI API key for AI agents"
   kms_key_id  = aws_kms_key.secrets.arn
 
   tags = {
-    Name = "accudefend-openai-key"
+    Name = "disputeai-openai-key"
   }
 }
 
 resource "aws_secretsmanager_secret" "anthropic_key" {
-  name        = "accudefend/anthropic-api-key"
+  name        = "disputeai/anthropic-api-key"
   description = "Anthropic API key for AI agents"
   kms_key_id  = aws_kms_key.secrets.arn
 
   tags = {
-    Name = "accudefend-anthropic-key"
+    Name = "disputeai-anthropic-key"
   }
 }
 
@@ -869,7 +869,7 @@ resource "aws_secretsmanager_secret" "anthropic_key" {
 # =============================================================================
 
 resource "aws_ecr_repository" "backend" {
-  name                 = "accudefend-backend"
+  name                 = "disputeai-backend"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -882,12 +882,12 @@ resource "aws_ecr_repository" "backend" {
   }
 
   tags = {
-    Name = "accudefend-backend"
+    Name = "disputeai-backend"
   }
 }
 
 resource "aws_ecr_repository" "frontend" {
-  name                 = "accudefend-frontend"
+  name                 = "disputeai-frontend"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -900,12 +900,12 @@ resource "aws_ecr_repository" "frontend" {
   }
 
   tags = {
-    Name = "accudefend-frontend"
+    Name = "disputeai-frontend"
   }
 }
 
 resource "aws_ecr_repository" "ai_agent" {
-  name                 = "accudefend-ai-agent"
+  name                 = "disputeai-ai-agent"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -918,7 +918,7 @@ resource "aws_ecr_repository" "ai_agent" {
   }
 
   tags = {
-    Name = "accudefend-ai-agent"
+    Name = "disputeai-ai-agent"
   }
 }
 
@@ -927,20 +927,20 @@ resource "aws_ecr_repository" "ai_agent" {
 # =============================================================================
 
 resource "aws_sns_topic" "alerts" {
-  name              = "accudefend-alerts"
+  name              = "disputeai-alerts"
   kms_master_key_id = aws_kms_key.sns.arn
 
   tags = {
-    Name = "accudefend-alerts"
+    Name = "disputeai-alerts"
   }
 }
 
 resource "aws_sns_topic" "backlog_updates" {
-  name              = "accudefend-backlog-updates"
+  name              = "disputeai-backlog-updates"
   kms_master_key_id = aws_kms_key.sns.arn
 
   tags = {
-    Name = "accudefend-backlog-updates"
+    Name = "disputeai-backlog-updates"
   }
 }
 
@@ -949,7 +949,7 @@ resource "aws_sns_topic" "backlog_updates" {
 # =============================================================================
 
 resource "aws_sqs_queue" "webhook_processing" {
-  name                       = "accudefend-webhook-processing"
+  name                       = "disputeai-webhook-processing"
   delay_seconds              = 0
   max_message_size           = 262144
   message_retention_seconds  = 1209600
@@ -965,22 +965,22 @@ resource "aws_sqs_queue" "webhook_processing" {
   })
 
   tags = {
-    Name = "accudefend-webhook-processing"
+    Name = "disputeai-webhook-processing"
   }
 }
 
 resource "aws_sqs_queue" "webhook_dlq" {
-  name                      = "accudefend-webhook-dlq"
+  name                      = "disputeai-webhook-dlq"
   message_retention_seconds = 1209600
   kms_master_key_id         = aws_kms_key.sqs.arn
 
   tags = {
-    Name = "accudefend-webhook-dlq"
+    Name = "disputeai-webhook-dlq"
   }
 }
 
 resource "aws_sqs_queue" "ai_analysis" {
-  name                       = "accudefend-ai-analysis"
+  name                       = "disputeai-ai-analysis"
   delay_seconds              = 0
   max_message_size           = 262144
   message_retention_seconds  = 1209600
@@ -990,12 +990,12 @@ resource "aws_sqs_queue" "ai_analysis" {
   kms_master_key_id = aws_kms_key.sqs.arn
 
   tags = {
-    Name = "accudefend-ai-analysis"
+    Name = "disputeai-ai-analysis"
   }
 }
 
 resource "aws_sqs_queue" "backlog_tasks" {
-  name                       = "accudefend-backlog-tasks"
+  name                       = "disputeai-backlog-tasks"
   delay_seconds              = 0
   max_message_size           = 262144
   message_retention_seconds  = 1209600
@@ -1005,7 +1005,7 @@ resource "aws_sqs_queue" "backlog_tasks" {
   kms_master_key_id = aws_kms_key.sqs.arn
 
   tags = {
-    Name = "accudefend-backlog-tasks"
+    Name = "disputeai-backlog-tasks"
   }
 }
 

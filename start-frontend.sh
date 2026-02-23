@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# AccuDefend - Frontend Startup Script
+# DisputeAI - Frontend Startup Script
 
 set -e
 
 echo "=========================================="
-echo "  AccuDefend - Starting Frontend"
+echo "  DisputeAI - Starting Frontend"
 echo "=========================================="
 echo ""
 

@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Dispute Inbound Worker
+ * DisputeAI - Dispute Inbound Worker
  *
  * Processes inbound webhook events from dispute portals
  * (Verifi, Ethoca, Merlink, etc.). Creates/updates chargebacks

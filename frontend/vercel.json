@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://accudefend-api.onrender.com/api/$1" },
+    { "source": "/api/(.*)", "destination": "https://disputeai-api.onrender.com/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

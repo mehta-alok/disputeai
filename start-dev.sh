@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AccuDefend - Full Stack Local Development Launcher
+# DisputeAI - Full Stack Local Development Launcher
 # Starts PostgreSQL, Redis, Backend API, and Frontend
 # Works for both desktop browser and mobile (via LAN IP)
 
@@ -23,7 +23,7 @@ LAN_IP=$(ipconfig getifaddr en0 2>/dev/null || hostname -I 2>/dev/null | awk '{p
 
 echo ""
 echo -e "${BLUE}${BOLD}╔═══════════════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}${BOLD}║        AccuDefend - Full Stack Dev Launcher           ║${NC}"
+echo -e "${BLUE}${BOLD}║        DisputeAI - Full Stack Dev Launcher           ║${NC}"
 echo -e "${BLUE}${BOLD}║   Desktop + Mobile Local Development Environment     ║${NC}"
 echo -e "${BLUE}${BOLD}╚═══════════════════════════════════════════════════════╝${NC}"
 echo ""
@@ -48,7 +48,7 @@ if [ "$DOCKER_AVAILABLE" = true ]; then
     # Wait for healthy services
     echo -n "  Waiting for PostgreSQL"
     for i in {1..20}; do
-        if docker exec accudefend-postgres pg_isready -U accudefend_user -q 2>/dev/null; then
+        if docker exec disputeai-postgres pg_isready -U disputeai_user -q 2>/dev/null; then
             echo -e " ${GREEN}ready${NC}"
             break
         fi
@@ -59,7 +59,7 @@ if [ "$DOCKER_AVAILABLE" = true ]; then
 
     echo -n "  Waiting for Redis"
     for i in {1..10}; do
-        if docker exec accudefend-redis redis-cli ping 2>/dev/null | grep -q PONG; then
+        if docker exec disputeai-redis redis-cli ping 2>/dev/null | grep -q PONG; then
             echo -e " ${GREEN}ready${NC}"
             break
         fi
@@ -118,7 +118,7 @@ sleep 3
 # ── Done ──────────────────────────────────────────────────────────────
 echo ""
 echo -e "${GREEN}${BOLD}╔═══════════════════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}${BOLD}║           AccuDefend is RUNNING!                      ║${NC}"
+echo -e "${GREEN}${BOLD}║           DisputeAI is RUNNING!                      ║${NC}"
 echo -e "${GREEN}${BOLD}╚═══════════════════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  ${BOLD}Desktop:${NC}"
@@ -129,8 +129,8 @@ echo -e "  ${BOLD}Mobile (same WiFi):${NC}"
 echo -e "    Open on phone: ${CYAN}http://${LAN_IP}:3000${NC}"
 echo ""
 echo -e "  ${BOLD}Demo Login:${NC}"
-echo -e "    Email:    ${YELLOW}admin@accudefend.com${NC}"
-echo -e "    Password: ${YELLOW}AccuAdmin123!${NC}"
+echo -e "    Email:    ${YELLOW}admin@disputeai.com${NC}"
+echo -e "    Password: ${YELLOW}DisputeAdmin123!${NC}"
 echo ""
 if [ "$DOCKER_AVAILABLE" = true ]; then
     echo -e "  ${BOLD}Database:${NC}  PostgreSQL on localhost:5432"
@@ -145,7 +145,7 @@ echo ""
 # Cleanup function
 cleanup() {
     echo ""
-    echo -e "${YELLOW}Shutting down AccuDefend...${NC}"
+    echo -e "${YELLOW}Shutting down DisputeAI...${NC}"
     kill $BACKEND_PID 2>/dev/null
     kill $FRONTEND_PID 2>/dev/null
     if [ "$DOCKER_AVAILABLE" = true ]; then

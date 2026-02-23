@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AutoClerk PMS Emulator
+ * DisputeAI - AutoClerk PMS Emulator
  * Local emulator that simulates the AutoClerk PMS API
  * Provides realistic hotel reservation data, folios, signatures, IDs, and audit trails
  */
@@ -1015,7 +1015,7 @@ class AutoClerkEmulator {
       system: 'AutoClerk PMS',
       status: 'connected',
       version: 'v2.4.1',
-      propertyName: 'AccuDefend Demo Hotel',
+      propertyName: 'DisputeAI Demo Hotel',
       propertyCode: 'ACDF-001',
       lastSync: new Date(Date.now() - 300000).toISOString(),
       nextSync: new Date(Date.now() + 3300000).toISOString(),

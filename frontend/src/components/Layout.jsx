@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Main Layout Component
  */
 
@@ -115,7 +115,7 @@ export default function Layout({ children }) {
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-blue-600">AccuDefend</h1>
+                <h1 className="text-lg font-bold text-blue-600">DisputeAI</h1>
                 <p className="text-xs text-gray-500">Chargeback Defense</p>
               </div>
             </Link>
@@ -323,8 +323,8 @@ export default function Layout({ children }) {
 
         {/* Footer */}
         <footer className="px-4 py-6 text-center text-sm text-gray-500 lg:px-8">
-          <p>AccuDefend - AI-Powered Chargeback Defense Platform</p>
-          <p className="mt-1">&copy; 2026 AccuDefend. All rights reserved.</p>
+          <p>DisputeAI - AI-Powered Chargeback Defense Platform</p>
+          <p className="mt-1">&copy; 2026 DisputeAI. All rights reserved.</p>
         </footer>
       </div>
 

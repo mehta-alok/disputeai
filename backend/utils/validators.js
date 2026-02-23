@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Lightweight Validation Library (Zod-compatible safeParse API)
  *
  * No external dependencies. Provides a schema builder that mimics

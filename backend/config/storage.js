@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * File Storage Configuration (Local + S3 support)
  *
  * Uses local storage by default, or S3 if configured
@@ -35,7 +35,7 @@ if (useS3) {
  */
 async function initializeStorage() {
   if (useS3) {
-    logger.info('AccuDefend: Using AWS S3 for file storage');
+    logger.info('DisputeAI: Using AWS S3 for file storage');
     s3Client = new S3Client({
       region: process.env.AWS_REGION || 'us-east-1',
       credentials: {
@@ -45,7 +45,7 @@ async function initializeStorage() {
     });
     return { type: 's3', bucket: process.env.AWS_S3_BUCKET };
   } else {
-    logger.info('AccuDefend: Using local file storage');
+    logger.info('DisputeAI: Using local file storage');
     // Create uploads directory if it doesn't exist
     await fs.mkdir(UPLOADS_DIR, { recursive: true });
     return { type: 'local', path: UPLOADS_DIR };
@@ -118,7 +118,7 @@ async function uploadToS3(buffer, key, contentType) {
     ContentType: contentType,
     ServerSideEncryption: 'AES256',
     Metadata: {
-      'uploaded-by': 'accudefend',
+      'uploaded-by': 'disputeai',
       'upload-timestamp': new Date().toISOString()
     }
   });

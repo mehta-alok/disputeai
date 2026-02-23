@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Main Application Component
  */
 
@@ -29,7 +29,7 @@ function ProtectedRoute({ children }) {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="spinner mx-auto mb-4"></div>
-          <p className="text-gray-500">Loading AccuDefend...</p>
+          <p className="text-gray-500">Loading DisputeAI...</p>
         </div>
       </div>
     );

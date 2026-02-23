@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Visa Resolve Online (VROL) Dispute Adapter
  *
  * Implements two-way integration with Visa's VROL platform:
@@ -184,7 +184,7 @@ const DISPUTE_STAGES = {
   COMPLIANCE: 'compliance'
 };
 
-// VROL portal status -> AccuDefend internal status
+// VROL portal status -> DisputeAI internal status
 const STATUS_MAP_FROM_VROL = {
   'new': 'PENDING',
   'open': 'PENDING',
@@ -204,7 +204,7 @@ const STATUS_MAP_FROM_VROL = {
   'accepted_by_merchant': 'RESOLVED'
 };
 
-// AccuDefend status -> VROL portal status
+// DisputeAI status -> VROL portal status
 const STATUS_MAP_TO_VROL = {
   'PENDING': 'open',
   'IN_REVIEW': 'under_review',
@@ -611,7 +611,7 @@ class VisaVROLAdapter extends BaseDisputeAdapter {
       merchantId: this.merchantId,
       acquirerBIN: this.acquirerBIN,
       action: 'accept_liability',
-      merchantNotes: 'Liability accepted by merchant via AccuDefend',
+      merchantNotes: 'Liability accepted by merchant via DisputeAI',
       idempotencyKey: this._generateIdempotencyKey('vrol_accept')
     };
 
@@ -919,7 +919,7 @@ class VisaVROLAdapter extends BaseDisputeAdapter {
   // ===========================================================================
 
   /**
-   * Normalize a VROL dispute/case into AccuDefend's standard format.
+   * Normalize a VROL dispute/case into DisputeAI's standard format.
    *
    * @param {Object} portalData - Raw VROL dispute data
    * @returns {Object} Normalized dispute object
@@ -961,10 +961,10 @@ class VisaVROLAdapter extends BaseDisputeAdapter {
   }
 
   /**
-   * Map a VROL status string to AccuDefend internal status.
+   * Map a VROL status string to DisputeAI internal status.
    *
    * @param {string} portalStatus - VROL status value
-   * @returns {string} AccuDefend status
+   * @returns {string} DisputeAI status
    */
   normalizeDisputeStatus(portalStatus) {
     if (!portalStatus) return 'PENDING';

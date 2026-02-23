@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI Client Service (stub for demo mode)
+ * DisputeAI - AI Client Service (stub for demo mode)
  */
 const logger = require('../utils/logger');
 

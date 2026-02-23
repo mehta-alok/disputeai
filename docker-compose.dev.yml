@@ -1,4 +1,4 @@
-# AccuDefend - Development Docker Compose
+# DisputeAI - Development Docker Compose
 # Usage: docker compose -f docker-compose.dev.yml up -d
 #
 # Option 1: Run just DB + Redis, run backend/frontend natively
@@ -10,17 +10,17 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: accudefend-postgres
+    container_name: disputeai-postgres
     environment:
-      POSTGRES_USER: accudefend_user
-      POSTGRES_PASSWORD: accudefend_password
-      POSTGRES_DB: accudefend_db
+      POSTGRES_USER: disputeai_user
+      POSTGRES_PASSWORD: disputeai_password
+      POSTGRES_DB: disputeai_db
     ports:
       - "5432:5432"
     volumes:
-      - accudefend_pgdata:/var/lib/postgresql/data
+      - disputeai_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U accudefend_user -d accudefend_db"]
+      test: ["CMD-SHELL", "pg_isready -U disputeai_user -d disputeai_db"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -28,12 +28,12 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: accudefend-redis
+    container_name: disputeai-redis
     command: redis-server --appendonly yes
     ports:
       - "6379:6379"
     volumes:
-      - accudefend_redisdata:/data
+      - disputeai_redisdata:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -45,13 +45,13 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
-    container_name: accudefend-backend-dev
+    container_name: disputeai-backend-dev
     ports:
       - "8000:8000"
     environment:
       - NODE_ENV=development
       - PORT=8000
-      - DATABASE_URL=postgresql://accudefend_user:accudefend_password@postgres:5432/accudefend_db?schema=public
+      - DATABASE_URL=postgresql://disputeai_user:disputeai_password@postgres:5432/disputeai_db?schema=public
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=dev-jwt-secret-not-for-production
       - JWT_REFRESH_SECRET=dev-refresh-secret-not-for-production
@@ -72,7 +72,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    container_name: accudefend-frontend-dev
+    container_name: disputeai-frontend-dev
     ports:
       - "3000:3000"
     environment:
@@ -85,5 +85,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  accudefend_pgdata:
-  accudefend_redisdata:
+  disputeai_pgdata:
+  disputeai_redisdata:

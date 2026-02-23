@@ -8,14 +8,14 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('accudefend_token');
-    const savedUser = localStorage.getItem('accudefend_user');
+    const token = localStorage.getItem('disputeai_token');
+    const savedUser = localStorage.getItem('disputeai_user');
     if (token && savedUser) {
       try {
         setUser(JSON.parse(savedUser));
       } catch {
-        localStorage.removeItem('accudefend_token');
-        localStorage.removeItem('accudefend_user');
+        localStorage.removeItem('disputeai_token');
+        localStorage.removeItem('disputeai_user');
       }
     }
     setLoading(false);
@@ -24,8 +24,8 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     const response = await api.post('/auth/login', { email, password });
     const { tokens, user: userData } = response;
-    localStorage.setItem('accudefend_token', tokens.accessToken);
-    localStorage.setItem('accudefend_user', JSON.stringify(userData));
+    localStorage.setItem('disputeai_token', tokens.accessToken);
+    localStorage.setItem('disputeai_user', JSON.stringify(userData));
     setUser(userData);
     return userData;
   };
@@ -36,8 +36,8 @@ export function AuthProvider({ children }) {
     } catch {
       // ignore logout errors
     }
-    localStorage.removeItem('accudefend_token');
-    localStorage.removeItem('accudefend_user');
+    localStorage.removeItem('disputeai_token');
+    localStorage.removeItem('disputeai_user');
     setUser(null);
   };
 

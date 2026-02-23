@@ -10,7 +10,7 @@ const outdir = join(__dirname, 'dist');
 // Ensure dist and assets dirs exist
 mkdirSync(join(outdir, 'assets'), { recursive: true });
 
-console.log('Building AccuDefend frontend...');
+console.log('Building DisputeAI frontend...');
 console.time('Total Build');
 
 // Step 1: Process Tailwind CSS using standalone binary (Node.js Tailwind hangs on v25+)
@@ -98,11 +98,11 @@ try {
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/accudefend-icon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/disputeai-icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="AccuDefend - AI-powered hotel chargeback defense platform" />
+    <meta name="description" content="DisputeAI - AI-powered hotel chargeback defense platform" />
     <meta name="theme-color" content="#2563eb" />
-    <title>AccuDefend</title>
+    <title>DisputeAI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">

@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a new feature or enhancement for AccuDefend
+about: Suggest a new feature or enhancement for DisputeAI
 title: "[FEATURE] "
 labels: enhancement
 assignees: mehta-alok

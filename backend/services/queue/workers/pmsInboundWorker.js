@@ -1,5 +1,5 @@
 /**
- * AccuDefend - PMS Inbound Worker
+ * DisputeAI - PMS Inbound Worker
  *
  * Processes inbound webhook events from PMS systems.
  * Normalizes data and upserts into Reservation, GuestFolioItem,

@@ -1,5 +1,5 @@
 /**
- * AccuDefend System
+ * DisputeAI System
  * AWS S3 Configuration (Evidence Storage)
  */
 
@@ -53,7 +53,7 @@ async function initializeS3() {
       return null;
     }
 
-    logger.info(`AccuDefend: S3 initialized for bucket ${bucket}`);
+    logger.info(`DisputeAI: S3 initialized for bucket ${bucket}`);
     return client;
   } catch (error) {
     logger.error('S3 initialization failed:', error);
@@ -88,7 +88,7 @@ async function uploadFile(buffer, key, contentType) {
     ContentType: contentType,
     ServerSideEncryption: 'AES256',
     Metadata: {
-      'uploaded-by': 'accudefend',
+      'uploaded-by': 'disputeai',
       'upload-timestamp': new Date().toISOString()
     }
   });

@@ -1,4 +1,4 @@
-# AccuDefend - Complete System Design
+# DisputeAI - Complete System Design
 
 **Version:** 3.0
 **Date:** February 2026
@@ -1152,7 +1152,7 @@ TTL: 15 minutes
 
 ### REST API Endpoints
 
-**Base URL:** `https://api.accudefend.com/api`
+**Base URL:** `https://api.disputeai.com/api`
 **Authentication:** `Bearer <JWT_TOKEN>`
 **Content-Type:** `application/json`
 
@@ -1760,7 +1760,7 @@ TRIGGER: Chargeback with confidence score < 85%
 
 ```
                     +-------------+
-                    |  AccuDefend |
+                    |  DisputeAI |
                     |   Core      |
                     +------+------+
                            |
@@ -1835,7 +1835,7 @@ class StripeAdapter extends ProcessorAdapter {
 
 ### PMS Integration Architecture
 
-AccuDefend integrates with 30 Property Management Systems organized in 4 categories, all implementing full two-way sync:
+DisputeAI integrates with 30 Property Management Systems organized in 4 categories, all implementing full two-way sync:
 
 **Enterprise PMS (15 systems):**
 
@@ -1890,7 +1890,7 @@ AccuDefend integrates with 30 Property Management Systems organized in 4 categor
 **PMS Integration Flow:**
 
 ```
-        Hotel's PMS System                 AccuDefend
+        Hotel's PMS System                 DisputeAI
         +---------------+                 +-----------------+
         |    Opera      |                 |   Webhook       |
         |    Cloud      |--check_in------>|   Receiver      |
@@ -1958,7 +1958,7 @@ const normalizedEvent = {
 
 ### Dispute & Chargeback Portal Integration
 
-AccuDefend integrates with 21 dispute/chargeback portals through dedicated adapters, all implementing full two-way sync via the `services/disputeCompanies.js` service and `/api/disputes` route module.
+DisputeAI integrates with 21 dispute/chargeback portals through dedicated adapters, all implementing full two-way sync via the `services/disputeCompanies.js` service and `/api/disputes` route module.
 
 **Prevention Services (3 adapters):**
 
@@ -2002,7 +2002,7 @@ AccuDefend integrates with 21 dispute/chargeback portals through dedicated adapt
 | Riskified | AI-driven fraud prevention, chargeback guarantee |
 
 **Two-Way Sync Pattern (all 21 adapters):**
-- Outbound: AccuDefend pushes case data, evidence packets, and submission status
+- Outbound: DisputeAI pushes case data, evidence packets, and submission status
 - Inbound: Portals push dispute outcomes, processor responses, and status updates back
 - Real-time sync via webhooks with fallback to scheduled polling
 - Configuration managed through the DisputeIntegration page in the web dashboard
@@ -2013,7 +2013,7 @@ AccuDefend integrates with 21 dispute/chargeback portals through dedicated adapt
 
 ### AI Agent Types
 
-AccuDefend includes an AI agent orchestration system with 8 distinct agent types:
+DisputeAI includes an AI agent orchestration system with 8 distinct agent types:
 
 | Agent Type | Purpose | Capabilities |
 |-----------|---------|-------------|
@@ -2241,10 +2241,10 @@ Layer 5: Compliance
 
 +------------------------------------------------------------+
 | Route 53 (DNS)                                              |
-| - app.accudefend.com     -> CloudFront                      |
-| - api.accudefend.com     -> ALB                             |
-| - dev.accudefend.com     -> Dev ALB                         |
-| - staging.accudefend.com -> Staging ALB                     |
+| - app.disputeai.com     -> CloudFront                      |
+| - api.disputeai.com     -> ALB                             |
+| - dev.disputeai.com     -> Dev ALB                         |
+| - staging.disputeai.com -> Staging ALB                     |
 +----------------------------+-------------------------------+
                              |
             +----------------+------------------+
@@ -2296,7 +2296,7 @@ The infrastructure is defined in `infrastructure/aws/`:
 **Key Terraform Configuration:**
 - Multi-region deployment (primary + secondary)
 - S3 backend for state management with DynamoDB locking
-- All resources tagged with Project=AccuDefend, Environment, ManagedBy=Terraform
+- All resources tagged with Project=DisputeAI, Environment, ManagedBy=Terraform
 
 ### Docker Configuration
 
@@ -2321,9 +2321,9 @@ The infrastructure is defined in `infrastructure/aws/`:
 | Environment | Frontend URL | Backend URL | Purpose |
 |-------------|-------------|-------------|---------|
 | Local | `http://localhost:3000` | `http://localhost:8000` | Developer workstation |
-| Development | `https://dev.accudefend.com` | `https://api-dev.accudefend.com` | Integration testing |
-| Staging | `https://staging.accudefend.com` | `https://api-staging.accudefend.com` | Pre-production validation |
-| Production | `https://app.accudefend.com` | `https://api.accudefend.com` | Live system |
+| Development | `https://dev.disputeai.com` | `https://api-dev.disputeai.com` | Integration testing |
+| Staging | `https://staging.disputeai.com` | `https://api-staging.disputeai.com` | Pre-production validation |
+| Production | `https://app.disputeai.com` | `https://api.disputeai.com` | Live system |
 
 ### Deployment Pipeline
 
@@ -2376,9 +2376,9 @@ Rollback capability: Instant (previous task definition)
 ```yaml
 # Development
 development:
-  database_url: postgres://localhost:5432/accudefend_dev
+  database_url: postgres://localhost:5432/disputeai_dev
   redis_url: redis://localhost:6379
-  s3_bucket: accudefend-dev-evidence
+  s3_bucket: disputeai-dev-evidence
   log_level: debug
   auto_submit_enabled: false
   frontend_port: 3000
@@ -2388,7 +2388,7 @@ development:
 staging:
   database_url: ${STAGING_DB_URL}
   redis_url: ${STAGING_REDIS_URL}
-  s3_bucket: accudefend-staging-evidence
+  s3_bucket: disputeai-staging-evidence
   log_level: info
   auto_submit_enabled: true
   processors:
@@ -2399,7 +2399,7 @@ staging:
 production:
   database_url: ${PROD_DB_URL}     # Aurora PostgreSQL Multi-AZ
   redis_url: ${PROD_REDIS_URL}     # ElastiCache 3-node cluster
-  s3_bucket: accudefend-prod-evidence
+  s3_bucket: disputeai-prod-evidence
   log_level: warn
   auto_submit_enabled: true
   processors:
@@ -2460,12 +2460,12 @@ production:
 
 **Major changes from Version 1.0 (January 2026):**
 
-1. **Product Branding:** Renamed from "Chargeback Defense System" to "AccuDefend" throughout the document to reflect the official product name.
+1. **Product Branding:** Renamed from "Chargeback Defense System" to "DisputeAI" throughout the document to reflect the official product name.
 
 2. **Technology Stack Updates:**
    - Removed TypeScript references; project uses plain JavaScript (JSX for frontend, CommonJS for backend)
    - Removed React Query, Zustand, and shadcn/ui; project uses plain React with Context API, Axios, and Lucide React icons
-   - Removed React Native mobile apps; AccuDefend is web-only
+   - Removed React Native mobile apps; DisputeAI is web-only
    - Removed Kong API Gateway; uses Express directly with Nginx reverse proxy
    - Removed Bull Queue; uses direct async processing and AWS SQS/SNS
    - Added actual package versions from package.json files (jsonwebtoken 9.0.2, bcryptjs 2.4.3, Zod 3.22.4, Winston 3.11.0, Multer 1.4.5, etc.)
@@ -2513,7 +2513,7 @@ production:
    - Documented Terraform IaC in infrastructure/aws/ (main.tf + variables.tf)
    - Documented Docker Compose configs (production + development)
    - Documented startup scripts (start-dev.sh, start-production.sh, start-frontend.sh)
-   - Updated deployment environments with AccuDefend domain names
+   - Updated deployment environments with DisputeAI domain names
    - Documented Aurora PostgreSQL, ElastiCache Redis 3-node cluster, S3 cross-region replication
 
 9. **Security Updates:**
@@ -2525,7 +2525,7 @@ production:
    - Documented Zod validation, Prisma SQL injection prevention
 
 10. **API Routes Updated:**
-    - Updated base URL to api.accudefend.com
+    - Updated base URL to api.disputeai.com
     - Added /api/disputes/* endpoints
     - Added /api/notifications/* endpoints
     - Added /api/pms/* endpoints

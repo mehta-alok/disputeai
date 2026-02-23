@@ -4,9 +4,9 @@ import { Shield, Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
 const DEMO_ACCOUNTS = [
-  { label: 'Admin', email: 'admin@accudefend.com', password: 'AccuAdmin123!' },
-  { label: 'Manager', email: 'manager@accudefend.com', password: 'AccuAdmin123!' },
-  { label: 'Staff', email: 'staff@accudefend.com', password: 'AccuAdmin123!' },
+  { label: 'Admin', email: 'admin@disputeai.com', password: 'DisputeAdmin123!' },
+  { label: 'Manager', email: 'manager@disputeai.com', password: 'DisputeAdmin123!' },
+  { label: 'Staff', email: 'staff@disputeai.com', password: 'DisputeAdmin123!' },
 ];
 
 export default function Login() {
@@ -69,7 +69,7 @@ export default function Login() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 shadow-lg shadow-blue-600/30 mb-4">
             <Shield className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">AccuDefend</h1>
+          <h1 className="text-3xl font-bold text-white tracking-tight">DisputeAI</h1>
           <p className="mt-2 text-sm text-blue-200/70">Hotel Chargeback Defense Platform</p>
         </div>
 
@@ -211,7 +211,7 @@ export default function Login() {
 
         {/* Footer */}
         <p className="mt-6 text-center text-xs text-blue-300/40">
-          &copy; {new Date().getFullYear()} AccuDefend &mdash; Chargeback Defense Platform
+          &copy; {new Date().getFullYear()} DisputeAI &mdash; Chargeback Defense Platform
         </p>
       </div>
     </div>

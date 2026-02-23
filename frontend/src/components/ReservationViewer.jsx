@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Reservation Viewer Component
  *
  * Full-screen slide-over panel for viewing reservation details,

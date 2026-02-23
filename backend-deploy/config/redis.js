@@ -1,5 +1,5 @@
 /**
- * AccuDefend System
+ * DisputeAI System
  * Redis Configuration (Caching & Session Management)
  */
 
@@ -31,7 +31,7 @@ function getRedisClient() {
     });
 
     redisClient.on('connect', () => {
-      logger.info('AccuDefend: Redis client connected');
+      logger.info('DisputeAI: Redis client connected');
     });
 
     redisClient.on('error', (error) => {
@@ -67,7 +67,7 @@ async function connectRedis() {
     );
 
     await Promise.race([connectPromise, timeoutPromise]);
-    logger.info('AccuDefend: Redis connection verified');
+    logger.info('DisputeAI: Redis connection verified');
     return client;
   } catch (error) {
     logger.error('Redis connection failed:', error.message || error);

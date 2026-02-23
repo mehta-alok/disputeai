@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI Help Chat Box
+ * DisputeAI - AI Help Chat Box
  * LLM-powered customer support chat that can escalate to Contact Us
  */
 
@@ -21,7 +21,7 @@ import {
 const AI_RESPONSES = {
   greeting: {
     patterns: ['hello', 'hi', 'hey', 'help', 'start'],
-    response: "Hello! I'm AccuDefend AI Assistant. I can help you with:\n\n- Chargeback case questions\n- Evidence collection from AutoClerk PMS\n- Understanding dispute reason codes\n- Platform navigation and features\n\nWhat would you like help with?"
+    response: "Hello! I'm DisputeAI AI Assistant. I can help you with:\n\n- Chargeback case questions\n- Evidence collection from AutoClerk PMS\n- Understanding dispute reason codes\n- Platform navigation and features\n\nWhat would you like help with?"
   },
   chargeback: {
     patterns: ['chargeback', 'dispute', 'charge', 'refund', 'fraud'],
@@ -29,7 +29,7 @@ const AI_RESPONSES = {
   },
   evidence: {
     patterns: ['evidence', 'folio', 'document', 'proof', 'collect'],
-    response: "AccuDefend collects 7 types of evidence from AutoClerk PMS:\n\n- **Guest Folio** - Itemized charges and payments\n- **Registration Card** - Signed at check-in\n- **Guest Signature** - Digital ink capture\n- **ID Scan** - Government photo ID\n- **Payment Receipt** - Auth codes and capture details\n- **Reservation Confirmation** - Booking terms accepted\n- **Audit Trail** - Complete activity log\n\nGo to **Reservations** > search guest > **Fetch Evidence** to collect them all at once."
+    response: "DisputeAI collects 7 types of evidence from AutoClerk PMS:\n\n- **Guest Folio** - Itemized charges and payments\n- **Registration Card** - Signed at check-in\n- **Guest Signature** - Digital ink capture\n- **ID Scan** - Government photo ID\n- **Payment Receipt** - Auth codes and capture details\n- **Reservation Confirmation** - Booking terms accepted\n- **Audit Trail** - Complete activity log\n\nGo to **Reservations** > search guest > **Fetch Evidence** to collect them all at once."
   },
   reasoncode: {
     patterns: ['reason code', 'code 10', 'code 13', 'authorization', 'not recognized', 'not received'],
@@ -37,7 +37,7 @@ const AI_RESPONSES = {
   },
   autoclerk: {
     patterns: ['autoclerk', 'pms', 'property management', 'reservation', 'booking'],
-    response: "AccuDefend is connected to your **AutoClerk PMS** in real-time:\n\n- Status: Connected\n- Property: AccuDefend Demo Hotel\n- 12 reservations synced\n- 7 evidence types available\n\nTo search reservations, go to the **Reservations** page and use the search bar. You can search by guest name, confirmation number, email, room number, or card last 4 digits."
+    response: "DisputeAI is connected to your **AutoClerk PMS** in real-time:\n\n- Status: Connected\n- Property: DisputeAI Demo Hotel\n- 12 reservations synced\n- 7 evidence types available\n\nTo search reservations, go to the **Reservations** page and use the search bar. You can search by guest name, confirmation number, email, room number, or card last 4 digits."
   },
   analytics: {
     patterns: ['analytics', 'win rate', 'performance', 'stats', 'metrics', 'report'],
@@ -45,11 +45,11 @@ const AI_RESPONSES = {
   },
   contact: {
     patterns: ['contact', 'human', 'agent', 'speak', 'call', 'email', 'support', 'person'],
-    response: "I'd be happy to connect you with our team!\n\nYou can reach us through:\n- **Email**: support@accudefend.com\n- **Phone**: 1-888-ACCU-DEF (1-888-222-8333)\n- **Live Chat**: Mon-Fri 9AM-6PM EST\n\nOr visit our **Contact Us** page for more options. Would you like me to take you there?"
+    response: "I'd be happy to connect you with our team!\n\nYou can reach us through:\n- **Email**: support@disputeai.com\n- **Phone**: 1-888-ACCU-DEF (1-888-222-8333)\n- **Live Chat**: Mon-Fri 9AM-6PM EST\n\nOr visit our **Contact Us** page for more options. Would you like me to take you there?"
   },
   settings: {
     patterns: ['settings', 'configure', 'setup', 'threshold', 'auto'],
-    response: "You can configure AccuDefend in **Settings**:\n\n- **Auto-Submit Threshold**: Set minimum AI confidence (currently 75%)\n- **Required Evidence**: Choose which types must be present\n- **PMS Connection**: Manage AutoClerk integration\n- **Notifications**: Email and in-app alerts\n\nCases above the threshold are automatically submitted to processors."
+    response: "You can configure DisputeAI in **Settings**:\n\n- **Auto-Submit Threshold**: Set minimum AI confidence (currently 75%)\n- **Required Evidence**: Choose which types must be present\n- **PMS Connection**: Manage AutoClerk integration\n- **Notifications**: Email and in-app alerts\n\nCases above the threshold are automatically submitted to processors."
   }
 };
 
@@ -71,7 +71,7 @@ export default function ChatHelp() {
     {
       id: 0,
       role: 'assistant',
-      content: "Hi! I'm your AccuDefend AI assistant. How can I help you today?",
+      content: "Hi! I'm your DisputeAI AI assistant. How can I help you today?",
       timestamp: new Date()
     }
   ]);
@@ -146,7 +146,7 @@ export default function ChatHelp() {
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h3 className="text-white font-semibold text-sm">AccuDefend AI</h3>
+            <h3 className="text-white font-semibold text-sm">DisputeAI AI</h3>
             <p className="text-blue-100 text-xs">Always here to help</p>
           </div>
         </div>
@@ -250,7 +250,7 @@ export default function ChatHelp() {
           </button>
         </div>
         <div className="mt-1.5 flex items-center justify-between">
-          <p className="text-[10px] text-gray-400">Powered by AccuDefend AI</p>
+          <p className="text-[10px] text-gray-400">Powered by DisputeAI AI</p>
           <button
             onClick={handleContactUs}
             className="text-[10px] text-blue-500 hover:text-blue-600 flex items-center gap-0.5"

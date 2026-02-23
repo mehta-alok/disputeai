@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Authentication Middleware
  */
 
@@ -43,7 +43,7 @@ async function authenticateToken(req, res, next) {
         role: decoded.role || 'ADMIN',
         isActive: true,
         propertyId: decoded.propertyId || 'demo-property-1',
-        property: { id: 'demo-property-1', name: 'AccuDefend Demo Hotel' }
+        property: { id: 'demo-property-1', name: 'DisputeAI Demo Hotel' }
       };
       req.token = token;
       return next();

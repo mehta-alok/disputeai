@@ -1,5 +1,5 @@
 /**
- * AccuDefend - PMS Outbound Worker
+ * DisputeAI - PMS Outbound Worker
  *
  * Sends data TO PMS systems: chargeback alerts, guest flags,
  * dispute outcomes, and notes.

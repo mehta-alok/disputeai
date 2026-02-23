@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Base Dispute Adapter
+ * DisputeAI - Base Dispute Adapter
  * All dispute/payment processor adapters extend this class
  */
 class BaseDisputeAdapter {

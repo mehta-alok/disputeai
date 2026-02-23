@@ -1,9 +1,9 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * PMS Data Normalization Utilities
  *
  * Shared normalization functions used across all PMS adapters to convert
- * PMS-specific data formats into canonical AccuDefend shapes.
+ * PMS-specific data formats into canonical DisputeAI shapes.
  */
 
 'use strict';
@@ -259,7 +259,7 @@ function normalizeCardBrand(value) {
 // ---------------------------------------------------------------------------
 
 /**
- * Map PMS-specific reservation statuses to canonical AccuDefend statuses.
+ * Map PMS-specific reservation statuses to canonical DisputeAI statuses.
  *
  * @param {string} value - PMS status string.
  * @returns {string} One of: confirmed, checked_in, checked_out, cancelled, no_show, reserved, pending.

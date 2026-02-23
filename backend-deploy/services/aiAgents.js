@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * AI Agents Service
  * Manages AI agents that automate backlog management, code review, and other tasks
  */
@@ -26,7 +26,7 @@ const AGENT_CONFIGS = {
       'generate_acceptance_criteria'
     ],
     schedule: '0 9 * * 1-5', // 9 AM weekdays
-    defaultPrompt: `You are an AI assistant helping manage a software development backlog for AccuDefend, a hotel chargeback defense system. Your role is to:
+    defaultPrompt: `You are an AI assistant helping manage a software development backlog for DisputeAI, a hotel chargeback defense system. Your role is to:
 1. Analyze system logs, errors, and performance metrics to identify issues
 2. Create well-structured backlog items with clear descriptions
 3. Prioritize items based on business impact and technical urgency
@@ -46,7 +46,7 @@ const AGENT_CONFIGS = {
       'comment_on_pr'
     ],
     schedule: null, // Event-driven
-    defaultPrompt: `You are an AI code reviewer for AccuDefend. Review code changes for:
+    defaultPrompt: `You are an AI code reviewer for DisputeAI. Review code changes for:
 1. Code quality and best practices
 2. Security vulnerabilities
 3. Performance issues
@@ -65,7 +65,7 @@ Provide constructive feedback with specific suggestions.`
       'generate_changelog'
     ],
     schedule: '0 0 * * 0', // Weekly on Sunday
-    defaultPrompt: `You are an AI documentation specialist for AccuDefend. Your role is to:
+    defaultPrompt: `You are an AI documentation specialist for DisputeAI. Your role is to:
 1. Keep README files up to date
 2. Generate API documentation from code
 3. Create changelogs from commits
@@ -83,7 +83,7 @@ Provide constructive feedback with specific suggestions.`
       'suggest_edge_cases'
     ],
     schedule: null, // Event-driven
-    defaultPrompt: `You are an AI test engineer for AccuDefend. Generate comprehensive test cases that:
+    defaultPrompt: `You are an AI test engineer for DisputeAI. Generate comprehensive test cases that:
 1. Cover edge cases and error scenarios
 2. Test business logic thoroughly
 3. Include integration tests for APIs
@@ -102,7 +102,7 @@ Provide constructive feedback with specific suggestions.`
       'create_security_issues'
     ],
     schedule: '0 2 * * *', // Daily at 2 AM
-    defaultPrompt: `You are an AI security analyst for AccuDefend. Scan the codebase for:
+    defaultPrompt: `You are an AI security analyst for DisputeAI. Scan the codebase for:
 1. Vulnerable dependencies
 2. Hardcoded secrets or credentials
 3. SQL injection risks
@@ -121,7 +121,7 @@ Provide constructive feedback with specific suggestions.`
       'create_performance_issues'
     ],
     schedule: '0 */6 * * *', // Every 6 hours
-    defaultPrompt: `You are an AI performance analyst for AccuDefend. Monitor and analyze:
+    defaultPrompt: `You are an AI performance analyst for DisputeAI. Monitor and analyze:
 1. API response times
 2. Database query performance
 3. Memory usage patterns
@@ -140,7 +140,7 @@ Create backlog items for performance improvements.`
       'generate_response'
     ],
     schedule: null, // Event-driven
-    defaultPrompt: `You are an AI dispute analyst for AccuDefend. For each chargeback case:
+    defaultPrompt: `You are an AI dispute analyst for DisputeAI. For each chargeback case:
 1. Analyze the dispute type and reason code
 2. Calculate win probability based on evidence
 3. Identify missing evidence
@@ -158,7 +158,7 @@ Create backlog items for performance improvements.`
       'verify_signatures'
     ],
     schedule: null, // Event-driven
-    defaultPrompt: `You are an AI evidence processor for AccuDefend. Process uploaded evidence:
+    defaultPrompt: `You are an AI evidence processor for DisputeAI. Process uploaded evidence:
 1. Extract text using OCR
 2. Validate document authenticity
 3. Extract key information (dates, amounts, signatures)
@@ -497,7 +497,7 @@ ${recentErrors.slice(0, 3).map(e => `  - ${e.title}: ${e.description?.substring(
       systemContext = 'System metrics unavailable.';
     }
 
-    const contextPrompt = `Analyze the AccuDefend system state and suggest backlog items. Return JSON:
+    const contextPrompt = `Analyze the DisputeAI system state and suggest backlog items. Return JSON:
 
 ${systemContext}
 
@@ -719,7 +719,7 @@ ${Object.keys(metrics).length > 0 ? `- Custom Metrics: ${JSON.stringify(metrics)
       systemMetrics = 'Database metrics unavailable.';
     }
 
-    const contextPrompt = `Analyze the AccuDefend system performance and suggest optimizations. Return JSON:
+    const contextPrompt = `Analyze the DisputeAI system performance and suggest optimizations. Return JSON:
 
 ${systemMetrics}
 

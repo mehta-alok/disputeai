@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AWS Infrastructure Variables
+ * DisputeAI - AWS Infrastructure Variables
  */
 
 # =============================================================================
@@ -20,7 +20,7 @@ variable "environment" {
 variable "project_name" {
   description = "Project name for tagging"
   type        = string
-  default     = "AccuDefend"
+  default     = "DisputeAI"
 }
 
 # =============================================================================
@@ -152,7 +152,7 @@ variable "vpc_cidr_secondary" {
 variable "domain_name" {
   description = "Primary domain name"
   type        = string
-  default     = "accudefend.com"
+  default     = "disputeai.com"
 }
 
 variable "acm_certificate_arn" {

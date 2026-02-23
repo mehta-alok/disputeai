@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Chargeback Cases Routes
  */
 
@@ -287,7 +287,7 @@ router.get('/:id', async (req, res) => {
         cardLastFour: '4532', cardBrand: 'VISA',
         processorDisputeId: 'dp_9AbCdEfGhIjKl',
         reservationId: null,
-        property: { id: 'demo-property-1', name: 'AccuDefend Demo Hotel' },
+        property: { id: 'demo-property-1', name: 'DisputeAI Demo Hotel' },
         provider: { id: 'stripe', name: 'Stripe' },
         fraudIndicators: {
           positive: ['VALID_ID_SCAN', 'MATCHING_ADDRESS', 'CHIP_TRANSACTION', 'LOYALTY_MEMBER'],
@@ -311,7 +311,7 @@ router.get('/:id', async (req, res) => {
         cardLastFour: '8891', cardBrand: 'MASTERCARD',
         processorDisputeId: 'dp_2YzAbCdEfGhI',
         reservationId: null,
-        property: { id: 'demo-property-1', name: 'AccuDefend Demo Hotel' },
+        property: { id: 'demo-property-1', name: 'DisputeAI Demo Hotel' },
         provider: { id: 'adyen', name: 'Adyen' },
         fraudIndicators: {
           positive: ['VALID_ID_SCAN', 'KEY_CARD_USED'],
@@ -335,7 +335,7 @@ router.get('/:id', async (req, res) => {
         cardLastFour: '1234', cardBrand: 'VISA',
         processorDisputeId: 'dp_4KlMnOpQrStU',
         reservationId: null,
-        property: { id: 'demo-property-1', name: 'AccuDefend Demo Hotel' },
+        property: { id: 'demo-property-1', name: 'DisputeAI Demo Hotel' },
         provider: { id: 'stripe', name: 'Stripe' },
         fraudIndicators: {
           positive: ['VALID_ID_SCAN', 'MATCHING_ADDRESS', 'CHIP_TRANSACTION', 'LOYALTY_MEMBER', 'RETURN_GUEST'],
@@ -377,7 +377,7 @@ router.get('/:id', async (req, res) => {
         cardLastFour: '6677', cardBrand: 'MASTERCARD',
         processorDisputeId: 'dp_6WxYzAbCdEfG',
         reservationId: null,
-        property: { id: 'demo-property-1', name: 'AccuDefend Demo Hotel' },
+        property: { id: 'demo-property-1', name: 'DisputeAI Demo Hotel' },
         provider: { id: 'shift4', name: 'Shift4' },
         fraudIndicators: {
           positive: ['VALID_ID_SCAN', 'CHIP_TRANSACTION', 'MATCHING_ADDRESS'],
@@ -402,7 +402,7 @@ router.get('/:id', async (req, res) => {
         cardLastFour: '9012', cardBrand: 'AMEX',
         processorDisputeId: 'dp_8HiJkLmNoPqR',
         reservationId: null,
-        property: { id: 'demo-property-1', name: 'AccuDefend Demo Hotel' },
+        property: { id: 'demo-property-1', name: 'DisputeAI Demo Hotel' },
         provider: { id: 'elavon', name: 'Elavon' },
         fraudIndicators: {
           positive: ['LOYALTY_MEMBER'],
@@ -426,7 +426,7 @@ router.get('/:id', async (req, res) => {
         cardLastFour: '3456', cardBrand: 'VISA',
         processorDisputeId: 'dp_0StUvWxYzAbCd',
         reservationId: null,
-        property: { id: 'demo-property-1', name: 'AccuDefend Demo Hotel' },
+        property: { id: 'demo-property-1', name: 'DisputeAI Demo Hotel' },
         provider: { id: 'stripe', name: 'Stripe' },
         fraudIndicators: {
           positive: ['VALID_ID_SCAN', 'MATCHING_ADDRESS', 'RETURN_GUEST', 'CHIP_TRANSACTION'],
@@ -466,7 +466,7 @@ router.get('/:id', async (req, res) => {
         cardLastFour: '5678', cardBrand: 'DISCOVER',
         processorDisputeId: 'dp_2UvWxYzAbCdEf',
         reservationId: null,
-        property: { id: 'demo-property-1', name: 'AccuDefend Demo Hotel' },
+        property: { id: 'demo-property-1', name: 'DisputeAI Demo Hotel' },
         provider: { id: 'elavon', name: 'Elavon' },
         fraudIndicators: {
           positive: [],
@@ -517,7 +517,7 @@ router.get('/:id', async (req, res) => {
         cardLastFour: '2345', cardBrand: 'MASTERCARD',
         processorDisputeId: 'dp_4WxYzAbCdEfGh',
         reservationId: null,
-        property: { id: 'demo-property-1', name: 'AccuDefend Demo Hotel' },
+        property: { id: 'demo-property-1', name: 'DisputeAI Demo Hotel' },
         provider: { id: 'adyen', name: 'Adyen' },
         fraudIndicators: {
           positive: ['VALID_ID_SCAN', 'KEY_CARD_USED', 'MATCHING_ADDRESS'],
@@ -541,7 +541,7 @@ router.get('/:id', async (req, res) => {
         cardLastFour: '7890', cardBrand: 'VISA',
         processorDisputeId: 'dp_6YzAbCdEfGhIj',
         reservationId: null,
-        property: { id: 'demo-property-1', name: 'AccuDefend Demo Hotel' },
+        property: { id: 'demo-property-1', name: 'DisputeAI Demo Hotel' },
         provider: { id: 'stripe', name: 'Stripe' },
         fraudIndicators: {
           positive: ['MATCHING_ADDRESS'],

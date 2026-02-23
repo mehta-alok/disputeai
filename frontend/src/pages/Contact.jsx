@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Contact Us Page
+ * DisputeAI - Contact Us Page
  */
 
 import React, { useState } from 'react';
@@ -31,7 +31,7 @@ export default function Contact() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Contact Us</h1>
-        <p className="text-gray-500">Get in touch with the AccuDefend team</p>
+        <p className="text-gray-500">Get in touch with the DisputeAI team</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -50,7 +50,7 @@ export default function Contact() {
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-gray-400" />
-                <span>support@accudefend.com</span>
+                <span>support@disputeai.com</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-gray-400" />
@@ -76,7 +76,7 @@ export default function Contact() {
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-gray-400" />
-                <span>sales@accudefend.com</span>
+                <span>sales@disputeai.com</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-gray-400" />
@@ -98,7 +98,7 @@ export default function Contact() {
             <div className="space-y-3 text-sm">
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-gray-400" />
-                <span>partners@accudefend.com</span>
+                <span>partners@disputeai.com</span>
               </div>
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function Contact() {
               <h3 className="font-semibold">Office</h3>
             </div>
             <p className="text-sm text-gray-600">
-              AccuDefend Inc.<br />
+              DisputeAI Inc.<br />
               100 Innovation Drive, Suite 400<br />
               Austin, TX 78701<br />
               United States

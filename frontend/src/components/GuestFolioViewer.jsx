@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Guest Folio Viewer Component
  *
  * Displays guest folio data from AutoClerk PMS including

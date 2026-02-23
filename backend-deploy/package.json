@@ -1,7 +1,7 @@
 {
-  "name": "accudefend-api",
+  "name": "disputeai-api",
   "version": "1.0.0",
-  "description": "AccuDefend - AI-Powered Hotel Chargeback Defense Platform API",
+  "description": "DisputeAI - AI-Powered Hotel Chargeback Defense Platform API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

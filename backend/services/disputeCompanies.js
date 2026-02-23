@@ -1,5 +1,5 @@
 /**
- * AccuDefend - AI-Powered Chargeback Defense Platform
+ * DisputeAI - AI-Powered Chargeback Defense Platform
  * Dispute Companies Integration Service
  *
  * Manages connections with hotel dispute management companies including:
@@ -825,7 +825,7 @@ class DisputeCompanyService {
     const encryptedCredentials = this.encryptCredentials(credentials);
 
     // Generate webhook URL
-    const baseUrl = process.env.BASE_URL || 'https://api.accudefend.com';
+    const baseUrl = process.env.BASE_URL || 'https://api.disputeai.com';
     const webhookUrl = `${baseUrl}${company.webhookEndpoint}`;
 
     const integration = await prisma.integration.create({

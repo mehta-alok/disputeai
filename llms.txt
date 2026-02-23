@@ -1,8 +1,8 @@
-# AccuDefend
+# DisputeAI
 
 > AI-Powered Hotel Chargeback Defense Platform. Protects hotel revenue through intelligent fraud detection, automated evidence collection, and AI-driven dispute management.
 
-AccuDefend is a full-stack SaaS platform purpose-built for the hospitality industry. It automates the chargeback representment process by collecting PMS evidence, analyzing fraud signals with AI, and managing disputes across 59 payment and hotel system integrations.
+DisputeAI is a full-stack SaaS platform purpose-built for the hospitality industry. It automates the chargeback representment process by collecting PMS evidence, analyzing fraud signals with AI, and managing disputes across 59 payment and hotel system integrations.
 
 ## Core Capabilities
 
@@ -127,9 +127,9 @@ Fraud Prevention: Kount, Signifyd
 Fully functional without PostgreSQL or Redis. Activated automatically when database is unavailable or via `DEMO_MODE=true`. Uses in-memory mock data with 9 demo cases, 12 reservations, and pre-configured integrations.
 
 Demo credentials:
-- Admin: admin@accudefend.com / AccuAdmin123!
-- Manager: manager@accudefend.com / AccuManager123!
-- Staff: staff@accudefend.com / AccuStaff123!
+- Admin: admin@disputeai.com / DisputeAdmin123!
+- Manager: manager@disputeai.com / DisputeManager123!
+- Staff: staff@disputeai.com / DisputeStaff123!
 
 ## Quick Start
 

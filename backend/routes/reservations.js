@@ -1,5 +1,5 @@
 /**
- * AccuDefend - Reservations Routes
+ * DisputeAI - Reservations Routes
  * Powered by AutoClerk PMS Emulator
  */
 

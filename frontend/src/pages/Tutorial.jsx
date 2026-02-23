@@ -9,9 +9,9 @@ import {
 const STEPS = [
   {
     id: 0,
-    title: 'Welcome to AccuDefend',
+    title: 'Welcome to DisputeAI',
     description:
-      'AccuDefend is your all-in-one hotel chargeback defense platform. This tutorial will walk you through the key features and help you get started with defending against fraudulent chargebacks. Each step covers a major area of the system.',
+      'DisputeAI is your all-in-one hotel chargeback defense platform. This tutorial will walk you through the key features and help you get started with defending against fraudulent chargebacks. Each step covers a major area of the system.',
     icon: BookOpen,
     link: null,
   },
@@ -43,7 +43,7 @@ const STEPS = [
     id: 4,
     title: 'Evidence Collection',
     description:
-      'Evidence is the backbone of chargeback defense. AccuDefend automatically collects and organizes evidence from your PMS including guest folios, ID scans, signed registration cards, key card access logs, CCTV snapshots, and guest correspondence. Strong evidence packages dramatically improve your win rate.',
+      'Evidence is the backbone of chargeback defense. DisputeAI automatically collects and organizes evidence from your PMS including guest folios, ID scans, signed registration cards, key card access logs, CCTV snapshots, and guest correspondence. Strong evidence packages dramatically improve your win rate.',
     icon: Package,
     link: '/cases',
   },
@@ -100,7 +100,7 @@ export default function Tutorial() {
             <BookOpen className="w-7 h-7 text-blue-600" />
             Interactive Tutorial
           </h1>
-          <p className="text-sm text-gray-500 mt-1">Learn how to use AccuDefend step by step</p>
+          <p className="text-sm text-gray-500 mt-1">Learn how to use DisputeAI step by step</p>
         </div>
         <div className="text-sm text-gray-600 font-medium">
           {completedSteps.size} of {STEPS.length} steps completed
@@ -129,7 +129,7 @@ export default function Tutorial() {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Congratulations!</h2>
           <p className="text-gray-600 mb-6 max-w-md mx-auto">
-            You have completed all tutorial steps. You are now ready to start defending against chargebacks with AccuDefend.
+            You have completed all tutorial steps. You are now ready to start defending against chargebacks with DisputeAI.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
