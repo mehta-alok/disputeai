@@ -57,7 +57,7 @@ const PMS_ADAPTERS = [
     color: '#10B981',
     features: ['reservations', 'folios', 'guest_data', 'key_cards', 'audit_logs', 'pos'],
     website: 'https://autoclerk.com',
-    portalUrl: 'https://www.autoclerkcloud.com',
+    portalUrl: 'https://www.bwh.autoclerkcloud.com/logon.do2',
     lastSync: '2026-02-16T10:28:00Z',
     syncCount: 12,
   },
