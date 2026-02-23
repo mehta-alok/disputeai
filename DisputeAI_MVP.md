@@ -77,9 +77,10 @@ Hotels lose $5,000-$50,000+ annually to chargebacks due to:
 - bcrypt password hashing (12 salt rounds)
 - Rate limiting: 100 req/15min general, 20 req/15min for auth
 
-**Supported Provider Categories (51 Total Integrations):**
+**Supported Provider Categories (68 Total Integrations):**
 - **PMS Systems (30):** Enterprise (15): Oracle Opera Cloud, Mews, Cloudbeds, AutoClerk, Agilysys, Infor, Stayntouch, RoomKey, Maestro, Hotelogix, RMS Cloud, Protel, eZee, SIHOT, innRoad | Boutique/Independent (6): Little Hotelier, Frontdesk Anywhere, WebRezPro, ThinkReservations, ResNexus, Guestline | Vacation Rental (4): Guesty, Hostaway, Lodgify, Escapia | Brand-Specific (5): Marriott GXP, Hilton OnQ, Hyatt Opera, IHG Concerto, Best Western
-- **Dispute/Chargeback Adapters (21):** Prevention (3): Verifi (Visa CDRN), Ethoca (Mastercard), RDR (Rapid Dispute Resolution) | Card Networks (4): Visa Resolve Online, Mastercard Connect, Amex GARN, Discover eDisputeLink | Merchant Processors (9): Stripe Disputes, Adyen Dispute Management, Shift4 Chargeback Manager, Elavon ChargebackOps, FIS/Worldpay, Global Payments, TSYS/TransFirst, Square Disputes, Toast | Third-Party (5): Chargebacks911 Portal, Chargeback Gurus, Midigator, SERTIFI, Merlink
+- **Dispute/Chargeback Adapters (29):** Prevention (3): Verifi (Visa CDRN), Ethoca (Mastercard), RDR (Rapid Dispute Resolution) | Card Networks (4): Visa Resolve Online, Mastercard Connect, Amex GARN, Discover eDisputeLink | Merchant Processors (9): Stripe Disputes, Adyen Dispute Management, Shift4 Chargeback Manager, Elavon ChargebackOps, FIS/Worldpay, Global Payments, TSYS/TransFirst, Square Disputes, Toast | Third-Party (5): Chargebacks911 Portal, Chargeback Gurus, Midigator, SERTIFI, Merlink | Additional (8): PayPal Disputes, Braintree, Checkout.com, Cybersource, Authorize.Net, NMI, Payeezy, BlueSnap
+- **OTA Integrations (9):** Booking.com, Expedia, Hotels.com, Airbnb, Vrbo, Agoda, Trip.com, Hotwire, Priceline
 - **All adapters implement full two-way sync with webhooks**
 - **Brand-specific loyalty integration:** Marriott Bonvoy, Hilton Honors, World of Hyatt, IHG One Rewards, Best Western Rewards
 
@@ -179,7 +180,7 @@ Weighted scoring model calculating confidence score (0-100):
 | Analytics | Trends, win rates by reason code, property comparison |
 | Settings | AI configuration, email notifications, storage settings |
 | PMSIntegration | Connect/manage 30 PMS systems across 4 categories |
-| DisputeIntegration | Manage 21 dispute/chargeback adapters with full two-way sync |
+| DisputeIntegration | Manage 29 dispute/chargeback adapters with full two-way sync |
 | Tutorial | Dedicated tutorial and help page |
 | Login | Authentication with provider selection |
 
@@ -197,9 +198,9 @@ Weighted scoring model calculating confidence score (0-100):
 
 ### 7. Dispute & Chargeback Portal Integration
 
-**Status:** Implemented (21 Adapters)
+**Status:** Implemented (29 Adapters)
 
-- 21 dispute/chargeback adapters with full two-way sync via webhooks
+- 29 dispute/chargeback adapters with full two-way sync via webhooks
 - Prevention adapters: Verifi (Visa CDRN), Ethoca (Mastercard), RDR (Rapid Dispute Resolution)
 - Card network adapters: Visa Resolve Online, Mastercard Connect, Amex GARN, Discover eDisputeLink
 - Merchant processor adapters: Stripe, Adyen, Shift4, Elavon, FIS/Worldpay, Global Payments, TSYS/TransFirst, Square, Toast
@@ -531,7 +532,7 @@ disputeai/
 |---------|------|---------|
 | 1.0 | January 28, 2026 | Initial MVP document |
 | 2.0 | February 2026 | Updated to reflect implemented system: added dispute integrations, notifications, 12+ PMS systems, full API endpoints, current tech stack (React 18, Node.js 20, PostgreSQL 16, Terraform IaC), cloud infrastructure details |
-| 3.0 | February 2026 | Expanded to 30 PMS systems (Enterprise, Boutique/Independent, Vacation Rental, Brand-Specific), 21 dispute/chargeback adapters with full two-way sync, 51 total integrations, brand-specific loyalty integration (Marriott Bonvoy, Hilton Honors, World of Hyatt, IHG One Rewards, Best Western Rewards) |
+| 3.0 | February 2026 | Expanded to 30 PMS systems (Enterprise, Boutique/Independent, Vacation Rental, Brand-Specific), 29 dispute/chargeback adapters with full two-way sync, 9 OTA integrations, 68 total integrations, brand-specific loyalty integration (Marriott Bonvoy, Hilton Honors, World of Hyatt, IHG One Rewards, Best Western Rewards) |
 | 4.0 | February 2026 | Added dispute outcome tracking (WON/LOST resolution data with win factors, denial codes, evidence gaps), arbitration workflow (3-step filing modal with evidence upload and narrative), OutcomeTab and ArbitrationModal components, auto-navigation to Outcome tab, resolution banners, new POST /api/cases/:id/arbitration endpoint |
 | 4.1 | February 2026 | Added reservations module: 4 new API endpoints (list, stats, detail, link-chargeback), 10 demo reservations across 4 PMS sources in demo mode, flattenReservation() normalization for frontend |
 | 5.0 | February 14, 2026 | Node.js v25 compatibility, standardized PMS/adapter names, 7 frontend components, 8 AI agents, deferred Prisma proxy |

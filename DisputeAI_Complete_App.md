@@ -78,12 +78,13 @@
 ### 7. Dispute Integration Page (NEW)
 
 - Dispute company management
-- 21 dispute adapters across 4 categories with full two-way sync:
+- 29 dispute adapters across 5 categories with full two-way sync:
   - **Prevention Networks (3)**
-  - **Card Network Portals (4)**
-  - **Merchant Processor Portals (9)**
-  - **Third-Party Services (5)**
-- All 21 adapters with full two-way sync
+  - **Hospitality Services (11):** StaySettle, Win Chargebacks, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
+  - **Card Network Portals (4):** Visa VROL, Mastercom, AMEX Merchant, Discover Dispute
+  - **Merchant Processors (9):** Chase, Stripe, Elavon, Fiserv, Global Payments, TSYS, Square, Authorize.net, Worldpay
+  - **Fraud Prevention (2):** Kount, Signifyd
+- All 29 adapters with full two-way sync
 - Company CRUD operations
 - Sync status and history
 
@@ -142,7 +143,27 @@
   - ArbitrationModal (~250 lines) - 3-step modal wizard for filing arbitration
 - **Auto-navigation:** Resolved cases automatically navigate to the Outcome tab on load
 
-### 13. Interactive Features
+### 13. OTA Integration Page (NEW)
+
+- Connect/disconnect 9 OTA channel managers
+- Portal sign-in links, configure modal, activity logs
+- Supported OTAs: Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Hotel Engine
+- Sync frequency, data sync toggles, webhook URL configuration
+- Two-way sync badges for connected providers
+
+### 14. Contact Page (NEW)
+
+- Contact form with name, email, subject, message fields
+- Support information and links
+- Email support at support@disputeai.com
+
+### 15. ChatHelp Assistant (NEW)
+
+- AI-powered contextual help widget available on all pages
+- FAQ, PMS help, dispute guidance, evidence tips
+- Expandable chat interface with suggested questions
+
+### 16. Interactive Features
 
 - Search cases by ID, guest name, or confirmation number
 - Filter by status, processor, date range
@@ -180,7 +201,8 @@ frontend/src/
 │   ├── OutcomeTab.jsx         # Dispute outcome display (WON/LOST resolution data)
 │   ├── ArbitrationModal.jsx   # 3-step arbitration filing modal
 │   ├── ReservationViewer.jsx  # Reservation details viewer
-│   └── GuestFolioViewer.jsx   # Guest folio details viewer
+│   ├── GuestFolioViewer.jsx   # Guest folio details viewer
+│   └── ChatHelp.jsx           # AI-powered contextual help widget
 ├── pages/
 │   ├── Login.jsx              # Authentication
 │   ├── Dashboard.jsx          # Main dashboard with metrics
@@ -190,6 +212,8 @@ frontend/src/
 │   ├── Settings.jsx           # System configuration
 │   ├── PMSIntegration.jsx     # PMS system connections
 │   ├── DisputeIntegration.jsx # Dispute company integrations
+│   ├── OTAIntegration.jsx     # OTA channel connections
+│   ├── Contact.jsx            # Contact form and support
 │   └── Tutorial.jsx           # Dedicated tutorial page
 ├── hooks/
 │   └── useAuth.jsx            # Authentication context & state
@@ -206,7 +230,8 @@ frontend/src/
 |---------|------|---------|
 | 1.0 | January 2026 | Initial application overview |
 | 2.0 | February 2026 | Updated to include: PMS Integration page, Dispute Integration page, Tutorial page, NotificationPanel component, helpers.js utility, 12+ PMS systems, Merlink sync, current tech stack |
-| 3.0 | February 2026 | Updated PMS to 30 systems, dispute adapters to 21, standardized names, 7 frontend components, Node.js v25 compatibility |
+| 3.0 | February 2026 | Updated PMS to 30 systems, dispute adapters to 21, standardized names, 7 frontend components, Node.js 20 LTS required (v25 incompatible) |
+| 4.0 | February 2026 | Updated dispute adapters to 29, added 9 OTA integrations, added Contact page, ChatHelp assistant, 68 total integrations, all integration pages have portal sign-in and configure modals |
 
 ---
 

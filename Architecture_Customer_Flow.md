@@ -23,10 +23,8 @@
 
 **Layer 1: Presentation Layer**
 - Web Dashboard (React 18 SPA with Vite)
-- 9 Pages: Dashboard, Cases, CaseDetail, Analytics, Settings, PMSIntegration, DisputeIntegration, Tutorial, Login
-- 7 Components: Layout, Tutorial/Help, NotificationPanel, OutcomeTab, ArbitrationModal, ReservationViewer, GuestFolioViewer
-- OutcomeTab (~250 lines): Displays WON/LOST resolution data, win factors, denial reasons, and arbitration options
-- ArbitrationModal (~250 lines): 3-step modal wizard (Review, Evidence & Narrative, Confirm) for filing arbitration on LOST cases
+- 12 Pages: Dashboard, Cases, CaseDetail, Analytics, Reservations, Settings, PMSIntegration, DisputeIntegration, OTAIntegration, Tutorial, Contact, Login
+- 6 Components: Layout, ChatHelp, NotificationPanel, ReservationViewer, GuestFolioViewer, Tutorial
 - Tailwind CSS 3 for responsive design
 
 **Layer 2: API Gateway**
@@ -36,7 +34,7 @@
 - Helmet security middleware
 
 **Layer 3: Business Logic**
-- Node.js 20 / Express 4 backend (compatible with Node.js v25.5)
+- Node.js 20 LTS / Express 4 backend (Node 25 incompatible due to CJS performance issues)
 - 10 route handlers (auth, cases, evidence, analytics, admin, disputes, notifications, pms, reservations, webhooks)
 - Arbitration endpoint: `POST /api/cases/:id/arbitration` for filing arbitration on lost disputes
 - 8 service modules:
@@ -58,8 +56,8 @@
 **Layer 5: External Integrations**
 - Payment Processors: Stripe, Adyen, Shift4, Elavon
 - Property Management Systems: 30 PMS systems in 4 categories - Enterprise (15: Oracle Opera Cloud, Mews, Cloudbeds, AutoClerk, Agilysys, Infor, Stayntouch, RoomKey, Maestro, Hotelogix, RMS Cloud, Protel, eZee, SIHOT, innRoad), Boutique/Independent (6), Vacation Rental (4), Brand-Specific (5 with loyalty programs including Marriott Bonvoy, Hilton Honors, World of Hyatt, IHG One Rewards, Best Western Rewards)
-- Dispute/Chargeback Portals: 21 adapters - Prevention (3: Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink), Card Networks (4: Visa VROL, Mastercom, AMEX Merchant, Discover Dispute), Merchant Processors (9: Elavon, Fiserv, Worldpay, Chase Merchant, Global Payments, TSYS, Square, Stripe, Authorize.net), Third-Party (5: Chargebacks911, Kount, Midigator, Signifyd, Riskified)
-- All 51 integrations implement full two-way sync
+- Dispute/Chargeback Portals: 29 adapters - Prevention (3: Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink), Card Networks (4: Visa VROL, Mastercom, AMEX Merchant, Discover Dispute), Merchant Processors (9: Elavon, Fiserv, Worldpay, Chase Merchant, Global Payments, TSYS, Square, Stripe, Authorize.net), Third-Party (5: Chargebacks911, Kount, Midigator, Signifyd, Riskified), OTA (9: Expedia, Booking.com, Airbnb, Hotels.com, Vrbo, Agoda, Trip.com, Priceline, Hotwire)
+- All 68 integrations implement full two-way sync
 - Demo mode support: server starts gracefully without DB/Redis, includes 10 pre-loaded reservations across 4 PMS sources (Opera Cloud, Mews, Cloudbeds, Maestro)
 - AI Services: OpenAI, Anthropic APIs
 - Notification Services
@@ -341,6 +339,7 @@ Reservations:
 | 3.0 | February 2026 | Expanded to 51 total integrations: 30 PMS systems (Enterprise 15, Boutique/Independent 6, Vacation Rental 4, Brand-Specific 5 with loyalty programs), 21 dispute/chargeback portal adapters (Prevention 3, Card Networks 4, Merchant Processors 9, Third-Party 5). All adapters implement full two-way sync. Added demo mode support. Brand-specific PMS adapters include loyalty integration. |
 | 3.1 | February 2026 | Added reservations API routes (list, stats, detail, link-chargeback), demo mode pre-loaded reservation data across 4 PMS sources, flattenReservation() data normalization documentation. |
 | 4.0 | February 2026 | Standardized PMS/adapter names, added reservations route, 7 frontend components, Node.js v25 compatibility |
+| 5.0 | February 2026 | Expanded to 12 pages (added Reservations, OTAIntegration, Contact), updated to 6 components (Layout, ChatHelp, NotificationPanel, ReservationViewer, GuestFolioViewer, Tutorial), expanded dispute adapters from 21 to 29 with 9 OTA integrations, total integrations now 68. Node.js 20 LTS (Node 25 incompatible due to CJS performance issues). |
 
 ---
 

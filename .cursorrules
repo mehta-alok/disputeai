@@ -35,8 +35,26 @@
 - docker-compose.yml - Production (backend + frontend containers)
 - docker-compose.dev.yml - Development (postgres + redis + backend + frontend)
 - infrastructure/aws/ - Terraform configs (main.tf, variables.tf)
-- .github/workflows/ci.yml - CI pipeline (lint, test, build)
+- .github/workflows/ci.yml - CI pipeline (lint, test, build, Docker build)
 - .github/workflows/deploy.yml - CD pipeline (ECR push, ECS deploy)
+
+## Integrations (68 Total)
+
+### PMS Integrations (30)
+Enterprise (15): AutoClerk (built-in emulator, portal: bwh.autoclerkcloud.com/logon.do2), Oracle Opera Cloud, Mews, Cloudbeds, Agilysys, Infor, Stayntouch, RoomKey, Maestro, Hotelogix, RMS Cloud, Protel, eZee, SIHOT, innRoad
+Boutique (6): Little Hotelier, Frontdesk Anywhere, WebRezPro, ThinkReservations, ResNexus, Guestline
+Vacation Rental (4): Guesty, Hostaway, Lodgify, Escapia
+Brand-Specific (5): Marriott GXP, Hilton OnQ, Hyatt Opera, IHG Concerto, Best Western BWR
+
+### Dispute Processors (29)
+Prevention Networks (3): Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink
+Hospitality Services (11): StaySettle, Win Chargebacks, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
+Card Network Portals (4): Visa VROL, Mastercom, AMEX Merchant, Discover Dispute
+Merchant Processors (9): Chase Merchant, Stripe Disputes, Elavon, Fiserv, Global Payments, TSYS, Square, Authorize.net, Worldpay
+Fraud Prevention (2): Kount, Signifyd
+
+### OTA Integrations (9)
+Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Hotel Engine
 
 ## Key Patterns
 - Demo mode: DEMO_MODE=true in .env skips DB/Redis, uses mock data
@@ -45,10 +63,32 @@
 - Global search: OR-logic across name, email, confirmation#, room, card, loyalty, room type, booking source
 - Color palette: omni (blue) and omni-gold (amber) in tailwind.config.cjs
 - Use .cjs extension for tailwind config (not .js)
-- 68 total integrations: 30 PMS adapters + 29 dispute processor adapters + 9 OTA integrations
-- 9 OTA integrations: Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Hotel Engine
 - ChatHelp AI assistant widget on all pages
 - Analytics KPI cards are clickable (navigate to filtered cases)
+- All integration pages (PMS, OTA, Dispute) have working: Sign In (portal links), Configure modal, Connect/Disconnect, View Logs, two-way sync badges
+- Login response structure: { message, user, tokens: { accessToken, refreshToken }, isDemo }
+
+## API Endpoints
+- POST /api/auth/login - JWT authentication (returns tokens.accessToken)
+- POST /api/auth/register - User registration
+- POST /api/auth/refresh - Refresh token rotation
+- GET /api/cases - List chargeback cases
+- GET /api/cases/:id - Case detail
+- POST /api/cases/:id/arbitration - File arbitration for lost case
+- POST /api/cases/:id/documents - Upload arbitration documents
+- GET /api/evidence - List evidence
+- POST /api/evidence/collect/:caseId - Collect evidence from PMS
+- GET /api/analytics/dashboard - Dashboard KPIs
+- GET /api/analytics/trends - Trend data
+- GET /api/pms/status - PMS integration status
+- GET /api/disputes/companies - Dispute processor list (29 companies)
+- GET /api/reservations - List reservations
+- GET /api/reservations/search/live - Real-time PMS search
+- GET /api/notifications - User notifications
+- POST /api/webhooks/stripe - Stripe webhook
+- POST /api/webhooks/adyen - Adyen webhook
+- GET /health - Health check
+- GET /ready - Readiness check (DB + Redis)
 
 ## Conventions
 - All routes return JSON with consistent error format
@@ -58,7 +98,6 @@
 - JWT tokens stored in localStorage via useAuth context
 - Node 20 LTS required (Node 25 has severe CJS performance issues)
 - Backend startup loads 68 integrations, takes ~24s in demo mode
-- All integration pages (PMS, OTA, Dispute) have portal sign-in links, configure modal, activity logs, two-way sync badges
 
 ## Demo Credentials
 - admin@disputeai.com / DisputeAdmin123!
@@ -74,3 +113,5 @@
 - Always use .cjs extension for tailwind.config
 - JWT_SECRET must be set in backend .env or login returns 500
 - After clean npm install, Vite needs ~30s warmup before first request
+- AutoClerk portal URL: https://www.bwh.autoclerkcloud.com/logon.do2
+- GitHub repo: github.com/mehta-alok/disputeai

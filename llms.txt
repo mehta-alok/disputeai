@@ -58,22 +58,27 @@ Key Services:
 
 Single-page React app with Vite dev server proxying `/api` to backend.
 
-Pages:
+Pages (12):
+- `Login.jsx` - Authentication with demo credentials
 - `Dashboard.jsx` - Main KPI dashboard with charts
 - `Cases.jsx` - Case list with status filters (Pending, In Review, Submitted, Won, Lost, Arbitration)
 - `CaseDetail.jsx` - Full case view with resolution, arbitration (Overview/Documents tabs), timeline, notes, fraud indicators
 - `Analytics.jsx` - Charts, trends, performance reports
-- `Reservations.jsx` - PMS reservation search and management
+- `Reservations.jsx` - PMS reservation search and management with global search
 - `PMSIntegration.jsx` - PMS system connections (30 adapters) with portal sign-in, configure modal, and activity logs
-- `DisputeIntegration.jsx` - Dispute processor management (29 adapters) with portal sign-in and configure modal
+- `DisputeIntegration.jsx` - Dispute processor management (29 adapters) with portal sign-in, configure modal, and two-way sync
 - `OTAIntegration.jsx` - OTA channel connections (9 integrations) with portal sign-in, configure modal, and activity logs
-- `Settings.jsx` - System configuration
-- `Tutorial.jsx` - Interactive onboarding
+- `Settings.jsx` - System configuration, AI thresholds, notification preferences
+- `Tutorial.jsx` - Interactive 7-step onboarding walkthrough
+- `Contact.jsx` - Contact form and support information
 
 Components:
 - `Layout.jsx` - Sidebar navigation, top bar, mobile bottom bar
-- `ChatHelp.jsx` - AI-powered contextual help assistant
+- `ChatHelp.jsx` - AI-powered contextual help assistant (available on all pages)
+- `NotificationPanel.jsx` - Real-time notification bell dropdown
+- `ReservationViewer.jsx` - Reservation detail modal with folio viewer
 - `GuestFolioViewer.jsx` - Guest folio display component
+- `Tutorial.jsx` - Welcome modal and help button
 
 ## AI Fraud Detection
 

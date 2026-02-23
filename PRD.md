@@ -28,7 +28,7 @@
 
 DisputeAI is a SaaS platform that helps hotels and hospitality businesses defend against fraudulent chargebacks. The hotel industry loses billions of dollars annually to chargebacks, many of which are filed fraudulently or could be successfully disputed with proper evidence. DisputeAI addresses this by combining AI-powered analysis, automated evidence collection, and deep integrations with Property Management Systems (PMS) and dispute processors to maximize chargeback win rates.
 
-The platform provides a unified dashboard where hotel teams can manage disputes end-to-end: from initial detection through evidence compilation to final resolution. Eight specialized AI agents analyze each case, score fraud likelihood, draft responses, and predict outcomes. Integration with 30 PMS platforms and 21 dispute processors ensures that evidence gathering and dispute filing are largely automated, reducing manual effort by over 90%.
+The platform provides a unified dashboard where hotel teams can manage disputes end-to-end: from initial detection through evidence compilation to final resolution. Eight specialized AI agents analyze each case, score fraud likelihood, draft responses, and predict outcomes. Integration with 30 PMS platforms, 29 dispute processors, and 9 OTA integrations (68 total) ensures that evidence gathering and dispute filing are largely automated, reducing manual effort by over 90%.
 
 DisputeAI is currently in its MVP phase with a fully functional demo mode, a complete frontend application, and production-ready backend infrastructure.
 
@@ -69,7 +69,7 @@ DisputeAI connects directly to PMS platforms to pull guest folios, registration 
 
 ### Streamlined Dispute Management
 
-A unified case management dashboard tracks every dispute from detection to resolution. Integrations with 21 dispute processors enable direct submission, webhook-based status updates, and real-time outcome tracking.
+A unified case management dashboard tracks every dispute from detection to resolution. Integrations with 29 dispute processors enable direct submission, webhook-based status updates, and real-time outcome tracking.
 
 ---
 
@@ -186,7 +186,7 @@ A unified case management dashboard tracks every dispute from detection to resol
 
 **Description**: Direct integration with card network dispute systems and third-party chargeback services.
 
-**Supported Processors (21 adapters)**:
+**Supported Processors (29 adapters)**:
 
 | Category | Processors |
 |----------|------------|
@@ -575,7 +575,7 @@ All endpoints except `/api/auth/login` and `/api/auth/register` require a valid 
 | 8 AI agent framework | Complete |
 | AutoClerk PMS integration with emulator | Complete |
 | 30 PMS adapter interfaces | Complete |
-| 21 dispute processor adapter interfaces | Complete |
+| 29 dispute processor adapter interfaces | Complete |
 | Evidence collection system (7 types) | Complete |
 | Reservation search and management | Complete |
 | Analytics dashboard with charts | Complete |

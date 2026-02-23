@@ -1,11 +1,11 @@
 # Competitive Analysis - DisputeAI
 
-**Version:** 4.0
+**Version:** 5.0
 **Analysis Period:** Q4 2025 - Q1 2026
-**Last Updated:** February 14, 2026
-**Next Review:** May 13, 2026 (quarterly update)
+**Last Updated:** February 2026
+**Next Review:** May 2026 (quarterly update)
 **Owner:** Aalok Mehta
-**Status:** v4.0 -- Updated route count, standardized PMS/adapter names, Node.js v25 compatibility
+**Status:** v5.0 -- Updated dispute adapters from 21 to 29, added 9 OTA integrations, total integrations now 68
 
 ---
 
@@ -17,6 +17,7 @@
 | 2.0 | February 13, 2026 | Aalok Mehta | Renamed product to DisputeAI. Updated tech stack to actual implementation (React 18/Vite 5/Tailwind, Node.js 20/Express 4/Prisma 5, PostgreSQL 16/Redis 7, AWS ECS Fargate/Aurora/Terraform IaC). Updated PMS integrations from 2-3 planned to 12 implemented. Updated payment processors to 4 (Stripe, Adyen, Shift4, Elavon) with real-time webhooks. Added dispute company integrations (Merlink 2-way sync). Updated feature comparison to reflect 9 frontend pages, 9 API route files, 8 service modules, 2 controllers, Docker containerization, JWT auth with refresh tokens. Updated SWOT to reflect current state: removed mobile app claim (web-only), added dispute company integration as opportunity, noted actual implemented features in strengths. |
 | 3.0 | February 13, 2026 | Aalok Mehta | Expanded PMS integrations from 12 to 30 systems across 4 categories (Enterprise 15, Boutique/Independent 6, Vacation Rental 4, Brand-Specific 5). Added 21 dispute/chargeback adapters with full two-way sync (Prevention 3, Card Networks 4, Merchant Processors 9, Third-Party 5). Total integrations now 51. Added brand-specific loyalty integration (Marriott Bonvoy, Hilton Honors, World of Hyatt, IHG One Rewards, Best Western Rewards). Updated all competitive analysis sections, feature matrix, SWOT, and key takeaways to reflect expanded platform. |
 | 4.0 | February 14, 2026 | Aalok Mehta | Updated route count to 10, standardized PMS/adapter names, Node.js v25 compatibility noted |
+| 5.0 | February 2026 | Aalok Mehta | Updated dispute adapters from 21 to 29, added 9 OTA integrations, total integrations now 68. Updated all counts across competitive analysis sections. |
 
 ---
 
@@ -81,8 +82,8 @@ Generic Solutions     *---+------------- Hotel-Specific
 **DisputeAI Strengths:**
 
 - Only fully automated hotel-specific solution
-- 30 PMS integrations implemented (competitors have 0-1), 51 total integrations
-- 21 dispute/chargeback adapters with full two-way sync via webhooks
+- 30 PMS integrations implemented (competitors have 0-1), 68 total integrations
+- 29 dispute/chargeback adapters with full two-way sync via webhooks (including 9 OTA integrations)
 - 4 payment processors with real-time webhooks from day one
 - AI-powered weighted confidence scoring (40% reason code, 35% evidence, 25% indicators)
 - 4-tier recommendation system for dispute handling
@@ -542,7 +543,7 @@ Total > 100% due to multi-processor setups.
 
 ### DisputeAI - Implemented PMS Integrations (30 Systems)
 
-DisputeAI currently supports 30 PMS integrations across 4 categories, far exceeding any competitor in the chargeback defense space. Combined with 21 dispute/chargeback adapters, DisputeAI offers 51 total integrations.
+DisputeAI currently supports 30 PMS integrations across 4 categories, far exceeding any competitor in the chargeback defense space. Combined with 29 dispute/chargeback adapters (including 9 OTA integrations), DisputeAI offers 68 total integrations.
 
 #### Enterprise PMS (15 Systems)
 
@@ -596,7 +597,7 @@ DisputeAI currently supports 30 PMS integrations across 4 categories, far exceed
 
 **Brand-Specific Loyalty Integration:** Marriott Bonvoy, Hilton Honors, World of Hyatt, IHG One Rewards, Best Western Rewards
 
-### DisputeAI - Dispute/Chargeback Adapters (21 Systems)
+### DisputeAI - Dispute/Chargeback Adapters (29 Systems)
 
 All adapters implement full two-way sync with webhooks.
 
@@ -623,6 +624,15 @@ All adapters implement full two-way sync with webhooks.
 | Third-Party | Midigator | Implemented |
 | Third-Party | SERTIFI | Implemented |
 | Third-Party | Merlink | Implemented |
+| OTA | Expedia | Implemented |
+| OTA | Booking.com | Implemented |
+| OTA | Airbnb | Implemented |
+| OTA | Hotels.com | Implemented |
+| OTA | Vrbo | Implemented |
+| OTA | Agoda | Implemented |
+| OTA | Trip.com | Implemented |
+| OTA | Priceline | Implemented |
+| OTA | Hotwire | Implemented |
 
 ### Major Hotel PMS Systems - Detail
 
@@ -770,7 +780,7 @@ Apaleo:         ===                           2%
 Others:         ================             16%
 ```
 
-**DisputeAI PMS Coverage:** With 30 PMS integrations and 21 dispute/chargeback adapters (51 total integrations) implemented, DisputeAI covers the vast majority of the hotel PMS market across enterprise, boutique/independent, vacation rental, and brand-specific segments, including all top-tier systems and many mid-tier/niche systems that competitors have not addressed.
+**DisputeAI PMS Coverage:** With 30 PMS integrations and 29 dispute/chargeback adapters (68 total integrations) implemented, DisputeAI covers the vast majority of the hotel PMS market across enterprise, boutique/independent, vacation rental, and brand-specific segments, including all top-tier systems and many mid-tier/niche systems that competitors have not addressed.
 
 ---
 
@@ -789,7 +799,7 @@ Others:         ================             16%
 | Multi-Processor | 4 (webhooks) | 100+ | 50+ | N/A | N/A | N/A |
 | Web Application | Yes (9 pages) | Yes | Yes | Yes | Yes | Partial |
 | Mobile App | No (planned) | No | No | No | No | No |
-| Dispute/Chargeback Adapters | 21 (full two-way sync) | No | No | No | No | No |
+| Dispute/Chargeback Adapters | 29 (full two-way sync) | No | No | No | No | No |
 | Brand Loyalty Integration | 5 programs | No | No | No | No | No |
 | PDF Generation | Auto | Manual | Semi | Manual | Manual | Manual |
 | Real-time Dashboard | Yes | Yes | Yes | Yes | Yes | Basic |
@@ -866,10 +876,10 @@ Others:         ================             16%
 - Manual processes take 2-3 hours per case
 - DisputeAI takes 5 minutes of staff time
 
-#### 2. 30 PMS Integrations + 21 Dispute Adapters (51 Total - Industry-Leading)
+#### 2. 30 PMS Integrations + 29 Dispute Adapters (68 Total - Industry-Leading)
 
 **Competitors:** No PMS integration OR 1 basic integration (beta)
-**DisputeAI:** 30 PMS systems integrated across 4 categories: Enterprise (15), Boutique/Independent (6), Vacation Rental (4), Brand-Specific (5). Plus 21 dispute/chargeback adapters with full two-way sync.
+**DisputeAI:** 30 PMS systems integrated across 4 categories: Enterprise (15), Boutique/Independent (6), Vacation Rental (4), Brand-Specific (5). Plus 29 dispute/chargeback adapters (including 9 OTA integrations) with full two-way sync.
 
 **Why It Matters:**
 - Evidence must be collected DURING the stay
@@ -877,7 +887,7 @@ Others:         ================             16%
 - DisputeAI captures evidence proactively across all major PMS platforms
 - Competitors rely on hotels to have saved documents
 - Brand-specific PMS integrations (Marriott GXP, Hilton OnQ, Hyatt Opera, IHG Concerto, Best Western) open the enterprise chain market
-- 21 dispute adapters ensure coverage across all card networks, processors, and third-party services
+- 29 dispute adapters ensure coverage across all card networks, processors, third-party services, and 9 OTA platforms
 
 #### 3. Multi-Processor Support with Real-Time Webhooks
 
@@ -901,14 +911,14 @@ Others:         ================             16%
 - Saves time on unwinnable cases
 - 4-tier system gives clear actionable guidance
 
-#### 5. 21 Dispute/Chargeback Adapters with Full Two-Way Sync
+#### 5. 29 Dispute/Chargeback Adapters with Full Two-Way Sync
 
 **Competitors:** No dispute portal integrations
-**DisputeAI:** 21 adapters covering Prevention (3), Card Networks (4), Merchant Processors (9), and Third-Party (5) -- all with full two-way sync via webhooks
+**DisputeAI:** 29 adapters covering Prevention (3), Card Networks (4), Merchant Processors (9), Third-Party (5), and OTA (9) -- all with full two-way sync via webhooks
 
 **Why It Matters:**
 - Hotels using third-party dispute companies get unified workflow
-- Full two-way sync across all 21 adapters eliminates manual data transfer
+- Full two-way sync across all 29 adapters eliminates manual data transfer
 - Coverage across all major card networks (Visa, Mastercard, Amex, Discover)
 - Enables hybrid approach (AI-assisted + human expert)
 - Prevention adapters (Verifi, Ethoca, RDR) stop chargebacks before they happen
@@ -1118,9 +1128,9 @@ Others:         ================             16%
 
 **Approach:** Integrate with Canary's authorization forms, joint case study, cross-promotion, revenue share or bundled pricing
 
-#### 8. Leverage 21 Dispute/Chargeback Adapters
+#### 8. Leverage 29 Dispute/Chargeback Adapters
 
-**With 21 adapters already implemented** (Prevention, Card Networks, Merchant Processors, Third-Party), position DisputeAI as the definitive hub connecting hotels, processors, card networks, and dispute companies. All adapters feature full two-way sync with webhooks for real-time data flow.
+**With 29 adapters already implemented** (Prevention, Card Networks, Merchant Processors, Third-Party, OTA), position DisputeAI as the definitive hub connecting hotels, processors, card networks, dispute companies, and OTA platforms. All adapters feature full two-way sync with webhooks for real-time data flow.
 
 ### Long-Term Strategy (12-24 Months)
 
@@ -1172,9 +1182,9 @@ Others:         ================             16%
 ### Strengths
 
 - Only hotel-specific automated chargeback defense solution on the market
-- 51 total integrations: 30 PMS systems + 21 dispute/chargeback adapters (competitors have 0-1 PMS integrations)
+- 68 total integrations: 30 PMS systems + 29 dispute/chargeback adapters + 9 OTA integrations (competitors have 0-1 PMS integrations)
 - 30 PMS integrations across 4 categories: Enterprise (15), Boutique/Independent (6), Vacation Rental (4), Brand-Specific (5)
-- 21 dispute/chargeback adapters with full two-way sync: Prevention (3), Card Networks (4), Merchant Processors (9), Third-Party (5)
+- 29 dispute/chargeback adapters with full two-way sync: Prevention (3), Card Networks (4), Merchant Processors (9), Third-Party (5), OTA (9)
 - Brand-specific loyalty integration: Marriott Bonvoy, Hilton Honors, World of Hyatt, IHG One Rewards, Best Western Rewards
 - 4 payment processors with real-time webhook processing (Stripe, Adyen, Shift4, Elavon)
 - AI-powered weighted confidence scoring (40/35/25 weighting) with 4-tier recommendation system
@@ -1208,7 +1218,7 @@ Others:         ================             16%
 - Shift4 partnership potential (40% of hotel payment market, weak native tools)
 - PMS marketplace listings (Stripe, Mews, Opera, Cloudbeds) for built-in distribution
 - Canary Technologies partnership (complementary products)
-- 21 dispute/chargeback adapters with full two-way sync as major differentiator and expansion vector
+- 29 dispute/chargeback adapters (including 9 OTA integrations) with full two-way sync as major differentiator and expansion vector
 - White-label licensing for payment processors
 - International expansion (protel integration already supports EU entry)
 - Upsell path to fraud prevention features
@@ -1264,7 +1274,7 @@ Others:         ================             16%
 
 ### Top 3 Competitive Advantages
 
-1. **Hotel-specific automation** with 30 PMS integrations + 21 dispute adapters = 51 total integrations (no competitor has this breadth)
+1. **Hotel-specific automation** with 30 PMS integrations + 29 dispute adapters = 68 total integrations (no competitor has this breadth)
 2. **AI-powered weighted confidence scoring** with 4-tier recommendation system
 3. **Multi-processor support** with real-time webhooks (processor-agnostic solution)
 
@@ -1304,12 +1314,12 @@ Others:         ================             16%
 - [ ] Publish case studies from pilot customers
 - [ ] Attend first hospitality tech conference
 - [ ] Begin Canary partnership discussions
-- [ ] Leverage 21 dispute/chargeback adapters for competitive positioning
+- [ ] Leverage 29 dispute/chargeback adapters for competitive positioning
 
 ---
 
-**Document Version:** 4.0
-**Last Updated:** February 14, 2026
-**Next Review:** May 13, 2026 (quarterly update)
+**Document Version:** 5.0
+**Last Updated:** February 2026
+**Next Review:** May 2026 (quarterly update)
 **Owner:** Aalok Mehta
-**Status:** Updated to reflect 10 API routes, standardized PMS/adapter names, Node.js v25 compatibility, 51 total integrations
+**Status:** Updated dispute adapters from 21 to 29, added 9 OTA integrations, total integrations now 68
