@@ -2,7 +2,7 @@
 
 > AI-Powered Hotel Chargeback Defense Platform. Protects hotel revenue through intelligent fraud detection, automated evidence collection, and AI-driven dispute management.
 
-DisputeAI is a full-stack SaaS platform purpose-built for the hospitality industry. It automates the chargeback representment process by collecting PMS evidence, analyzing fraud signals with AI, and managing disputes across 59 payment and hotel system integrations.
+DisputeAI is a full-stack SaaS platform purpose-built for the hospitality industry. It automates the chargeback representment process by collecting PMS evidence, analyzing fraud signals with AI, and managing disputes across 68 payment and hotel system integrations.
 
 ## Core Capabilities
 
@@ -11,7 +11,7 @@ DisputeAI is a full-stack SaaS platform purpose-built for the hospitality indust
 - Arbitration workflow for lost cases (filing, document upload, deadline tracking)
 - 30 PMS integrations with two-way reservation sync
 - 29 dispute processor adapters with portal sign-in and two-way sync (Visa VROL, Mastercom, Ethoca, Verifi, Stripe, Chase, Fiserv, etc.)
-- 6 OTA integrations (Booking.com, Expedia, Airbnb, Hotels.com, Hotel Engine, Agoda)
+- 9 OTA integrations (Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Hotel Engine)
 - 8 autonomous AI agents for fraud analysis, evidence processing, security scanning
 - Role-based access control (Admin, Manager, Staff) with property-level isolation
 - Real-time dashboard with KPIs, analytics, and trend reporting
@@ -64,9 +64,9 @@ Pages:
 - `CaseDetail.jsx` - Full case view with resolution, arbitration (Overview/Documents tabs), timeline, notes, fraud indicators
 - `Analytics.jsx` - Charts, trends, performance reports
 - `Reservations.jsx` - PMS reservation search and management
-- `PMSIntegration.jsx` - PMS system connections (30 adapters)
+- `PMSIntegration.jsx` - PMS system connections (30 adapters) with portal sign-in, configure modal, and activity logs
 - `DisputeIntegration.jsx` - Dispute processor management (29 adapters) with portal sign-in and configure modal
-- `OTAIntegration.jsx` - OTA channel connections (6 integrations)
+- `OTAIntegration.jsx` - OTA channel connections (9 integrations) with portal sign-in, configure modal, and activity logs
 - `Settings.jsx` - System configuration
 - `Tutorial.jsx` - Interactive onboarding
 

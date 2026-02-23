@@ -45,8 +45,8 @@
 - Global search: OR-logic across name, email, confirmation#, room, card, loyalty, room type, booking source
 - Color palette: omni (blue) and omni-gold (amber) in tailwind.config.cjs
 - Use .cjs extension for tailwind config (not .js)
-- 59 total integrations: 30 PMS adapters + 29 dispute processor adapters
-- 6 OTA integrations: Booking.com, Expedia, Airbnb, Hotels.com, Hotel Engine, Agoda
+- 68 total integrations: 30 PMS adapters + 29 dispute processor adapters + 9 OTA integrations
+- 9 OTA integrations: Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Hotel Engine
 - ChatHelp AI assistant widget on all pages
 - Analytics KPI cards are clickable (navigate to filtered cases)
 
@@ -57,8 +57,8 @@
 - React functional components with hooks only
 - JWT tokens stored in localStorage via useAuth context
 - Node 20 LTS required (Node 25 has severe CJS performance issues)
-- Backend startup loads 59 integrations, takes ~24s in demo mode
-- Dispute Companies page has portal sign-in links, configure modal, two-way sync badges
+- Backend startup loads 68 integrations, takes ~24s in demo mode
+- All integration pages (PMS, OTA, Dispute) have portal sign-in links, configure modal, activity logs, two-way sync badges
 
 ## Demo Credentials
 - admin@disputeai.com / DisputeAdmin123!

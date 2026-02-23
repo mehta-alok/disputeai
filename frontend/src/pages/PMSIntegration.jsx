@@ -57,6 +57,7 @@ const PMS_ADAPTERS = [
     color: '#10B981',
     features: ['reservations', 'folios', 'guest_data', 'key_cards', 'audit_logs', 'pos'],
     website: 'https://autoclerk.com',
+    portalUrl: 'https://www.autoclerkcloud.com',
     lastSync: '2026-02-16T10:28:00Z',
     syncCount: 12,
   },
@@ -70,6 +71,7 @@ const PMS_ADAPTERS = [
     color: '#EF4444',
     features: ['reservations', 'folios', 'guest_data', 'key_cards', 'audit_logs', 'pos', 'loyalty'],
     website: 'https://oracle.com/hospitality',
+    portalUrl: 'https://www.oracle.com/hospitality/hotel-property-management/',
     lastSync: null,
     syncCount: 0,
   },
@@ -83,6 +85,7 @@ const PMS_ADAPTERS = [
     color: '#8B5CF6',
     features: ['reservations', 'folios', 'guest_data', 'loyalty', 'rewards'],
     website: 'https://marriott.com',
+    portalUrl: 'https://gxp.iris.net/',
     lastSync: null,
     syncCount: 0,
   },
@@ -96,6 +99,7 @@ const PMS_ADAPTERS = [
     color: '#1D4ED8',
     features: ['reservations', 'folios', 'guest_data', 'key_cards', 'honors'],
     website: 'https://hilton.com',
+    portalUrl: 'https://www.globaldms.net/HPP/Default.aspx',
     lastSync: null,
     syncCount: 0,
   },
@@ -109,6 +113,7 @@ const PMS_ADAPTERS = [
     color: '#D97706',
     features: ['reservations', 'folios', 'guest_data', 'world_of_hyatt'],
     website: 'https://hyatt.com',
+    portalUrl: 'https://www.hyattconnect.com/',
     lastSync: null,
     syncCount: 0,
   },
@@ -122,6 +127,7 @@ const PMS_ADAPTERS = [
     color: '#059669',
     features: ['reservations', 'folios', 'guest_data', 'ihg_rewards'],
     website: 'https://ihg.com',
+    portalUrl: 'https://concerto.ihg.com',
     lastSync: null,
     syncCount: 0,
   },
@@ -135,6 +141,7 @@ const PMS_ADAPTERS = [
     color: '#2563EB',
     features: ['reservations', 'folios', 'guest_data', 'rewards'],
     website: 'https://bestwestern.com',
+    portalUrl: 'https://hotel.bwhhotelgroup.com/',
     lastSync: null,
     syncCount: 0,
   },
@@ -148,6 +155,7 @@ const PMS_ADAPTERS = [
     color: '#6366F1',
     features: ['reservations', 'folios', 'guest_data', 'payments', 'audit_logs'],
     website: 'https://mews.com',
+    portalUrl: 'https://app.mews.com',
     lastSync: null,
     syncCount: 0,
   },
@@ -161,6 +169,7 @@ const PMS_ADAPTERS = [
     color: '#0EA5E9',
     features: ['reservations', 'folios', 'guest_data', 'channel_manager', 'payments'],
     website: 'https://cloudbeds.com',
+    portalUrl: 'https://www.cloudbeds.com/sign-in/',
     lastSync: null,
     syncCount: 0,
   },
@@ -174,6 +183,7 @@ const PMS_ADAPTERS = [
     color: '#F59E0B',
     features: ['reservations', 'guest_data', 'channel_manager', 'payments', 'messaging'],
     website: 'https://guesty.com',
+    portalUrl: 'https://app.guesty.com/auth/login',
     lastSync: null,
     syncCount: 0,
   },
@@ -187,6 +197,7 @@ const PMS_ADAPTERS = [
     color: '#14B8A6',
     features: ['reservations', 'guest_data', 'channel_manager', 'payments'],
     website: 'https://hostaway.com',
+    portalUrl: 'https://dashboard.hostaway.com/login',
     lastSync: null,
     syncCount: 0,
   },
@@ -200,6 +211,7 @@ const PMS_ADAPTERS = [
     color: '#EC4899',
     features: ['reservations', 'folios', 'guest_data', 'channel_manager'],
     website: 'https://littlehotelier.com',
+    portalUrl: 'https://www.littlehotelier.com/login/',
     lastSync: null,
     syncCount: 0,
   },
@@ -213,6 +225,7 @@ const PMS_ADAPTERS = [
     color: '#3B82F6',
     features: ['reservations', 'folios', 'guest_data', 'key_cards', 'audit_logs'],
     website: 'https://rmscloud.com',
+    portalUrl: 'https://app.rmscloud.com/Login',
     lastSync: null,
     syncCount: 0,
   },
@@ -226,6 +239,7 @@ const PMS_ADAPTERS = [
     color: '#7C3AED',
     features: ['reservations', 'folios', 'guest_data', 'mobile_keys', 'payments'],
     website: 'https://stayntouch.com',
+    portalUrl: 'https://pms.stayntouch.com/',
     lastSync: null,
     syncCount: 0,
   },
@@ -239,6 +253,7 @@ const PMS_ADAPTERS = [
     color: '#DC2626',
     features: ['reservations', 'folios', 'guest_data', 'key_cards', 'pos'],
     website: 'https://protel.net',
+    portalUrl: 'https://app.protel.net/',
     lastSync: null,
     syncCount: 0,
   },
@@ -252,6 +267,7 @@ const PMS_ADAPTERS = [
     color: '#F97316',
     features: ['reservations', 'folios', 'guest_data', 'key_cards', 'audit_logs', 'pos', 'analytics'],
     website: 'https://infor.com',
+    portalUrl: 'https://hmsweb.hms.inforcloudsuite.com',
     lastSync: null,
     syncCount: 0,
   },
@@ -265,6 +281,7 @@ const PMS_ADAPTERS = [
     color: '#0891B2',
     features: ['reservations', 'folios', 'guest_data', 'key_cards', 'spa', 'pos'],
     website: 'https://maestropms.com',
+    portalUrl: 'https://web.maestropms.com',
     lastSync: null,
     syncCount: 0,
   },
@@ -278,6 +295,7 @@ const PMS_ADAPTERS = [
     color: '#4F46E5',
     features: ['reservations', 'folios', 'guest_data', 'channel_manager'],
     website: 'https://innroad.com',
+    portalUrl: 'https://app.innroad.com/',
     lastSync: null,
     syncCount: 0,
   },
@@ -291,6 +309,7 @@ const PMS_ADAPTERS = [
     color: '#16A34A',
     features: ['reservations', 'folios', 'guest_data', 'channel_manager', 'payments'],
     website: 'https://ezeetechnosys.com',
+    portalUrl: 'https://live.ipms247.com/login/',
     lastSync: null,
     syncCount: 0,
   },
@@ -304,6 +323,7 @@ const PMS_ADAPTERS = [
     color: '#E11D48',
     features: ['reservations', 'folios', 'guest_data', 'channel_manager'],
     website: 'https://hotelogix.com',
+    portalUrl: 'https://app.hotelogix.com',
     lastSync: null,
     syncCount: 0,
   },
@@ -317,6 +337,7 @@ const PMS_ADAPTERS = [
     color: '#0284C7',
     features: ['reservations', 'folios', 'guest_data', 'online_booking'],
     website: 'https://webrezpro.com',
+    portalUrl: 'https://secure.webrez.com/',
     lastSync: null,
     syncCount: 0,
   },
@@ -330,6 +351,7 @@ const PMS_ADAPTERS = [
     color: '#9333EA',
     features: ['reservations', 'guest_data', 'channel_manager', 'booking_engine', 'analytics'],
     website: 'https://siteminder.com',
+    portalUrl: 'https://www.siteminder.com/login/',
     lastSync: null,
     syncCount: 0,
   },
@@ -343,6 +365,7 @@ const PMS_ADAPTERS = [
     color: '#2DD4BF',
     features: ['reservations', 'folios', 'guest_data', 'payments', 'channel_manager'],
     website: 'https://guestline.com',
+    portalUrl: 'https://pms.eu.guestline.net/',
     lastSync: null,
     syncCount: 0,
   },
@@ -356,6 +379,7 @@ const PMS_ADAPTERS = [
     color: '#CA8A04',
     features: ['reservations', 'folios', 'guest_data', 'online_booking'],
     website: 'https://resnexus.com',
+    portalUrl: 'https://resnexus.com/resnexus/login.aspx',
     lastSync: null,
     syncCount: 0,
   },
@@ -369,6 +393,7 @@ const PMS_ADAPTERS = [
     color: '#65A30D',
     features: ['reservations', 'folios', 'guest_data', 'online_booking'],
     website: 'https://thinkreservations.com',
+    portalUrl: 'https://manage.thinkreservations.com/',
     lastSync: null,
     syncCount: 0,
   },
@@ -382,6 +407,7 @@ const PMS_ADAPTERS = [
     color: '#6D28D9',
     features: ['reservations', 'folios', 'guest_data'],
     website: 'https://roomkeypms.com',
+    portalUrl: 'https://app.roomkeypms.com/',
     lastSync: null,
     syncCount: 0,
   },
@@ -395,6 +421,7 @@ const PMS_ADAPTERS = [
     color: '#0D9488',
     features: ['reservations', 'folios', 'guest_data', 'payments'],
     website: 'https://frontdeskanywhere.com',
+    portalUrl: 'https://pms.us-west.frontdeskanywhere.net/login',
     lastSync: null,
     syncCount: 0,
   },
@@ -408,6 +435,7 @@ const PMS_ADAPTERS = [
     color: '#F472B6',
     features: ['reservations', 'guest_data', 'channel_manager', 'website_builder', 'payments'],
     website: 'https://lodgify.com',
+    portalUrl: 'https://app.lodgify.com/login/',
     lastSync: null,
     syncCount: 0,
   },
@@ -421,6 +449,7 @@ const PMS_ADAPTERS = [
     color: '#DB2777',
     features: ['reservations', 'guest_data', 'channel_manager', 'trust_accounting'],
     website: 'https://escapia.com',
+    portalUrl: 'https://app.escapia.com/p/login',
     lastSync: null,
     syncCount: 0,
   },
@@ -434,6 +463,7 @@ const PMS_ADAPTERS = [
     color: '#1E40AF',
     features: ['reservations', 'folios', 'guest_data', 'key_cards', 'pos', 'spa', 'golf', 'analytics'],
     website: 'https://agilysys.com',
+    portalUrl: 'https://stay.rguest.com/',
     lastSync: null,
     syncCount: 0,
   },
@@ -663,10 +693,22 @@ function PMSCard({ adapter, onConnect, onConfigure, onDisconnect }) {
           </div>
         )}
 
-        {/* Action Button */}
+        {/* Action Buttons */}
         <div className="flex gap-2">
           {isConnected ? (
             <>
+              {/* Portal Sign-In */}
+              {adapter.portalUrl && (
+                <a
+                  href={adapter.portalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  Sign In
+                </a>
+              )}
               <button
                 onClick={() => onConfigure(adapter)}
                 className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
@@ -690,13 +732,27 @@ function PMSCard({ adapter, onConnect, onConfigure, onDisconnect }) {
               Coming Soon
             </button>
           ) : (
-            <button
-              onClick={() => onConnect(adapter)}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm transition-colors"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Connect
-            </button>
+            <>
+              {/* Portal Sign-In (for available adapters too) */}
+              {adapter.portalUrl && (
+                <a
+                  href={adapter.portalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg hover:bg-indigo-100 transition-colors"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  Sign In
+                </a>
+              )}
+              <button
+                onClick={() => onConnect(adapter)}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Connect
+              </button>
+            </>
           )}
         </div>
       </div>
@@ -988,6 +1044,19 @@ function ConfigureModal({ open, onClose, adapter }) {
           <StatusBadge status="connected" />
         </div>
 
+        {/* Portal Sign-In Link */}
+        {adapter.portalUrl && (
+          <a
+            href={adapter.portalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors w-full"
+          >
+            <ExternalLink className="w-4 h-4" />
+            Sign In to {adapter.name} Portal
+          </a>
+        )}
+
         {/* Sync Frequency */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Sync Frequency</label>
@@ -1110,6 +1179,66 @@ function ConfigureModal({ open, onClose, adapter }) {
 }
 
 // ============================================================
+// PMS Activity Logs Modal Component
+// ============================================================
+
+function PMSLogsModal({ open, onClose, adapter }) {
+  if (!open || !adapter) return null;
+
+  const logs = [
+    { time: '2 min ago', action: 'Reservation synced', detail: `RES-${Math.floor(Math.random() * 90000 + 10000)} · Check-in Mar 5`, status: 'success' },
+    { time: '5 min ago', action: 'Guest profile updated', detail: 'John Smith · Loyalty tier: Gold', status: 'success' },
+    { time: '8 min ago', action: 'Folio data synced', detail: 'Folio #44291 · Total: $1,847.50', status: 'success' },
+    { time: '15 min ago', action: 'Key card access log synced', detail: 'Room 412 · 3 entries recorded', status: 'success' },
+    { time: '22 min ago', action: 'Evidence auto-collected', detail: 'Chargeback CB-2026-3891 · 6 documents', status: 'info' },
+    { time: '45 min ago', action: 'Audit log synced', detail: '12 new entries from PMS audit trail', status: 'success' },
+    { time: '1 hr ago', action: 'Full sync completed', detail: `${adapter.syncCount} reservations · 0 conflicts`, status: 'success' },
+    { time: '2 hrs ago', action: 'API rate limit warning', detail: '75% of hourly quota used', status: 'warning' },
+    { time: '3 hrs ago', action: 'Connection health check', detail: 'API responding · Latency: 142ms', status: 'success' },
+  ];
+
+  const statusColors = {
+    success: 'bg-green-500',
+    warning: 'bg-amber-500',
+    error: 'bg-red-500',
+    info: 'bg-blue-500',
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={`${adapter.name} - Activity Logs`}
+      subtitle="Recent sync and event activity"
+      maxWidth="max-w-lg"
+    >
+      <div className="space-y-2">
+        {logs.map((log, i) => (
+          <div key={i} className="flex items-start gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <div className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${statusColors[log.status]}`} />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-800">{log.action}</p>
+                <span className="text-xs text-gray-400 ml-2 flex-shrink-0">{log.time}</span>
+              </div>
+              <p className="text-xs text-gray-500 mt-0.5">{log.detail}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="pt-4 border-t border-gray-100 mt-4">
+        <button
+          onClick={onClose}
+          className="w-full px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+        >
+          Close
+        </button>
+      </div>
+    </Modal>
+  );
+}
+
+// ============================================================
 // Main PMS Integration Component
 // ============================================================
 
@@ -1120,6 +1249,7 @@ export default function PMSIntegration() {
   const [connectModal, setConnectModal] = useState({ open: false, adapter: null });
   const [configureModal, setConfigureModal] = useState({ open: false, adapter: null });
   const [disconnectConfirm, setDisconnectConfirm] = useState({ open: false, adapter: null });
+  const [logsModal, setLogsModal] = useState({ open: false, adapter: null });
 
   // Derived data
   const connectedCount = PMS_ADAPTERS.filter((a) => a.status === 'connected').length;
@@ -1231,7 +1361,10 @@ export default function PMSIntegration() {
                 <Settings className="w-3.5 h-3.5" />
                 Configure
               </button>
-              <button className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-white border border-green-300 text-green-700 rounded-lg hover:bg-green-50">
+              <button
+                onClick={() => setLogsModal({ open: true, adapter: PMS_ADAPTERS[0] })}
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-white border border-green-300 text-green-700 rounded-lg hover:bg-green-50"
+              >
                 <Activity className="w-3.5 h-3.5" />
                 View Logs
               </button>
@@ -1378,7 +1511,10 @@ export default function PMSIntegration() {
                 </p>
               </div>
             </div>
-            <button className="inline-flex items-center gap-1.5 px-5 py-2.5 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm flex-shrink-0">
+            <button
+              onClick={() => window.open('mailto:support@disputeai.com?subject=PMS%20Integration%20Request&body=Please%20add%20support%20for%20the%20following%20PMS%3A%0A%0APMS%20Name%3A%20%0AWebsite%3A%20%0AProperty%20Name%3A%20', '_blank')}
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 shadow-sm flex-shrink-0"
+            >
               <Plus className="w-4 h-4" />
               Request Integration
             </button>
@@ -1435,6 +1571,13 @@ export default function PMSIntegration() {
           </div>
         </div>
       </Modal>
+
+      {/* Activity Logs Modal */}
+      <PMSLogsModal
+        open={logsModal.open}
+        onClose={() => setLogsModal({ open: false, adapter: null })}
+        adapter={logsModal.adapter}
+      />
     </div>
   );
 }
