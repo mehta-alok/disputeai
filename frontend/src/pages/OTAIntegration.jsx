@@ -185,7 +185,7 @@ const OTA_PROVIDERS = [
     features: ['Two-way sync', 'Corporate rates', 'Dispute alerts', 'Auto-evidence'],
     apiVersion: 'v2.0',
     connectionType: 'OAuth 2.0',
-    portalUrl: 'https://partnerhub.engine.com/auth/signin?next=%2Fwallet%2F107778&propertyId=107778',
+    portalUrl: 'https://partnerhub.engine.com/auth/signin',
     webhookSupport: true,
     twoWaySync: true,
     requiredConfig: ['clientId', 'clientSecret', 'organizationId', 'webhookSecret'],
