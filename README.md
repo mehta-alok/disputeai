@@ -20,7 +20,7 @@ Protecting hotel revenue through intelligent fraud detection, automated evidence
 - **8 AI Agents** -- Autonomous fraud analysis, evidence processing, dispute strategy, security scanning, and more
 - **30 PMS Integrations** -- Two-way sync with Opera, Mews, Cloudbeds, and 27 others (AutoClerk built-in emulator)
 - **29 Dispute Processor Adapters** -- Visa VROL, Mastercom, Ethoca, Verifi, Stripe, Elavon, Chase, Fiserv, and more with portal sign-in and two-way sync
-- **9 OTA Integrations** -- Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Hotel Engine with real-time monitoring
+- **9 OTA Integrations** -- Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Engine with real-time monitoring
 - **Real-Time Reservation Search** -- Full-text search across all guest, booking, and payment fields
 - **Automated Evidence Collection** -- 7 evidence types (ID scan, signatures, folio, key card logs, CCTV, correspondence, cancellation policy)
 - **Interactive Tutorial & ChatHelp AI Assistant** -- Built-in onboarding walkthrough and contextual help
@@ -128,8 +128,6 @@ Hotel.Chargeback.Fraud_OMNI/
 │   │   ├── components/        # Shared UI components
 │   │   │   ├── Layout.jsx     #   Sidebar, nav, mobile bottom bar
 │   │   │   ├── ChatHelp.jsx   #   AI-powered help assistant
-│   │   │   ├── Tutorial.jsx   #   Step-by-step tutorial overlay
-│   │   │   ├── NotificationPanel.jsx # Real-time notification dropdown
 │   │   │   ├── ReservationViewer.jsx # Reservation detail modal
 │   │   │   └── GuestFolioViewer.jsx # Guest folio display
 │   │   ├── hooks/             # useAuth context & state
@@ -273,7 +271,7 @@ All dispute companies include portal sign-in links, API configuration modal, and
 Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink
 
 **Hospitality-Specific Services (11)**:
-StaySettle, Win Chargebacks, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
+StaySettle, Canary Technologies, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
 
 **Card Network Portals (4)**:
 Visa VROL, Mastercom, AMEX Merchant, Discover Dispute

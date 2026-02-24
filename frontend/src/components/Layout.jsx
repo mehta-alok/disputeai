@@ -31,7 +31,8 @@ import {
   CalendarCheck,
   RefreshCw,
   Globe,
-  Phone
+  Phone,
+  AlertTriangle
 } from 'lucide-react';
 import ChatHelp from './ChatHelp';
 
@@ -71,8 +72,9 @@ export default function Layout({ children }) {
     const fetchNotificationCount = async () => {
       try {
         const response = await api.get('/notifications/unread-count');
-        if (response.data.success) {
-          setNotificationCount(response.data.count);
+        // api.js interceptor unwraps .data, so response IS the data object
+        if (response.success || response.count !== undefined) {
+          setNotificationCount(response.count || 0);
         }
       } catch (error) {
         console.debug('Could not fetch notification count:', error.message);
@@ -196,19 +198,27 @@ export default function Layout({ children }) {
 
             {/* Center - Search Bar */}
             <div className="flex-1 max-w-xl mx-4 hidden md:block">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search cases, analytics, or settings..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-gray-400"
-                />
-                <kbd className="absolute right-3 top-1/2 transform -translate-y-1/2 hidden lg:inline-flex items-center px-2 py-0.5 text-xs text-gray-400 bg-gray-100 rounded">
-                  ⌘K
-                </kbd>
-              </div>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                if (searchQuery.trim()) {
+                  navigate({ pathname: '/cases', search: `?search=${encodeURIComponent(searchQuery.trim())}` });
+                  setSearchQuery('');
+                }
+              }}>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search cases by guest, case number, or confirmation..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-gray-400"
+                  />
+                  <kbd className="absolute right-3 top-1/2 transform -translate-y-1/2 hidden lg:inline-flex items-center px-2 py-0.5 text-xs text-gray-400 bg-gray-100 rounded">
+                    ⌘K
+                  </kbd>
+                </div>
+              </form>
             </div>
 
             {/* Right side */}
@@ -221,11 +231,11 @@ export default function Layout({ children }) {
               </button>
 
               <button
-                className="hidden sm:flex items-center space-x-1 px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-                onClick={() => navigate('/cases')}
+                className="hidden sm:flex items-center space-x-1 px-3 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors shadow-sm"
+                onClick={() => navigate({ pathname: '/cases', search: '?status=PENDING' })}
               >
-                <Plus className="w-4 h-4" />
-                <span className="hidden lg:inline">New Case</span>
+                <AlertTriangle className="w-4 h-4" />
+                <span className="hidden lg:inline">Urgent Cases</span>
               </button>
 
               {/* Notification bell */}
@@ -301,17 +311,26 @@ export default function Layout({ children }) {
           {/* Mobile Search Bar */}
           {showSearch && (
             <div className="md:hidden px-4 pb-3 animate-fade-in">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  autoFocus
-                  className="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                if (searchQuery.trim()) {
+                  navigate({ pathname: '/cases', search: `?search=${encodeURIComponent(searchQuery.trim())}` });
+                  setSearchQuery('');
+                  setShowSearch(false);
+                }
+              }}>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search cases..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    autoFocus
+                    className="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </form>
             </div>
           )}
         </header>

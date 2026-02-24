@@ -80,7 +80,7 @@
 - Dispute company management
 - 29 dispute adapters across 5 categories with full two-way sync:
   - **Prevention Networks (3)**
-  - **Hospitality Services (11):** StaySettle, Win Chargebacks, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
+  - **Hospitality Services (11):** StaySettle, Canary Technologies, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
   - **Card Network Portals (4):** Visa VROL, Mastercom, AMEX Merchant, Discover Dispute
   - **Merchant Processors (9):** Chase, Stripe, Elavon, Fiserv, Global Payments, TSYS, Square, Authorize.net, Worldpay
   - **Fraud Prevention (2):** Kount, Signifyd
@@ -147,7 +147,7 @@
 
 - Connect/disconnect 9 OTA channel managers
 - Portal sign-in links, configure modal, activity logs
-- Supported OTAs: Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Hotel Engine
+- Supported OTAs: Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Engine
 - Sync frequency, data sync toggles, webhook URL configuration
 - Two-way sync badges for connected providers
 

@@ -22,7 +22,7 @@
 - backend/utils/logger.js - Winston logger configuration
 - backend/data/mockData.js - Demo users, cases, notifications
 - frontend/src/pages/ - 12 pages (Login, Dashboard, Cases, CaseDetail, Reservations, Analytics, Tutorial, Settings, PMSIntegration, DisputeIntegration, OTAIntegration, Contact)
-- frontend/src/components/ - Layout, ChatHelp, NotificationPanel, GuestFolioViewer, ReservationViewer, Tutorial
+- frontend/src/components/ - Layout, ChatHelp, GuestFolioViewer, ReservationViewer
 - frontend/src/utils/api.js - Axios API client with auth interceptors, formatCurrency helper
 - frontend/src/hooks/useAuth.jsx - Auth context provider
 - frontend/vite.config.js - Vite config with API proxy, optimizeDeps
@@ -48,13 +48,13 @@ Brand-Specific (5): Marriott GXP, Hilton OnQ, Hyatt Opera, IHG Concerto, Best We
 
 ### Dispute Processors (29)
 Prevention Networks (3): Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink
-Hospitality Services (11): StaySettle, Win Chargebacks, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
+Hospitality Services (11): StaySettle, Canary Technologies, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
 Card Network Portals (4): Visa VROL, Mastercom, AMEX Merchant, Discover Dispute
 Merchant Processors (9): Chase Merchant, Stripe Disputes, Elavon, Fiserv, Global Payments, TSYS, Square, Authorize.net, Worldpay
 Fraud Prevention (2): Kount, Signifyd
 
 ### OTA Integrations (9)
-Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Hotel Engine
+Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Engine
 
 ## Key Patterns
 - Demo mode: DEMO_MODE=true in .env skips DB/Redis, uses mock data

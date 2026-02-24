@@ -11,7 +11,7 @@ DisputeAI is a full-stack SaaS platform purpose-built for the hospitality indust
 - Arbitration workflow for lost cases (filing, document upload, deadline tracking)
 - 30 PMS integrations with two-way reservation sync
 - 29 dispute processor adapters with portal sign-in and two-way sync (Visa VROL, Mastercom, Ethoca, Verifi, Stripe, Chase, Fiserv, etc.)
-- 9 OTA integrations (Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Hotel Engine)
+- 9 OTA integrations (Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Engine)
 - 8 autonomous AI agents for fraud analysis, evidence processing, security scanning
 - Role-based access control (Admin, Manager, Staff) with property-level isolation
 - Real-time dashboard with KPIs, analytics, and trend reporting
@@ -113,7 +113,7 @@ Brand-Specific: Marriott GXP, Hilton OnQ, Hyatt Opera, IHG Concerto, Best Wester
 All companies include portal sign-in links, API configuration modal, and two-way sync badges.
 
 Prevention Networks: Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink
-Hospitality Services: StaySettle, Win Chargebacks, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
+Hospitality Services: StaySettle, Canary Technologies, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
 Card Network Portals: Visa VROL, Mastercom, AMEX Merchant, Discover Dispute
 Merchant Processors: Chase Merchant, Stripe Disputes, Elavon, Fiserv, Global Payments, TSYS, Square, Authorize.net, Worldpay
 Fraud Prevention: Kount, Signifyd

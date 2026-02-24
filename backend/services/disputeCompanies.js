@@ -54,7 +54,7 @@ const DISPUTE_COMPANIES = {
     category: 'hospitality',
     twoWaySync: true,
     logo: '🏨',
-    portalUrl: 'https://app.staysettle.com',
+    portalUrl: 'https://www.staysettle.com/login',
     features: [
       'Autopilot Dispute Resolution',
       'PMS Integration (Cloudbeds, Oracle, Mews)',
@@ -68,26 +68,26 @@ const DISPUTE_COMPANIES = {
     apiBaseUrl: process.env.STAYSETTLE_API_URL || 'https://api.staysettle.com/v1',
     description: 'Automated dispute resolution built for hotels; integrates with PMS for autopilot chargeback handling'
   },
-  WIN_CHARGEBACKS: {
-    name: 'Win Chargebacks',
-    fullName: 'Win Chargebacks',
+  CANARY: {
+    name: 'Canary Technologies',
+    fullName: 'Canary Technologies Guest Management',
     type: 'dispute_management',
     category: 'hospitality',
     twoWaySync: true,
-    logo: '🏆',
-    portalUrl: 'https://portal.winchargebacks.com',
+    logo: '🐤',
+    portalUrl: 'https://www.canarytechnologies.com/login/',
     features: [
-      'AI-Powered Platform',
-      'Booking System Integration',
-      'Automatic Evidence Dossiers',
-      'Representment Filing',
-      'OTA/Hotel Support'
+      'Digital Authorizations',
+      'Fraud Detection & Prevention',
+      'PMS Integration (Marriott, Hilton, IHG)',
+      'Chargeback Evidence Dashboard',
+      'Guest Identity Verification'
     ],
-    requiredConfig: ['apiKey', 'merchantId'],
-    optionalConfig: ['bookingSource', 'autoFile'],
-    webhookEndpoint: '/api/webhooks/winchargebacks',
-    apiBaseUrl: process.env.WINCHARGEBACKS_API_URL || 'https://api.winchargebacks.com/v1',
-    description: 'AI-powered platform that connects to booking systems and payment processors for automatic dispute handling'
+    requiredConfig: ['apiKey', 'propertyId'],
+    optionalConfig: ['pmsType', 'autoVerify'],
+    webhookEndpoint: '/api/webhooks/canary',
+    apiBaseUrl: process.env.CANARY_API_URL || 'https://api.canarytechnologies.com/v1',
+    description: 'Award-winning hospitality platform trusted by 20,000+ hotels for fraud detection, digital authorizations, and chargeback prevention'
   },
   CHARGEBACK_GURUS: {
     name: 'Chargeback Gurus',
@@ -96,7 +96,7 @@ const DISPUTE_COMPANIES = {
     category: 'hospitality',
     twoWaySync: true,
     logo: '🧙',
-    portalUrl: 'https://portal.chargebackgurus.com',
+    portalUrl: 'https://helpdesk.chargebackgurus.com/portal/en/signin',
     features: [
       'Early Alert System',
       'Analytics Dashboard',
@@ -112,7 +112,7 @@ const DISPUTE_COMPANIES = {
   },
   CHARGEBACKHELP: {
     name: 'ChargebackHelp',
-    portalUrl: 'https://app.chargebackhelp.com',
+    portalUrl: 'https://client.chargebackhelp.com/login',
     fullName: 'ChargebackHelp',
     type: 'dispute_management',
     category: 'hospitality',
@@ -134,7 +134,7 @@ const DISPUTE_COMPANIES = {
   },
   CLEARVIEW: {
     name: 'Clearview',
-    portalUrl: 'https://portal.clearviewmc.net',
+    portalUrl: 'https://www.clearviewmc.net/',
     fullName: 'Clearview / Chargeback Shield',
     type: 'dispute_management',
     category: 'hospitality',
@@ -209,7 +209,7 @@ const DISPUTE_COMPANIES = {
     category: 'general',
     twoWaySync: true,
     logo: '🚨',
-    portalUrl: 'https://app.chargebacks911.com',
+    portalUrl: 'https://clients.chargebacks911.com/',
     features: [
       'Chargeback Alerts',
       'Prevention Tools',
@@ -273,7 +273,7 @@ const DISPUTE_COMPANIES = {
     category: 'general',
     twoWaySync: true,
     logo: '📊',
-    portalUrl: 'https://portal.midigator.com',
+    portalUrl: 'https://app.midigator.com/login',
     features: [
       'Dispute Intelligence',
       'Automated Responses',
@@ -340,7 +340,7 @@ const DISPUTE_COMPANIES = {
     category: 'network',
     twoWaySync: true,
     logo: '🔵',
-    portalUrl: 'https://www.visaonline.com',
+    portalUrl: 'https://usa.visa.com/solutions/post-purchase-solutions/visa-resolve-online.html',
     features: ['Visa Resolve Online Portal', 'Dispute Case Management', 'Evidence Upload', 'Response Deadlines', 'Transaction Detail Inquiry'],
     requiredConfig: ['merchantId', 'acquirerBIN', 'username', 'password'],
     optionalConfig: ['autoNotify'],
@@ -354,7 +354,7 @@ const DISPUTE_COMPANIES = {
     category: 'network',
     twoWaySync: true,
     logo: '🔴',
-    portalUrl: 'https://mastercom.mastercard.com',
+    portalUrl: 'https://www.mastercardconnect.com/-/sign-in',
     features: ['Mastercard Dispute Portal', 'Case Management', 'Evidence Submission', 'Chargeback Tracking', 'Pre-Compliance Filing'],
     requiredConfig: ['merchantId', 'acquirerICA', 'username', 'password'],
     optionalConfig: ['autoResponse'],
@@ -368,7 +368,7 @@ const DISPUTE_COMPANIES = {
     category: 'network',
     twoWaySync: false,
     logo: '💠',
-    portalUrl: 'https://merchant.americanexpress.com',
+    portalUrl: 'https://www.americanexpress.com/us/merchant/merchant-home.html',
     features: ['American Express Disputes', 'Merchant Dashboard', 'Evidence Upload', 'Inquiry Response', 'Transaction Search'],
     requiredConfig: ['merchantId', 'username', 'password'],
     optionalConfig: ['notificationEmail'],
@@ -382,7 +382,7 @@ const DISPUTE_COMPANIES = {
     category: 'network',
     twoWaySync: false,
     logo: '🟠',
-    portalUrl: 'https://merchantcenter.discovernetwork.com',
+    portalUrl: 'https://servicecenter.discovernetwork.com/loginlogout/exec/loginForm.do',
     features: ['Discover Dispute Portal', 'Case Tracking', 'Response Filing', 'Evidence Management', 'Chargeback Reporting'],
     requiredConfig: ['merchantId', 'username', 'password'],
     optionalConfig: ['autoAlerts'],

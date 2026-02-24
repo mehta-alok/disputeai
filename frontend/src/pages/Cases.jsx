@@ -85,24 +85,30 @@ export default function Cases() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({ page: 1, limit: 20, total: 0, totalPages: 1 });
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '');
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState('desc');
   const [refreshing, setRefreshing] = useState(false);
+  const [searchTrigger, setSearchTrigger] = useState(0);
 
-  // Apply status filter from URL params
+  // Apply URL params (status filter and search)
   useEffect(() => {
     const urlStatus = searchParams.get('status');
-    if (urlStatus && urlStatus !== statusFilter) {
+    const urlSearch = searchParams.get('search');
+    if (urlStatus !== null && urlStatus !== statusFilter) {
       setStatusFilter(urlStatus);
+    }
+    if (urlSearch !== null && urlSearch !== search) {
+      setSearch(urlSearch);
+      setSearchTrigger(prev => prev + 1);
     }
   }, [searchParams]);
 
   // Fetch cases
   useEffect(() => {
     fetchCases();
-  }, [statusFilter, pagination.page, sortBy, sortOrder]);
+  }, [statusFilter, pagination.page, sortBy, sortOrder, searchTrigger]);
 
   async function fetchCases() {
     try {
@@ -117,11 +123,31 @@ export default function Cases() {
       if (search.trim()) params.search = search.trim();
 
       const res = await api.get('/cases', params);
-      setCases(res.cases || []);
+      let fetchedCases = res.cases || [];
+
+      // Client-side search filtering for demo mode (backend returns all cases)
+      if (search.trim() && res.isDemo) {
+        const q = search.trim().toLowerCase();
+        fetchedCases = fetchedCases.filter(c =>
+          (c.guestName || '').toLowerCase().includes(q) ||
+          (c.guestEmail || '').toLowerCase().includes(q) ||
+          (c.caseNumber || '').toLowerCase().includes(q) ||
+          (c.confirmationNumber || '').toLowerCase().includes(q) ||
+          (c.cardBrand || '').toLowerCase().includes(q) ||
+          (c.reasonCode || '').toLowerCase().includes(q)
+        );
+      }
+
+      // Client-side status filtering for demo mode
+      if (statusFilter && res.isDemo) {
+        fetchedCases = fetchedCases.filter(c => c.status === statusFilter);
+      }
+
+      setCases(fetchedCases);
       setPagination(prev => ({
         ...prev,
-        total: res.pagination?.total || 0,
-        totalPages: res.pagination?.totalPages || 1,
+        total: fetchedCases.length,
+        totalPages: Math.ceil(fetchedCases.length / prev.limit) || 1,
       }));
       setError(null);
     } catch (err) {
@@ -136,7 +162,7 @@ export default function Cases() {
   function handleSearch(e) {
     e.preventDefault();
     setPagination(prev => ({ ...prev, page: 1 }));
-    fetchCases();
+    setSearchTrigger(prev => prev + 1);
   }
 
   function handleStatusFilter(st) {

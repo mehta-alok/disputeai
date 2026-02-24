@@ -71,7 +71,7 @@ const PMS_ADAPTERS = [
     color: '#EF4444',
     features: ['reservations', 'folios', 'guest_data', 'key_cards', 'audit_logs', 'pos', 'loyalty'],
     website: 'https://oracle.com/hospitality',
-    portalUrl: 'https://www.oracle.com/hospitality/hotel-property-management/',
+    portalUrl: 'https://www.oracle.com/hospitality/hotel-property-management/hotel-pms-software/',
     lastSync: null,
     syncCount: 0,
   },

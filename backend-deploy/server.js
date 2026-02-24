@@ -323,8 +323,9 @@ async function startServer() {
 ║     AI Agents: ${(aiAgentsInitialized ? '8 Active' : 'Disabled').padEnd(21)}                    ║
 ║     AI Provider: ${(process.env.AI_MODEL_PROVIDER || 'none').padEnd(18)}                    ║
 ║     PMS Adapters: 30 loaded                                   ║
-║     Dispute Adapters: 21 loaded                               ║
-║     Total Integrations: 51                                    ║
+║     Dispute Adapters: 29 loaded                               ║
+║     OTA Integrations: 9 loaded                                ║
+║     Total Integrations: 68                                    ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
       `);
