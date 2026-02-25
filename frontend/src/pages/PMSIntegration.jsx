@@ -1244,6 +1244,7 @@ function PMSLogsModal({ open, onClose, adapter }) {
 
 export default function PMSIntegration() {
   const { user } = useAuth();
+  const [adapters, setAdapters] = useState(PMS_ADAPTERS);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [connectModal, setConnectModal] = useState({ open: false, adapter: null });
@@ -1252,11 +1253,11 @@ export default function PMSIntegration() {
   const [logsModal, setLogsModal] = useState({ open: false, adapter: null });
 
   // Derived data
-  const connectedCount = PMS_ADAPTERS.filter((a) => a.status === 'connected').length;
-  const totalSyncedReservations = PMS_ADAPTERS.reduce((sum, a) => sum + (a.syncCount || 0), 0);
+  const connectedCount = adapters.filter((a) => a.status === 'connected').length;
+  const totalSyncedReservations = adapters.reduce((sum, a) => sum + (a.syncCount || 0), 0);
 
   const filteredAdapters = useMemo(() => {
-    let result = PMS_ADAPTERS;
+    let result = [...adapters];
 
     // Apply category filter
     if (activeFilter === 'connected') {
@@ -1286,11 +1287,29 @@ export default function PMSIntegration() {
     });
 
     return result;
-  }, [searchQuery, activeFilter]);
+  }, [searchQuery, activeFilter, adapters]);
 
   const handleConnect = useCallback((adapter) => {
-    setConnectModal({ open: true, adapter });
+    // In demo mode, directly connect the adapter
+    setAdapters(prev => prev.map(a =>
+      a.id === adapter.id
+        ? { ...a, status: 'connected', lastSync: new Date().toISOString(), syncCount: Math.floor(Math.random() * 20) + 5 }
+        : a
+    ));
+    try {
+      api.post('/pms/connect', { pmsId: adapter.id });
+    } catch (err) {
+      // Demo mode
+    }
   }, []);
+
+  const handleConnectAll = () => {
+    setAdapters(prev => prev.map(a =>
+      a.status !== 'connected' && a.status !== 'coming_soon'
+        ? { ...a, status: 'connected', lastSync: new Date().toISOString(), syncCount: Math.floor(Math.random() * 20) + 5 }
+        : a
+    ));
+  };
 
   const handleConfigure = useCallback((adapter) => {
     setConfigureModal({ open: true, adapter });
@@ -1301,8 +1320,12 @@ export default function PMSIntegration() {
   }, []);
 
   const confirmDisconnect = async () => {
+    const adapterId = disconnectConfirm.adapter?.id;
+    setAdapters(prev => prev.map(a =>
+      a.id === adapterId ? { ...a, status: 'available', lastSync: null, syncCount: 0 } : a
+    ));
     try {
-      await api.post('/pms/disconnect', { pmsId: disconnectConfirm.adapter?.id });
+      await api.post('/pms/disconnect', { pmsId: adapterId });
     } catch (err) {
       // Demo mode
     }
@@ -1326,16 +1349,27 @@ export default function PMSIntegration() {
                 Connect multiple PMS systems across all properties — all integrations run simultaneously
               </p>
             </div>
-            <a
-              href="https://docs.disputeai.com/integrations"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              <FileText className="w-4 h-4" />
-              API Documentation
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+            <div className="flex items-center gap-2">
+              {connectedCount < adapters.filter(a => a.status !== 'coming_soon').length && (
+                <button
+                  onClick={handleConnectAll}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700"
+                >
+                  <Zap className="w-4 h-4" />
+                  Connect All
+                </button>
+              )}
+              <a
+                href="https://docs.disputeai.com/integrations"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                <FileText className="w-4 h-4" />
+                API Docs
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -1355,14 +1389,14 @@ export default function PMSIntegration() {
             </div>
             <div className="flex items-center gap-2">
               <button
-                onClick={() => handleConfigure(PMS_ADAPTERS[0])}
+                onClick={() => handleConfigure(adapters[0])}
                 className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-white/20 text-white rounded-lg hover:bg-white/30"
               >
                 <Settings className="w-3.5 h-3.5" />
                 Configure
               </button>
               <button
-                onClick={() => setLogsModal({ open: true, adapter: PMS_ADAPTERS[0] })}
+                onClick={() => setLogsModal({ open: true, adapter: adapters[0] })}
                 className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-white/20 text-white rounded-lg hover:bg-white/30"
               >
                 <Activity className="w-3.5 h-3.5" />
@@ -1371,7 +1405,7 @@ export default function PMSIntegration() {
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            {PMS_ADAPTERS.filter(a => a.status === 'connected').map(a => (
+            {adapters.filter(a => a.status === 'connected').map(a => (
               <span key={a.id} className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-sm">
                 <span className="w-2 h-2 rounded-full bg-white" />
                 {a.name}
@@ -1385,7 +1419,7 @@ export default function PMSIntegration() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <StatCard
             label="Adapters Available"
-            value={PMS_ADAPTERS.length}
+            value={adapters.length}
             icon={Database}
             color="bg-blue-600"
           />
@@ -1432,10 +1466,10 @@ export default function PMSIntegration() {
               const isActive = activeFilter === filter.id;
               const count =
                 filter.id === 'all'
-                  ? PMS_ADAPTERS.length
+                  ? adapters.length
                   : filter.id === 'connected'
-                  ? PMS_ADAPTERS.filter((a) => a.status === 'connected').length
-                  : PMS_ADAPTERS.filter((a) => a.category === filter.id).length;
+                  ? adapters.filter((a) => a.status === 'connected').length
+                  : adapters.filter((a) => a.category === filter.id).length;
               return (
                 <button
                   key={filter.id}
@@ -1500,7 +1534,7 @@ export default function PMSIntegration() {
         {filteredAdapters.length > 0 && (
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-500">
-              Showing {filteredAdapters.length} of {PMS_ADAPTERS.length} PMS adapters
+              Showing {filteredAdapters.length} of {adapters.length} PMS adapters
             </p>
           </div>
         )}
