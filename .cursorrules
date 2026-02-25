@@ -15,7 +15,7 @@
 - backend/routes/ - 11 route files (auth, cases, evidence, analytics, webhooks, admin, pms, notifications, disputes, reservations, sync)
 - backend/services/ - AI agents, AutoClerk PMS emulator, dispute companies, PMS integration, fraud detection
 - backend/services/pms/ - 30 PMS adapter modules
-- backend/services/disputes/ - 29 dispute processor adapter modules
+- backend/services/disputes/ - 27 dispute processor adapter modules
 - backend/services/queue/ - BullMQ job queue & workers
 - backend/middleware/auth.js - JWT authentication with demo mode fallback
 - backend/utils/validators.js - Lightweight Zod-compatible validation
@@ -67,7 +67,7 @@ Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, E
 - Analytics KPI cards are clickable (navigate to filtered cases)
 - All integration pages (PMS, OTA, Dispute) have working: Sign In (portal links), Configure modal, Connect/Disconnect, View Logs, two-way sync badges
 - Multi-PMS support: Reservations page has PMS switcher tabs, backend accepts ?pmsSource= parameter
-- Multi-integration: All 68 integrations can be active simultaneously across multiple properties
+- Multi-integration: All 66 integrations can be active simultaneously across multiple properties
 - OTA page: "Connect All" button, active integrations strip showing all connected OTAs
 - Dispute page: Connect/Disconnect toggle per company, "Connect All" button, active integrations summary
 - PMS page: Multi-PMS banner showing all connected PMS systems
@@ -105,7 +105,7 @@ Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, E
 - React functional components with hooks only
 - JWT tokens stored in localStorage via useAuth context
 - Node 20 LTS required (Node 25 has severe CJS performance issues)
-- Backend startup loads 68 integrations, takes ~24s in demo mode
+- Backend startup loads 66 integrations, takes ~24s in demo mode
 
 ## Demo Credentials
 - admin@disputeai.com / DisputeAdmin123!

@@ -105,7 +105,7 @@ Hotel.Chargeback.Fraud_OMNI/
 │   │   ├── autoclerkEmulator.js # AutoClerk PMS emulator
 │   │   ├── fraudDetection.js  #   AI fraud analysis engine
 │   │   ├── pmsIntegration.js  #   30 PMS adapters
-│   │   ├── disputeCompanies.js #  29 dispute processor adapters
+│   │   ├── disputeCompanies.js #  27 dispute processor adapters
 │   │   ├── reservationMatcher.js # Reservation-to-case matching
 │   │   └── queue/             #   BullMQ job queue & workers
 │   ├── middleware/            # Auth, validation middleware

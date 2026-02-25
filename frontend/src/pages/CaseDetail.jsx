@@ -114,6 +114,9 @@ export default function CaseDetail() {
   const [arbDocuments, setArbDocuments] = useState([]);
   const [uploadingDoc, setUploadingDoc] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [caseDocuments, setCaseDocuments] = useState([]);
+  const [uploadingCaseDoc, setUploadingCaseDoc] = useState(false);
+  const [caseDragOver, setCaseDragOver] = useState(false);
 
   useEffect(() => {
     const fetchCase = async () => {
@@ -269,6 +272,49 @@ export default function CaseDetail() {
     if (type === 'Image') return '🖼️';
     if (type === 'Spreadsheet') return '📊';
     return '📎';
+  };
+
+  // Supporting document upload handlers
+  const handleCaseDocUpload = async (files) => {
+    if (!files || files.length === 0) return;
+    setUploadingCaseDoc(true);
+    try {
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('document', file);
+        formData.append('type', 'supporting');
+        await api.post(`/cases/${id}/documents`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        }).catch(() => null);
+
+        const newDoc = {
+          id: `doc-${Date.now()}-${Math.random().toString(36).substring(7)}`,
+          name: file.name,
+          type: file.type.includes('pdf') ? 'PDF' : file.type.includes('image') ? 'Image' : file.type.includes('sheet') || file.type.includes('csv') ? 'Spreadsheet' : 'Document',
+          size: file.size,
+          uploadedAt: new Date().toISOString(),
+          uploadedBy: 'You',
+        };
+        setCaseDocuments(prev => [...prev, newDoc]);
+      }
+    } catch (err) {
+      console.error('Failed to upload supporting document:', err);
+    } finally {
+      setUploadingCaseDoc(false);
+    }
+  };
+
+  const handleCaseDocDrop = (e) => {
+    e.preventDefault();
+    setCaseDragOver(false);
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) handleCaseDocUpload(files);
+  };
+
+  const handleCaseDocSelect = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 0) handleCaseDocUpload(files);
+    e.target.value = '';
   };
 
   const handleAddNote = async () => {
@@ -661,6 +707,134 @@ export default function CaseDetail() {
               )}
             </div>
           </div>
+
+          {/* Supporting Documents Upload (PENDING, IN_REVIEW, LOST, SUBMITTED) */}
+          {(['PENDING', 'IN_REVIEW', 'LOST', 'SUBMITTED'].includes(caseData.status)) && (
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+              <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Upload className="w-4 h-4 text-gray-400" />
+                  <h2 className="text-base font-semibold text-gray-900">Supporting Documents</h2>
+                  {caseDocuments.length > 0 && (
+                    <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                      {caseDocuments.length}
+                    </span>
+                  )}
+                </div>
+                <span className="text-xs text-gray-500">Upload documents to strengthen your case</span>
+              </div>
+              <div className="p-6 space-y-4">
+                {/* Upload area */}
+                <div
+                  onDragOver={(e) => { e.preventDefault(); setCaseDragOver(true); }}
+                  onDragLeave={() => setCaseDragOver(false)}
+                  onDrop={handleCaseDocDrop}
+                  className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                    caseDragOver
+                      ? 'border-blue-400 bg-blue-50'
+                      : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50/30'
+                  }`}
+                >
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleCaseDocSelect}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.xls,.xlsx,.csv,.txt"
+                  />
+                  <div className="flex flex-col items-center gap-2">
+                    {uploadingCaseDoc ? (
+                      <RefreshCw className="w-8 h-8 text-blue-500 animate-spin" />
+                    ) : (
+                      <Upload className="w-8 h-8 text-gray-400" />
+                    )}
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">
+                        {uploadingCaseDoc ? 'Uploading...' : 'Drop files here or click to upload'}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        PDF, DOC, images, spreadsheets up to 25MB each
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Suggested documents for different statuses */}
+                {caseDocuments.length === 0 && (
+                  <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">Recommended Documents</p>
+                    <ul className="space-y-1.5">
+                      <li className="text-xs text-gray-600 flex items-center gap-2">
+                        <span className="w-1 h-1 bg-blue-400 rounded-full flex-shrink-0" />
+                        Signed registration card or check-in agreement
+                      </li>
+                      <li className="text-xs text-gray-600 flex items-center gap-2">
+                        <span className="w-1 h-1 bg-blue-400 rounded-full flex-shrink-0" />
+                        Guest folio with itemized charges
+                      </li>
+                      <li className="text-xs text-gray-600 flex items-center gap-2">
+                        <span className="w-1 h-1 bg-blue-400 rounded-full flex-shrink-0" />
+                        Booking confirmation with cancellation policy
+                      </li>
+                      <li className="text-xs text-gray-600 flex items-center gap-2">
+                        <span className="w-1 h-1 bg-blue-400 rounded-full flex-shrink-0" />
+                        ID verification or credit card authorization form
+                      </li>
+                      {caseData.status === 'LOST' && (
+                        <li className="text-xs text-gray-600 flex items-center gap-2">
+                          <span className="w-1 h-1 bg-blue-400 rounded-full flex-shrink-0" />
+                          New evidence not included in original submission
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Document list */}
+                {caseDocuments.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Uploaded Documents ({caseDocuments.length})
+                    </p>
+                    {caseDocuments.map((doc) => (
+                      <div
+                        key={doc.id}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100 hover:bg-gray-100 transition-colors group"
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-9 h-9 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-base flex-shrink-0">
+                            {getDocIcon(doc.type)}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">{doc.name}</p>
+                            <div className="flex items-center gap-2 text-xs text-gray-500">
+                              <span>{doc.type}</span>
+                              {doc.size && (
+                                <>
+                                  <span className="text-gray-300">·</span>
+                                  <span>{formatFileSize(doc.size)}</span>
+                                </>
+                              )}
+                              <span className="text-gray-300">·</span>
+                              <span>{formatDate(doc.uploadedAt)}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="View">
+                            <Eye className="w-4 h-4" />
+                          </button>
+                          <button className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="Download">
+                            <Download className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Resolution / Outcome Section (WON or LOST cases) */}
           {caseData.resolution && (

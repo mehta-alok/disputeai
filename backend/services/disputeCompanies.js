@@ -5,7 +5,6 @@
  * Manages connections with hotel dispute management companies including:
  * - Merlink (2-way integration)
  * - Chargebacks911
- * - CAVU
  * - Verifi (Visa)
  * - Ethoca (Mastercard)
  */
@@ -268,7 +267,7 @@ const DISPUTE_COMPANIES = {
   },
   MIDIGATOR: {
     name: 'Midigator',
-    fullName: 'Midigator by CAVU',
+    fullName: 'Midigator',
     type: 'dispute_management',
     category: 'general',
     twoWaySync: true,
@@ -278,8 +277,7 @@ const DISPUTE_COMPANIES = {
       'Dispute Intelligence',
       'Automated Responses',
       'Analytics & Reporting',
-      'Prevention Alerts',
-      'CAVU Integration'
+      'Prevention Alerts'
     ],
     requiredConfig: ['apiKey', 'accountId'],
     optionalConfig: ['autoRespond'],
@@ -287,49 +285,6 @@ const DISPUTE_COMPANIES = {
     apiBaseUrl: process.env.MIDIGATOR_API_URL || 'https://api.midigator.com/v1',
     description: 'Intelligent dispute management platform with comprehensive analytics'
   },
-  CAVU: {
-    name: 'CAVU',
-    fullName: 'CAVU Payment Solutions',
-    type: 'dispute_management',
-    category: 'general',
-    twoWaySync: true,
-    logo: '✈️',
-    portalUrl: 'https://portal.cavupayments.com',
-    features: [
-      'Hospitality Focus',
-      'Real-time Alerts',
-      'Evidence Collection',
-      'Response Management',
-      'Payment Processing'
-    ],
-    requiredConfig: ['apiKey', 'clientId', 'clientSecret'],
-    optionalConfig: ['propertyCode'],
-    webhookEndpoint: '/api/webhooks/cavu',
-    apiBaseUrl: process.env.CAVU_API_URL || 'https://api.cavupayments.com/v1',
-    description: 'Hospitality-focused payment and dispute solution'
-  },
-  TAILOREDPAY: {
-    name: 'TailoredPay',
-    fullName: 'TailoredPay',
-    type: 'dispute_management',
-    category: 'general',
-    twoWaySync: true,
-    logo: '🎯',
-    portalUrl: 'https://merchant.tailoredpay.com',
-    features: [
-      'Fraud Prevention',
-      'Chargeback Management',
-      'High-Risk Support',
-      'Payment Services',
-      'Merchant Services'
-    ],
-    requiredConfig: ['apiKey', 'merchantId'],
-    optionalConfig: ['webhookSecret'],
-    webhookEndpoint: '/api/webhooks/tailoredpay',
-    apiBaseUrl: process.env.TAILOREDPAY_API_URL || 'https://api.tailoredpay.com/v1',
-    description: 'Fraud prevention + chargeback management as part of high-risk merchant payment services'
-  },
-
   // =========================================================================
   // CARD NETWORK PORTALS
   // =========================================================================
