@@ -18,10 +18,11 @@ Protecting hotel revenue through intelligent fraud detection, automated evidence
 ## Features
 
 - **8 AI Agents** -- Autonomous fraud analysis, evidence processing, dispute strategy, security scanning, and more
-- **30 PMS Integrations** -- Two-way sync with Opera, Mews, Cloudbeds, and 27 others (AutoClerk built-in emulator)
-- **29 Dispute Processor Adapters** -- Visa VROL, Mastercom, Ethoca, Verifi, Stripe, Elavon, Chase, Fiserv, and more with portal sign-in and two-way sync
-- **9 OTA Integrations** -- Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Engine with real-time monitoring
-- **Real-Time Reservation Search** -- Full-text search across all guest, booking, and payment fields
+- **30 PMS Integrations** -- Two-way sync with Opera, Mews, Cloudbeds, and 27 others (AutoClerk built-in emulator); multi-PMS switcher on Reservations page
+- **29 Dispute Processor Adapters** -- Visa VROL, Mastercom, Ethoca, Verifi, Stripe, Elavon, Chase, Fiserv, and more; all integrations can be active simultaneously
+- **9 OTA Integrations** -- Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Engine; multi-channel with Connect All
+- **Multi-Property Support** -- Switch between PMS systems, run all OTA/Dispute integrations simultaneously across properties
+- **Real-Time Reservation Search** -- Full-text search across all guest, booking, and payment fields with PMS source filtering
 - **Automated Evidence Collection** -- 7 evidence types (ID scan, signatures, folio, key card logs, CCTV, correspondence, cancellation policy)
 - **Interactive Tutorial & ChatHelp AI Assistant** -- Built-in onboarding walkthrough and contextual help
 - **Role-Based Access Control** -- Admin, Manager, and Staff roles with property-level data isolation

@@ -66,6 +66,11 @@ Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, E
 - ChatHelp AI assistant widget on all pages
 - Analytics KPI cards are clickable (navigate to filtered cases)
 - All integration pages (PMS, OTA, Dispute) have working: Sign In (portal links), Configure modal, Connect/Disconnect, View Logs, two-way sync badges
+- Multi-PMS support: Reservations page has PMS switcher tabs, backend accepts ?pmsSource= parameter
+- Multi-integration: All 68 integrations can be active simultaneously across multiple properties
+- OTA page: "Connect All" button, active integrations strip showing all connected OTAs
+- Dispute page: Connect/Disconnect toggle per company, "Connect All" button, active integrations summary
+- PMS page: Multi-PMS banner showing all connected PMS systems
 - Login response structure: { message, user, tokens: { accessToken, refreshToken }, isDemo }
 
 ## API Endpoints
@@ -81,6 +86,9 @@ Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, E
 - GET /api/analytics/dashboard - Dashboard KPIs
 - GET /api/analytics/trends - Trend data
 - GET /api/pms/status - PMS integration status
+- GET /api/pms/connected - List of connected PMS systems (multi-property)
+- GET /api/reservations?pmsSource=X - Reservations from specific PMS (autoclerk, mews, opera-cloud)
+- GET /api/reservations/pms/status?pmsSource=X - PMS status for specific source
 - GET /api/disputes/companies - Dispute processor list (29 companies)
 - GET /api/reservations - List reservations
 - GET /api/reservations/search/live - Real-time PMS search

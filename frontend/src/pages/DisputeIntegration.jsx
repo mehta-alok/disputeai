@@ -26,7 +26,10 @@ import {
   EyeOff,
   Save,
   Search,
-  Filter
+  Filter,
+  Zap,
+  Link2,
+  Globe
 } from 'lucide-react';
 
 function TypeBadge({ type }) {
@@ -177,12 +180,12 @@ function ConfigureModal({ company, onClose }) {
   );
 }
 
-function CompanyCard({ company, onConfigure }) {
+function CompanyCard({ company, onConfigure, isConnected, onToggleConnection }) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-md transition-shadow">
+    <div className={`bg-white rounded-lg border p-5 hover:shadow-md transition-shadow ${isConnected ? 'border-emerald-300 ring-1 ring-emerald-100' : 'border-gray-200'}`}>
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Shield className="w-5 h-5 text-indigo-600" />
+          <Shield className={`w-5 h-5 ${isConnected ? 'text-emerald-600' : 'text-indigo-600'}`} />
           <h3 className="font-semibold text-gray-900">{company.name}</h3>
         </div>
         <div className="flex items-center gap-1.5">
@@ -191,7 +194,7 @@ function CompanyCard({ company, onConfigure }) {
               <ArrowLeftRight className="w-3 h-3" />
             </span>
           )}
-          {company.status === 'active' ? (
+          {isConnected ? (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
               <CheckCircle className="w-3 h-3" /> Active
             </span>
@@ -232,7 +235,7 @@ function CompanyCard({ company, onConfigure }) {
             href={company.portalUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
+            className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition-colors"
           >
             <ExternalLink className="w-3.5 h-3.5" />
             Sign In
@@ -240,10 +243,24 @@ function CompanyCard({ company, onConfigure }) {
         )}
         <button
           onClick={() => onConfigure(company)}
-          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors"
+          className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors"
         >
           <Settings className="w-3.5 h-3.5" />
           Configure
+        </button>
+        <button
+          onClick={() => onToggleConnection(company.id)}
+          className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${
+            isConnected
+              ? 'text-red-600 bg-red-50 hover:bg-red-100'
+              : 'text-green-600 bg-green-50 hover:bg-green-100'
+          }`}
+        >
+          {isConnected ? (
+            <><XCircle className="w-3.5 h-3.5" /> Disconnect</>
+          ) : (
+            <><Link2 className="w-3.5 h-3.5" /> Connect</>
+          )}
         </button>
       </div>
     </div>
@@ -264,6 +281,8 @@ export default function DisputeIntegration() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
   const [configureCompany, setConfigureCompany] = useState(null);
+  // Track connected companies locally (in demo mode, simulate some as active)
+  const [connectedIds, setConnectedIds] = useState(new Set());
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -272,6 +291,12 @@ export default function DisputeIntegration() {
         const data = res?.companies || res?.data?.companies || [];
         if (data.length > 0) {
           setCompanies(data);
+          // In demo mode, auto-connect a subset of companies to demonstrate multi-integration
+          const defaultConnected = new Set();
+          data.forEach((c, i) => {
+            if (c.status === 'active' || i < 8) defaultConnected.add(c.id);
+          });
+          setConnectedIds(defaultConnected);
         }
       } catch (err) {
         console.debug('Could not fetch dispute companies:', err.message);
@@ -282,7 +307,28 @@ export default function DisputeIntegration() {
     fetchCompanies();
   }, []);
 
-  const filteredCompanies = companies.filter(c => {
+  const handleToggleConnection = (companyId) => {
+    setConnectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(companyId)) {
+        next.delete(companyId);
+      } else {
+        next.add(companyId);
+      }
+      return next;
+    });
+  };
+
+  const handleConnectAll = () => {
+    setConnectedIds(new Set(companies.map(c => c.id)));
+  };
+
+  const companiesWithStatus = companies.map(c => ({
+    ...c,
+    status: connectedIds.has(c.id) ? 'active' : c.status
+  }));
+
+  const filteredCompanies = companiesWithStatus.filter(c => {
     const matchesSearch = !searchTerm ||
       c.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       c.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -292,11 +338,12 @@ export default function DisputeIntegration() {
   });
 
   const categoryCount = (cat) => {
-    if (cat === 'all') return companies.length;
-    return companies.filter(c => c.category === cat).length;
+    if (cat === 'all') return companiesWithStatus.length;
+    return companiesWithStatus.filter(c => c.category === cat).length;
   };
 
-  const twoWayCount = companies.filter(c => c.twoWaySync).length;
+  const twoWayCount = companiesWithStatus.filter(c => c.twoWaySync).length;
+  const activeCount = connectedIds.size;
 
   return (
     <div className="space-y-6">
@@ -305,16 +352,101 @@ export default function DisputeIntegration() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dispute Companies</h1>
           <p className="mt-1 text-sm text-gray-500">
-            {companies.length} integrations ({twoWayCount} with two-way sync)
+            {companiesWithStatus.length} integrations available — connect as many as needed across all properties
           </p>
         </div>
-        <button
-          onClick={() => window.location.reload()}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
-        >
-          <RefreshCw className="w-4 h-4" />
-          Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          {activeCount < companiesWithStatus.length && (
+            <button
+              onClick={handleConnectAll}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700"
+            >
+              <Zap className="w-4 h-4" />
+              Connect All
+            </button>
+          )}
+          <button
+            onClick={() => window.location.reload()}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      {/* Active Integrations Summary */}
+      {activeCount > 0 && (
+        <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-4 text-white">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold flex items-center gap-2">
+              <Shield className="w-5 h-5" />
+              {activeCount} of {companiesWithStatus.length} Dispute Integrations Active
+            </h3>
+            <span className="text-sm text-indigo-200">{twoWayCount} with two-way sync</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {companiesWithStatus.filter(c => connectedIds.has(c.id)).slice(0, 12).map(c => (
+              <span key={c.id} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white/20 rounded-full text-xs">
+                <CheckCircle className="w-3 h-3" />
+                {c.name}
+              </span>
+            ))}
+            {activeCount > 12 && (
+              <span className="inline-flex items-center px-2.5 py-1 bg-white/10 rounded-full text-xs text-indigo-200">
+                +{activeCount - 12} more
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <Link2 className="w-5 h-5 text-green-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{activeCount}/{companiesWithStatus.length}</p>
+              <p className="text-sm text-gray-500">Active</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <ArrowLeftRight className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{twoWayCount}</p>
+              <p className="text-sm text-gray-500">Two-Way Sync</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <CreditCard className="w-5 h-5 text-purple-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{categoryCount('network')}</p>
+              <p className="text-sm text-gray-500">Card Networks</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-200 p-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-amber-100 rounded-lg">
+              <Globe className="w-5 h-5 text-amber-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{categoryCount('processor')}</p>
+              <p className="text-sm text-gray-500">Processors</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Search + Category Filters */}
@@ -378,7 +510,9 @@ export default function DisputeIntegration() {
             <CompanyCard
               key={company.id || company.name || idx}
               company={company}
+              isConnected={connectedIds.has(company.id)}
               onConfigure={setConfigureCompany}
+              onToggleConnection={handleToggleConnection}
             />
           ))}
         </div>

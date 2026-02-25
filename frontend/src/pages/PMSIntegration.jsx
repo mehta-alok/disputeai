@@ -1323,7 +1323,7 @@ export default function PMSIntegration() {
                 PMS Integrations
               </h1>
               <p className="mt-1 text-sm text-gray-500">
-                Connect your Property Management System to automate evidence collection
+                Connect multiple PMS systems across all properties — all integrations run simultaneously
               </p>
             </div>
             <a
@@ -1341,34 +1341,43 @@ export default function PMSIntegration() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Connection Status Banner */}
-        <div className="mb-6 p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        {/* Multi-PMS Connection Status Banner */}
+        <div className="mb-6 p-5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl text-white">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-green-600 rounded-xl">
-                <Wifi className="w-5 h-5 text-white" />
+              <div className="p-2.5 bg-white/20 rounded-xl">
+                <Wifi className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-green-900">AutoClerk PMS Connected</p>
-                <p className="text-xs text-green-600">Real-time sync active - Last updated 2 minutes ago</p>
+                <p className="font-semibold">{connectedCount} PMS System{connectedCount !== 1 ? 's' : ''} Connected</p>
+                <p className="text-sm text-green-100">{totalSyncedReservations} reservations synced — all systems run simultaneously</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleConfigure(PMS_ADAPTERS[0])}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-white border border-green-300 text-green-700 rounded-lg hover:bg-green-50"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-white/20 text-white rounded-lg hover:bg-white/30"
               >
                 <Settings className="w-3.5 h-3.5" />
                 Configure
               </button>
               <button
                 onClick={() => setLogsModal({ open: true, adapter: PMS_ADAPTERS[0] })}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-white border border-green-300 text-green-700 rounded-lg hover:bg-green-50"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium bg-white/20 text-white rounded-lg hover:bg-white/30"
               >
                 <Activity className="w-3.5 h-3.5" />
                 View Logs
               </button>
             </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {PMS_ADAPTERS.filter(a => a.status === 'connected').map(a => (
+              <span key={a.id} className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-sm">
+                <span className="w-2 h-2 rounded-full bg-white" />
+                {a.name}
+                {a.syncCount > 0 && <span className="text-green-200 text-xs">({a.syncCount})</span>}
+              </span>
+            ))}
           </div>
         </div>
 

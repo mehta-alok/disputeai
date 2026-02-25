@@ -6,7 +6,8 @@ import GuestFolioViewer from '../components/GuestFolioViewer';
 import {
   Search, Hotel, CalendarCheck, CreditCard, FileText, Shield, Key,
   Camera, Mail, Phone, User, MapPin, RefreshCw, ChevronDown, ChevronUp,
-  Package, Download, ExternalLink, Wifi, CheckCircle, Clock, AlertTriangle
+  Package, Download, ExternalLink, Wifi, CheckCircle, Clock, AlertTriangle,
+  Building2, ArrowLeftRight
 } from 'lucide-react';
 
 const EVIDENCE_ICONS = {
@@ -47,6 +48,12 @@ function StatusBadge({ status }) {
 
 export default function Reservations() {
   const { user } = useAuth();
+
+  // Multi-PMS state
+  const [connectedSystems, setConnectedSystems] = useState([]);
+  const [activePms, setActivePms] = useState('autoclerk');
+  const [pmsLoading, setPmsLoading] = useState(true);
+
   const [pmsStatus, setPmsStatus] = useState(null);
   const [reservations, setReservations] = useState([]);
   const [total, setTotal] = useState(0);
@@ -67,19 +74,42 @@ export default function Reservations() {
   const [collectLoading, setCollectLoading] = useState(false);
   const [collectResult, setCollectResult] = useState(null);
 
-  // Fetch PMS status
+  // Fetch connected PMS systems on mount
   useEffect(() => {
-    api.get('/reservations/pms/status')
+    setPmsLoading(true);
+    api.get('/pms/connected')
+      .then((data) => {
+        const systems = data.systems || [];
+        setConnectedSystems(systems);
+        if (systems.length > 0) {
+          const primary = systems.find(s => s.isPrimary) || systems[0];
+          setActivePms(primary.id);
+        }
+      })
+      .catch(() => {
+        // Fallback: single AutoClerk connection
+        setConnectedSystems([{
+          id: 'autoclerk', name: 'AutoClerk', propertyName: 'Grand Hotel & Suites',
+          status: 'connected', reservationsCount: 12, color: '#10B981', isPrimary: true,
+        }]);
+      })
+      .finally(() => setPmsLoading(false));
+  }, []);
+
+  // Fetch PMS status whenever active PMS changes
+  useEffect(() => {
+    if (!activePms) return;
+    api.get('/reservations/pms/status', { pmsSource: activePms })
       .then((data) => setPmsStatus(data))
       .catch(() => setPmsStatus(null));
-  }, []);
+  }, [activePms]);
 
   // Fetch reservations
   const fetchReservations = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const params = { page, limit };
+      const params = { page, limit, pmsSource: activePms };
       if (searchQuery.trim()) params.search = searchQuery.trim();
       const data = await api.get('/reservations', params);
       setReservations(data.reservations || []);
@@ -91,11 +121,23 @@ export default function Reservations() {
     } finally {
       setLoading(false);
     }
-  }, [page, limit, searchQuery]);
+  }, [page, limit, searchQuery, activePms]);
 
   useEffect(() => {
     fetchReservations();
   }, [fetchReservations]);
+
+  // Handle PMS switch
+  const handlePmsSwitch = (pmsId) => {
+    if (pmsId === activePms) return;
+    setActivePms(pmsId);
+    setPage(1);
+    setSearchQuery('');
+    setExpandedId(null);
+    setDetailData(null);
+    setEvidence(null);
+    setCollectResult(null);
+  };
 
   // Expand row -> fetch detail
   const toggleExpand = async (id) => {
@@ -112,7 +154,7 @@ export default function Reservations() {
     setCollectResult(null);
     setDetailLoading(true);
     try {
-      const data = await api.get(`/reservations/${id}`);
+      const data = await api.get(`/reservations/${id}`, { pmsSource: activePms });
       setDetailData(data.reservation || data);
     } catch {
       setDetailData(null);
@@ -125,7 +167,7 @@ export default function Reservations() {
   const fetchEvidence = async (id) => {
     setEvidenceLoading(true);
     try {
-      const data = await api.get(`/reservations/${id}/evidence`);
+      const data = await api.get(`/reservations/${id}/evidence`, { pmsSource: activePms });
       setEvidence(data.evidence || []);
     } catch {
       setEvidence([]);
@@ -140,7 +182,7 @@ export default function Reservations() {
     setCollectLoading(true);
     setCollectResult(null);
     try {
-      const data = await api.post(`/reservations/${id}/evidence/collect`, { caseId: collectCaseId.trim() });
+      const data = await api.post(`/reservations/${id}/evidence/collect`, { caseId: collectCaseId.trim(), pmsSource: activePms });
       setCollectResult({ success: true, message: data.message || 'Evidence collected successfully' });
     } catch (err) {
       setCollectResult({ success: false, message: err.message || 'Failed to collect evidence' });
@@ -161,7 +203,12 @@ export default function Reservations() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Reservations</h1>
-          <p className="text-sm text-gray-500 mt-1">Powered by AutoClerk PMS</p>
+          <p className="text-sm text-gray-500 mt-1">
+            {connectedSystems.length > 1
+              ? `${connectedSystems.length} PMS systems connected`
+              : `Powered by ${connectedSystems[0]?.name || 'PMS'}`
+            }
+          </p>
         </div>
         <button
           onClick={fetchReservations}
@@ -171,6 +218,46 @@ export default function Reservations() {
           Refresh
         </button>
       </div>
+
+      {/* Multi-PMS Switcher Tabs */}
+      {connectedSystems.length > 1 && (
+        <div className="bg-white rounded-xl border border-gray-200 p-1.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto">
+            <div className="flex items-center gap-1.5 px-2 text-xs text-gray-400 font-medium uppercase tracking-wider whitespace-nowrap">
+              <ArrowLeftRight className="w-3.5 h-3.5" />
+              Switch PMS
+            </div>
+            {connectedSystems.map((sys) => {
+              const isActive = sys.id === activePms;
+              return (
+                <button
+                  key={sys.id}
+                  onClick={() => handlePmsSwitch(sys.id)}
+                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                    isActive
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  }`}
+                >
+                  <span
+                    className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${isActive ? 'bg-white' : ''}`}
+                    style={!isActive ? { backgroundColor: sys.color || '#6B7280' } : {}}
+                  />
+                  <span>{sys.name}</span>
+                  <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
+                  }`}>
+                    {sys.propertyName}
+                  </span>
+                  <span className={`text-xs tabular-nums ${isActive ? 'text-blue-200' : 'text-gray-400'}`}>
+                    {sys.reservationsCount || 0}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* PMS Status Banner */}
       {pmsStatus && (

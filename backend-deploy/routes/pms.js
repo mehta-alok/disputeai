@@ -7,6 +7,64 @@ router.get('/status', authenticateToken, async (req, res) => {
   res.json({ connected: false, adapters: [], message: 'PMS integration (demo mode)' });
 });
 
+/**
+ * GET /api/pms/connected
+ * Returns list of connected PMS systems for multi-property support.
+ * In demo mode, returns AutoClerk as the primary connected PMS
+ * plus simulated connections for Mews and Opera Cloud.
+ */
+router.get('/connected', authenticateToken, async (req, res) => {
+  try {
+    // In production, this would query the database for connected PMS systems
+    // In demo mode, we return realistic multi-property connections
+    const connectedSystems = [
+      {
+        id: 'autoclerk',
+        name: 'AutoClerk',
+        propertyName: 'Grand Hotel & Suites',
+        propertyId: 'PROP-001',
+        status: 'connected',
+        lastSync: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+        reservationsCount: 12,
+        color: '#10B981',
+        isPrimary: true,
+      },
+      {
+        id: 'mews',
+        name: 'Mews',
+        propertyName: 'Oceanview Resort',
+        propertyId: 'PROP-002',
+        status: 'connected',
+        lastSync: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+        reservationsCount: 8,
+        color: '#6366F1',
+        isPrimary: false,
+      },
+      {
+        id: 'opera-cloud',
+        name: 'Opera Cloud',
+        propertyName: 'Downtown Business Hotel',
+        propertyId: 'PROP-003',
+        status: 'connected',
+        lastSync: new Date(Date.now() - 32 * 60 * 1000).toISOString(),
+        reservationsCount: 15,
+        color: '#EF4444',
+        isPrimary: false,
+      },
+    ];
+
+    res.json({
+      success: true,
+      systems: connectedSystems,
+      total: connectedSystems.length,
+      isDemo: true,
+    });
+  } catch (error) {
+    logger.error('Get connected PMS systems error:', error);
+    res.status(500).json({ error: 'Failed to get connected PMS systems' });
+  }
+});
+
 router.get('/adapters', authenticateToken, async (req, res) => {
   res.json({ adapters: ['Opera Cloud', 'Mews', 'Cloudbeds', 'AutoClerk', 'Guesty', 'Agilysys'] });
 });

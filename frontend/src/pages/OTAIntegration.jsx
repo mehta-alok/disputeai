@@ -610,23 +610,68 @@ export default function OTAIntegration() {
     }
   };
 
+  const twoWaySyncCount = providers.filter(p => p.status === 'connected' && p.twoWaySync).length;
+
+  const handleConnectAll = () => {
+    setProviders(prev => prev.map(p =>
+      p.status !== 'connected'
+        ? { ...p, status: 'connected', lastSync: 'Just now', reservations: Math.floor(Math.random() * 50) + 10 }
+        : p
+    ));
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">OTA Integrations</h1>
-        <p className="text-gray-500">Two-way integration with Online Travel Agencies for all-in-one guest access</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">OTA Integrations</h1>
+          <p className="text-gray-500">Multi-channel OTA connections — all integrations can be active simultaneously across properties</p>
+        </div>
+        <div className="flex items-center gap-2">
+          {connectedCount < providers.length && (
+            <button
+              onClick={handleConnectAll}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700"
+            >
+              <Zap className="w-4 h-4" />
+              Connect All
+            </button>
+          )}
+        </div>
       </div>
 
+      {/* Active Integrations Strip */}
+      {connectedCount > 0 && (
+        <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-4 text-white">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold flex items-center gap-2">
+              <CheckCircle className="w-5 h-5" />
+              {connectedCount} of {providers.length} OTAs Active
+            </h3>
+            <span className="text-sm text-green-100">{totalReservations} total reservations synced</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {providers.filter(p => p.status === 'connected').map(p => (
+              <span key={p.id} className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 rounded-full text-sm">
+                <span className={`w-5 h-5 ${p.logoColor} rounded-md flex items-center justify-center text-[10px] font-bold`}>{p.logo}</span>
+                {p.name}
+                <span className="text-green-200 text-xs">({p.reservations})</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="card card-body">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-green-100 rounded-lg">
               <Link2 className="w-5 h-5 text-green-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{connectedCount}</p>
-              <p className="text-sm text-gray-500">Connected OTAs</p>
+              <p className="text-2xl font-bold text-gray-900">{connectedCount}/{providers.length}</p>
+              <p className="text-sm text-gray-500">OTAs Connected</p>
             </div>
           </div>
         </div>
@@ -637,7 +682,7 @@ export default function OTAIntegration() {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">{totalReservations}</p>
-              <p className="text-sm text-gray-500">OTA Reservations Synced</p>
+              <p className="text-sm text-gray-500">Reservations Synced</p>
             </div>
           </div>
         </div>
@@ -647,8 +692,19 @@ export default function OTAIntegration() {
               <ArrowLeftRight className="w-5 h-5 text-purple-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">Two-Way</p>
-              <p className="text-sm text-gray-500">Sync Mode Active</p>
+              <p className="text-2xl font-bold text-gray-900">{twoWaySyncCount}</p>
+              <p className="text-sm text-gray-500">Two-Way Sync Active</p>
+            </div>
+          </div>
+        </div>
+        <div className="card card-body">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-amber-100 rounded-lg">
+              <Globe className="w-5 h-5 text-amber-600" />
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{providers.length}</p>
+              <p className="text-sm text-gray-500">Available Channels</p>
             </div>
           </div>
         </div>
