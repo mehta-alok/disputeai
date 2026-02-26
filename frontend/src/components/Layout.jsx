@@ -32,7 +32,12 @@ import {
   RefreshCw,
   Globe,
   Phone,
-  AlertTriangle
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Zap,
+  ExternalLink,
+  Check
 } from 'lucide-react';
 import ChatHelp from './ChatHelp';
 
@@ -55,6 +60,9 @@ export default function Layout({ children }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -89,6 +97,94 @@ export default function Layout({ children }) {
   const handleLogout = async () => {
     await logout();
     navigate('/login');
+  };
+
+  const fetchNotifications = async () => {
+    setNotificationsLoading(true);
+    try {
+      const response = await api.get('/notifications');
+      const data = response.data || response;
+      setNotifications(data.notifications || []);
+      setNotificationCount(data.unreadCount || 0);
+    } catch (err) {
+      console.debug('Could not fetch notifications:', err.message);
+    } finally {
+      setNotificationsLoading(false);
+    }
+  };
+
+  const toggleNotifications = () => {
+    if (!notificationsOpen) {
+      fetchNotifications();
+    }
+    setNotificationsOpen(!notificationsOpen);
+    setUserMenuOpen(false);
+  };
+
+  const handleMarkAsRead = async (notifId) => {
+    try {
+      await api.patch(`/notifications/${notifId}/read`);
+      setNotifications(prev => prev.map(n => n.id === notifId ? { ...n, isRead: true } : n));
+      setNotificationCount(prev => Math.max(0, prev - 1));
+    } catch (err) {
+      // Demo fallback: just update locally
+      setNotifications(prev => prev.map(n => n.id === notifId ? { ...n, isRead: true } : n));
+      setNotificationCount(prev => Math.max(0, prev - 1));
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    try {
+      await api.patch('/notifications/read-all');
+    } catch (err) {
+      // Demo fallback
+    }
+    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+    setNotificationCount(0);
+  };
+
+  const handleNotificationClick = (notif) => {
+    if (!notif.isRead) handleMarkAsRead(notif.id);
+    if (notif.link) {
+      navigate(notif.link);
+      setNotificationsOpen(false);
+    }
+  };
+
+  const getNotifIcon = (type) => {
+    switch (type) {
+      case 'CHARGEBACK_ALERT': return <AlertTriangle className="w-4 h-4 text-red-500" />;
+      case 'AI_ANALYSIS': return <Zap className="w-4 h-4 text-purple-500" />;
+      case 'CASE_WON': return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'DEADLINE_WARNING': return <Clock className="w-4 h-4 text-amber-500" />;
+      case 'EVIDENCE_COLLECTED': return <FileText className="w-4 h-4 text-blue-500" />;
+      case 'CASE_UPDATE': return <RefreshCw className="w-4 h-4 text-indigo-500" />;
+      case 'DOCUMENT_UPLOADED': return <FileText className="w-4 h-4 text-teal-500" />;
+      case 'ARBITRATION_FILED': return <Shield className="w-4 h-4 text-amber-600" />;
+      default: return <Bell className="w-4 h-4 text-gray-500" />;
+    }
+  };
+
+  const getNotifPriorityDot = (priority) => {
+    switch (priority) {
+      case 'HIGH': return 'bg-red-500';
+      case 'MEDIUM': return 'bg-amber-500';
+      case 'LOW': return 'bg-green-500';
+      default: return 'bg-gray-400';
+    }
+  };
+
+  const formatTimeAgo = (dateStr) => {
+    const now = new Date();
+    const date = new Date(dateStr);
+    const diffMs = now - date;
+    const diffMin = Math.floor(diffMs / 60000);
+    if (diffMin < 1) return 'Just now';
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHr = Math.floor(diffMin / 60);
+    if (diffHr < 24) return `${diffHr}h ago`;
+    const diffDays = Math.floor(diffHr / 24);
+    return `${diffDays}d ago`;
   };
 
   return (
@@ -239,14 +335,104 @@ export default function Layout({ children }) {
               </button>
 
               {/* Notification bell */}
-              <button className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
-                <Bell className="w-5 h-5 text-gray-500" />
-                {notificationCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full">
-                    {notificationCount > 9 ? '9+' : notificationCount}
-                  </span>
+              <div className="relative">
+                <button
+                  onClick={toggleNotifications}
+                  className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <Bell className={`w-5 h-5 ${notificationsOpen ? 'text-blue-600' : 'text-gray-500'}`} />
+                  {notificationCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-red-500 rounded-full animate-pulse">
+                      {notificationCount > 9 ? '9+' : notificationCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Notification Dropdown Panel */}
+                {notificationsOpen && (
+                  <div className="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden animate-fade-in z-50">
+                    {/* Header */}
+                    <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+                      <div className="flex items-center gap-2">
+                        <Bell className="w-4 h-4 text-gray-500" />
+                        <h3 className="text-sm font-semibold text-gray-900">Notifications</h3>
+                        {notificationCount > 0 && (
+                          <span className="text-xs font-bold text-white bg-red-500 px-1.5 py-0.5 rounded-full">
+                            {notificationCount}
+                          </span>
+                        )}
+                      </div>
+                      {notifications.some(n => !n.isRead) && (
+                        <button
+                          onClick={handleMarkAllRead}
+                          className="text-xs font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                        >
+                          <Check className="w-3 h-3" />
+                          Mark all read
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Notification List */}
+                    <div className="max-h-[400px] overflow-y-auto">
+                      {notificationsLoading ? (
+                        <div className="flex items-center justify-center py-8">
+                          <RefreshCw className="w-5 h-5 text-blue-500 animate-spin" />
+                        </div>
+                      ) : notifications.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-8 px-4">
+                          <Bell className="w-10 h-10 text-gray-300 mb-2" />
+                          <p className="text-sm text-gray-500 font-medium">No notifications</p>
+                          <p className="text-xs text-gray-400 mt-1">You're all caught up!</p>
+                        </div>
+                      ) : (
+                        notifications.map((notif) => (
+                          <button
+                            key={notif.id}
+                            onClick={() => handleNotificationClick(notif)}
+                            className={`w-full text-left px-4 py-3 border-b border-gray-50 hover:bg-blue-50/50 transition-colors ${
+                              !notif.isRead ? 'bg-blue-50/30' : ''
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="mt-0.5 flex-shrink-0">
+                                {getNotifIcon(notif.type)}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <p className={`text-sm truncate ${!notif.isRead ? 'font-semibold text-gray-900' : 'font-medium text-gray-700'}`}>
+                                    {notif.title}
+                                  </p>
+                                  {!notif.isRead && (
+                                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${getNotifPriorityDot(notif.priority)}`} />
+                                  )}
+                                </div>
+                                <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{notif.message}</p>
+                                <p className="text-[10px] text-gray-400 mt-1">{formatTimeAgo(notif.createdAt)}</p>
+                              </div>
+                              {notif.link && (
+                                <ExternalLink className="w-3 h-3 text-gray-300 mt-1 flex-shrink-0" />
+                              )}
+                            </div>
+                          </button>
+                        ))
+                      )}
+                    </div>
+
+                    {/* Footer */}
+                    {notifications.length > 0 && (
+                      <div className="px-4 py-2.5 border-t border-gray-100 bg-gray-50 text-center">
+                        <button
+                          onClick={() => { setNotificationsOpen(false); navigate('/cases'); }}
+                          className="text-xs font-medium text-blue-600 hover:text-blue-700"
+                        >
+                          View all cases
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 )}
-              </button>
+              </div>
 
               {/* User menu */}
               <div className="relative">
@@ -347,11 +533,11 @@ export default function Layout({ children }) {
         </footer>
       </div>
 
-      {/* Click outside to close user menu */}
-      {userMenuOpen && (
+      {/* Click outside to close dropdowns */}
+      {(userMenuOpen || notificationsOpen) && (
         <div
           className="fixed inset-0 z-20"
-          onClick={() => setUserMenuOpen(false)}
+          onClick={() => { setUserMenuOpen(false); setNotificationsOpen(false); }}
         />
       )}
 

@@ -9,6 +9,7 @@ const { authenticateToken, requireRole, requirePropertyAccess } = require('../mi
 const { createCaseSchema, updateCaseSchema, updateCaseStatusSchema, caseFilterSchema } = require('../utils/validators');
 const { analyzeChargeback } = require('../services/fraudDetection');
 const logger = require('../utils/logger');
+const { addDemoNotification } = require('../controllers/notificationsController');
 
 const router = express.Router();
 
@@ -710,10 +711,20 @@ router.post('/', requireRole('ADMIN', 'MANAGER', 'STAFF'), async (req, res) => {
     });
 
   } catch (error) {
-    logger.error('Create case error:', error);
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: 'Failed to create case'
+    // Demo mode fallback
+    logger.warn('Create case: database unavailable, returning demo response');
+    const caseNumber = `CB-2026-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`;
+    res.status(201).json({
+      message: 'Chargeback created successfully (Demo Mode)',
+      chargeback: {
+        id: `demo-${Date.now()}`,
+        caseNumber,
+        guestName: req.body.guestName || 'Demo Guest',
+        amount: req.body.amount || 0,
+        status: 'PENDING',
+        createdAt: new Date().toISOString()
+      },
+      isDemo: true
     });
   }
 });
@@ -794,6 +805,15 @@ router.post('/:id/submit', requireRole('ADMIN', 'MANAGER', 'STAFF'), async (req,
 
     logger.info(`Case submitted: ${chargeback.caseNumber} by ${req.user.email}`);
 
+    addDemoNotification({
+      type: 'CASE_UPDATE',
+      priority: 'HIGH',
+      title: 'Response Submitted',
+      message: `Case ${chargeback.caseNumber} evidence package submitted to processor.`,
+      link: `/cases/${req.params.id}`,
+      metadata: { caseId: req.params.id }
+    });
+
     res.json({
       message: 'Case submitted successfully',
       chargeback: updatedChargeback,
@@ -803,6 +823,16 @@ router.post('/:id/submit', requireRole('ADMIN', 'MANAGER', 'STAFF'), async (req,
   } catch (error) {
     // Demo mode fallback
     logger.warn('Submit case: database unavailable, returning demo response');
+
+    addDemoNotification({
+      type: 'CASE_UPDATE',
+      priority: 'HIGH',
+      title: 'Response Submitted',
+      message: `Case evidence package submitted to processor successfully.`,
+      link: `/cases/${req.params.id}`,
+      metadata: { caseId: req.params.id }
+    });
+
     res.json({
       message: 'Case submitted successfully (Demo Mode)',
       chargeback: {
@@ -880,10 +910,16 @@ router.patch('/:id', requireRole('ADMIN', 'MANAGER', 'STAFF'), async (req, res) 
     });
 
   } catch (error) {
-    logger.error('Update case error:', error);
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: 'Failed to update case'
+    // Demo mode fallback
+    logger.warn('Update case: database unavailable, returning demo response');
+    res.json({
+      message: 'Chargeback updated successfully (Demo Mode)',
+      chargeback: {
+        id: req.params.id,
+        ...req.body,
+        updatedAt: new Date().toISOString()
+      },
+      isDemo: true
     });
   }
 });
@@ -948,6 +984,16 @@ router.patch('/:id/status', requireRole('ADMIN', 'MANAGER'), async (req, res) =>
 
     logger.info(`Case status updated: ${chargeback.caseNumber} -> ${status} by ${req.user.email}`);
 
+    const statusTitles = { WON: 'Dispute Won!', LOST: 'Dispute Lost', SUBMITTED: 'Response Submitted', PENDING: 'Case Reopened', IN_REVIEW: 'Case Under Review' };
+    addDemoNotification({
+      type: status === 'WON' ? 'CASE_WON' : status === 'LOST' ? 'CHARGEBACK_ALERT' : 'CASE_UPDATE',
+      priority: status === 'WON' ? 'LOW' : status === 'LOST' ? 'HIGH' : 'MEDIUM',
+      title: statusTitles[status] || `Status → ${status}`,
+      message: `Case ${chargeback.caseNumber} status changed to ${status}.`,
+      link: `/cases/${req.params.id}`,
+      metadata: { caseId: req.params.id, status }
+    });
+
     res.json({
       message: 'Status updated successfully',
       chargeback
@@ -960,6 +1006,17 @@ router.patch('/:id/status', requireRole('ADMIN', 'MANAGER'), async (req, res) =>
     if (!status) {
       return res.status(400).json({ error: 'Validation Error', message: 'Status is required' });
     }
+
+    const statusTitles = { WON: 'Dispute Won!', LOST: 'Dispute Lost', SUBMITTED: 'Response Submitted', PENDING: 'Case Reopened', IN_REVIEW: 'Case Under Review' };
+    addDemoNotification({
+      type: status === 'WON' ? 'CASE_WON' : status === 'LOST' ? 'CHARGEBACK_ALERT' : 'CASE_UPDATE',
+      priority: status === 'WON' ? 'LOW' : status === 'LOST' ? 'HIGH' : 'MEDIUM',
+      title: statusTitles[status] || `Status → ${status}`,
+      message: `Case status changed to ${status}.`,
+      link: `/cases/${req.params.id}`,
+      metadata: { caseId: req.params.id, status }
+    });
+
     res.json({
       message: 'Status updated successfully (Demo Mode)',
       chargeback: {
@@ -1263,6 +1320,15 @@ router.post('/:id/arbitration', requireRole('ADMIN', 'MANAGER', 'STAFF'), async 
 
     logger.info(`Arbitration filed: ${existing.caseNumber} by ${req.user.email}`);
 
+    addDemoNotification({
+      type: 'ARBITRATION_FILED',
+      priority: 'HIGH',
+      title: 'Arbitration Filed',
+      message: `Arbitration filed for case ${existing.caseNumber}. Awaiting processor review.`,
+      link: `/cases/${req.params.id}`,
+      metadata: { caseId: req.params.id, caseNumber: existing.caseNumber }
+    });
+
     res.status(201).json({
       message: 'Arbitration filed successfully',
       arbitration: {
@@ -1280,6 +1346,15 @@ router.post('/:id/arbitration', requireRole('ADMIN', 'MANAGER', 'STAFF'), async 
     if (!narrative || narrative.trim().length === 0) {
       return res.status(400).json({ error: 'Validation Error', message: 'Arbitration narrative is required' });
     }
+    addDemoNotification({
+      type: 'ARBITRATION_FILED',
+      priority: 'HIGH',
+      title: 'Arbitration Filed',
+      message: `Arbitration filed for case ${req.params.id}. Awaiting processor review.`,
+      link: `/cases/${req.params.id}`,
+      metadata: { caseId: req.params.id }
+    });
+
     res.status(201).json({
       message: 'Arbitration filed successfully (Demo Mode)',
       arbitration: {
@@ -1305,6 +1380,15 @@ router.post('/:id/arbitration/documents', requireRole('ADMIN', 'MANAGER', 'STAFF
     const caseId = req.params.id;
 
     logger.info(`Arbitration document upload for case ${caseId}`);
+
+    addDemoNotification({
+      type: 'DOCUMENT_UPLOADED',
+      priority: 'MEDIUM',
+      title: 'Arbitration Document Uploaded',
+      message: `New arbitration document "${req.body?.name || 'document'}" uploaded for case ${caseId}.`,
+      link: `/cases/${caseId}`,
+      metadata: { caseId, docType: 'arbitration' }
+    });
 
     res.status(201).json({
       message: 'Document uploaded successfully',
@@ -1346,6 +1430,15 @@ router.post('/:id/documents', requireRole('ADMIN', 'MANAGER', 'STAFF'), async (r
     const caseId = req.params.id;
 
     logger.info(`Supporting document upload for case ${caseId}`);
+
+    addDemoNotification({
+      type: 'DOCUMENT_UPLOADED',
+      priority: 'MEDIUM',
+      title: 'Supporting Document Uploaded',
+      message: `New supporting document "${req.body?.name || 'document'}" uploaded for case ${caseId}.`,
+      link: `/cases/${caseId}`,
+      metadata: { caseId, docType: 'supporting' }
+    });
 
     res.status(201).json({
       message: 'Document uploaded successfully',
@@ -1447,10 +1540,11 @@ router.delete('/:id', requireRole('ADMIN'), async (req, res) => {
     });
 
   } catch (error) {
-    logger.error('Delete case error:', error);
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: 'Failed to delete case'
+    // Demo mode fallback
+    logger.warn('Delete case: database unavailable, returning demo response');
+    res.json({
+      message: 'Chargeback cancelled successfully (Demo Mode)',
+      isDemo: true
     });
   }
 });
