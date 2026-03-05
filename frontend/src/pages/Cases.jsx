@@ -18,6 +18,7 @@ import {
   Download,
   Gavel,
   RefreshCw,
+  Shield,
 } from 'lucide-react';
 import { api } from '../utils/api';
 
@@ -225,11 +226,24 @@ export default function Cases() {
             Refresh
           </button>
           <button
-            onClick={() => navigate('/cases/new')}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+            onClick={() => handleStatusFilter('PENDING')}
+            className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm transition-colors ${
+              summary.urgent > 0
+                ? 'bg-red-600 hover:bg-red-700'
+                : 'bg-blue-600 hover:bg-blue-700'
+            }`}
           >
-            <Plus className="w-4 h-4" />
-            New Case
+            {summary.urgent > 0 ? (
+              <AlertTriangle className="w-4 h-4" />
+            ) : (
+              <Shield className="w-4 h-4" />
+            )}
+            Respond to Cases
+            {summary.urgent > 0 && (
+              <span className="ml-1 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold bg-white/25 rounded-full">
+                {summary.urgent}
+              </span>
+            )}
           </button>
         </div>
       </div>
@@ -263,11 +277,6 @@ export default function Cases() {
             </button>
           );
         })}
-        {summary.urgent > 0 && (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-full bg-red-50 text-red-700 border border-red-200">
-            <AlertTriangle className="w-3 h-3" /> {summary.urgent} Urgent
-          </span>
-        )}
       </div>
 
       {/* Search Bar */}
@@ -317,16 +326,8 @@ export default function Cases() {
                 ? `No ${STATUS_MAP[statusFilter]?.label || ''} cases. Try removing the filter.`
                 : search
                 ? 'No cases match your search. Try different keywords.'
-                : 'Get started by creating your first chargeback case.'}
+                : 'No chargeback cases received yet. Cases appear here automatically when disputes are filed.'}
             </p>
-            {!statusFilter && !search && (
-              <button
-                onClick={() => navigate('/cases/new')}
-                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700"
-              >
-                <Plus className="w-4 h-4" /> Create a case
-              </button>
-            )}
           </div>
         ) : (
           <>

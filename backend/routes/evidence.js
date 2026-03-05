@@ -6,6 +6,7 @@
 const express = require('express');
 const { authenticateToken } = require('../middleware/auth');
 const { autoclerk } = require('../services/autoclerkEmulator');
+const { analyzeChargeback } = require('../services/fraudDetection');
 const logger = require('../utils/logger');
 
 const router = express.Router();
@@ -69,13 +70,22 @@ router.post('/:caseId/collect', authenticateToken, async (req, res) => {
 
     logger.info(`Evidence collected: ${stored.length} documents for case ${req.params.caseId} from ${confirmationNumber}`);
 
+    // Run fraud analysis after evidence collection
+    let analysis = null;
+    try {
+      analysis = await analyzeChargeback(req.params.caseId);
+    } catch (analysisErr) {
+      logger.warn('Post-collection analysis error:', analysisErr.message);
+    }
+
     res.json({
       success: true,
       message: `Collected ${stored.length} evidence documents from AutoClerk PMS`,
       caseId: req.params.caseId,
       confirmationNumber,
       evidence: stored,
-      total: stored.length
+      total: stored.length,
+      analysis
     });
   } catch (error) {
     logger.warn('Collect evidence: error, returning demo collected evidence');

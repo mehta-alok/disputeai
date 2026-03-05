@@ -2,96 +2,117 @@
 
 > AI-Powered Hotel Chargeback Defense Platform. Protects hotel revenue through intelligent fraud detection, automated evidence collection, and AI-driven dispute management.
 
-DisputeAI is a full-stack SaaS platform purpose-built for the hospitality industry. It automates the chargeback representment process by collecting PMS evidence, analyzing fraud signals with AI, and managing disputes across 68 payment and hotel system integrations.
+DisputeAI is a full-stack SaaS platform purpose-built for the hospitality industry. It automates the chargeback representment process by collecting PMS evidence, analyzing fraud signals with AI, and managing disputes across 66 payment and hotel system integrations.
 
 ## Core Capabilities
 
 - Chargeback case management with AI-powered fraud scoring (0-100% confidence)
-- Automated evidence collection from Property Management Systems (7 evidence types)
+- **Auto-evidence pipeline**: Matches chargebacks to PMS reservations, collects 7 evidence types, scores confidence, recommends action
 - Arbitration workflow for lost cases (filing, document upload, deadline tracking)
 - 30 PMS integrations with two-way reservation sync
-- 29 dispute processor adapters with portal sign-in and two-way sync (Visa VROL, Mastercom, Ethoca, Verifi, Stripe, Chase, Fiserv, etc.)
+- 27 dispute processor adapters with portal sign-in and two-way sync (Visa VROL, Mastercom, Ethoca, Verifi, Stripe, Chase, Fiserv, etc.)
 - 9 OTA integrations (Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Engine)
-- 8 autonomous AI agents for fraud analysis, evidence processing, security scanning
+- 4 AI agents for evidence collection, response generation, case analysis, deadline monitoring
 - Role-based access control (Admin, Manager, Staff) with property-level isolation
 - Real-time dashboard with KPIs, analytics, and trend reporting
 - Interactive tutorial system and AI-powered ChatHelp assistant
-- Demo mode that operates fully without database or Redis
+- Demo mode that operates fully without database or Redis (50 endpoints, zero 500 errors)
 
 ## Tech Stack
 
 - Backend: Node.js 20 LTS, Express 4.18, Prisma ORM, PostgreSQL, Redis, BullMQ
 - Frontend: React 18, Vite 5, Tailwind CSS 3.4, React Router 6, Recharts, Lucide React
-- AI Providers: OpenAI, Anthropic, Ollama (configurable)
+- AI Providers: OpenAI, Anthropic, Ollama (configurable; demo uses rule-based scoring)
 - Storage: AWS S3 for evidence, local filesystem fallback
 - Infrastructure: Docker, Terraform (AWS), Vercel, Render/Railway
 
 ## Architecture
 
-### Backend (Port 8000)
+### Auto-Evidence Pipeline (Core Feature)
 
-Entry point: `backend/server.js` with automatic demo mode detection.
+```
+Chargeback Received → Match to PMS Reservation → Collect Evidence → Score Confidence → Recommend Action
+```
 
-API Route Groups:
-- `/api/auth` - JWT authentication with refresh token rotation
-- `/api/cases` - Chargeback case CRUD, status updates, AI analysis, arbitration filing, document upload
-- `/api/evidence` - Evidence collection, upload, download from PMS
-- `/api/analytics` - Dashboard metrics, trends, reports
-- `/api/admin` - User management, system settings
-- `/api/disputes` - Dispute processor connections
-- `/api/notifications` - Real-time notification system
-- `/api/pms` - PMS integration management
-- `/api/reservations` - Reservation lookup, search, folio viewing, case linking
-- `/api/sync` - PMS data synchronization triggers
-- `/api/webhooks` - Payment processor webhooks (Stripe, Adyen, Shift4, Elavon)
-
-Key Services:
-- `services/aiAgents.js` - 8 autonomous AI agents
-- `services/aiClient.js` - Multi-provider AI client (OpenAI/Anthropic/Ollama)
-- `services/fraudDetection.js` - Weighted fraud scoring engine
-- `services/autoclerkEmulator.js` - Built-in PMS emulator for demo
-- `services/pmsIntegration.js` - 30 PMS adapter orchestration
-- `services/disputeCompanies.js` - 29 dispute processor adapters
-- `services/reservationMatcher.js` - Reservation-to-case matching
-
-### Frontend (Port 3000)
-
-Single-page React app with Vite dev server proxying `/api` to backend.
-
-Pages (12):
-- `Login.jsx` - Authentication with demo credentials
-- `Dashboard.jsx` - Main KPI dashboard with charts
-- `Cases.jsx` - Case list with status filters (Pending, In Review, Submitted, Won, Lost, Arbitration)
-- `CaseDetail.jsx` - Full case view with resolution, arbitration (Overview/Documents tabs), timeline, notes, fraud indicators
-- `Analytics.jsx` - Charts, trends, performance reports
-- `Reservations.jsx` - PMS reservation search and management with global search
-- `PMSIntegration.jsx` - PMS system connections (30 adapters) with portal sign-in, configure modal, and activity logs
-- `DisputeIntegration.jsx` - Dispute processor management (29 adapters) with portal sign-in, configure modal, and two-way sync
-- `OTAIntegration.jsx` - OTA channel connections (9 integrations) with portal sign-in, configure modal, and activity logs
-- `Settings.jsx` - System configuration, AI thresholds, notification preferences
-- `Tutorial.jsx` - Interactive 7-step onboarding walkthrough
-- `Contact.jsx` - Contact form and support information
-
-Components:
-- `Layout.jsx` - Sidebar navigation, top bar, mobile bottom bar
-- `ChatHelp.jsx` - AI-powered contextual help assistant (available on all pages)
-- `NotificationPanel.jsx` - Real-time notification bell dropdown
-- `ReservationViewer.jsx` - Reservation detail modal with folio viewer
-- `GuestFolioViewer.jsx` - Guest folio display component
-- `Tutorial.jsx` - Welcome modal and help button
-
-## AI Fraud Detection
-
-Weighted scoring model with three components:
-- Reason Code Analysis (40%) - Historical win rates by dispute type
-- Evidence Completeness (35%) - 7 evidence types: ID scan, authorization signature, checkout signature, guest folio, key card log, correspondence, CCTV footage
-- Fraud Indicators (25%) - Positive signals (matching address, verified identity) and risk flags (no ID scan, no signature, first-time guest)
+1. **reservationMatcher.js** — 6 matching strategies: exact confirmation# (100%), card+dates (90%), name+dates (75%), card-only (60%), name-only (50%), email (70%)
+2. **autoclerkEmulator.js** — In-memory PMS emulator: 10 guests, 13 reservations, 7 evidence types (folio, registration_card, payment_receipt, guest_signature, id_scan, reservation, audit_trail)
+3. **fraudDetection.js** — Rule-based scoring: 15 positive factors (+2 to +15 pts) and 10 negative factors (-3 to -20 pts). Base score 50, clamped 0-100. Case-level flags override evidence presence.
+4. **autoEvidenceCollector.js** — Pipeline orchestrator: Match → Collect → Score → Notify. Runs synchronously in demo mode.
 
 Score-based recommendations:
 - 85-100%: AUTO_SUBMIT (submit defense immediately)
 - 70-84%: REVIEW_RECOMMENDED (manual review)
 - 50-69%: GATHER_MORE_EVIDENCE (missing documentation)
 - 0-49%: UNLIKELY_TO_WIN (consider accepting loss)
+
+### Backend (Port 8000)
+
+Entry point: `backend/server.js` with automatic demo mode detection.
+
+API Route Groups (50 endpoints):
+- `/api/auth` — JWT authentication with refresh token rotation
+- `/api/cases` — Case CRUD, submit, notes, arbitration, auto-collect pipeline
+- `/api/evidence` — Evidence collection (with fraud analysis), upload, summary
+- `/api/analytics` — Dashboard KPIs, trend data
+- `/api/admin` — Users, properties, agents, settings, audit log
+- `/api/disputes` — 27 dispute processor companies
+- `/api/notifications` — Notification count
+- `/api/pms` — PMS connect, sync, config, disconnect
+- `/api/reservations` — Multi-PMS reservation search (?pmsSource=)
+- `/api/sync` — Sync status
+- `/api/webhooks` — Payment processor webhooks
+
+Key Services:
+- `services/autoEvidenceCollector.js` — Pipeline orchestrator (demo mode)
+- `services/reservationMatcher.js` — Multi-strategy reservation matching
+- `services/fraudDetection.js` — Rule-based confidence scoring (25 factors)
+- `services/autoclerkEmulator.js` — In-memory PMS emulator
+- `services/aiAgents.js` — AI agent definitions (production: Claude/GPT)
+- `services/pmsIntegration.js` — 12 PMS adapter definitions
+- `services/disputeCompanies.js` — 27 dispute companies with portal URLs
+- `services/queue/workers/` — BullMQ workers (production async pipeline)
+
+### Frontend (Port 3000)
+
+Single-page React app with Vite dev server proxying `/api` to backend.
+
+Pages (12):
+- `Login.jsx` — Authentication with demo credentials
+- `Dashboard.jsx` — KPI cards (clickable), case breakdown, "Respond to Cases" button (turns red with badge when urgent)
+- `Cases.jsx` — Case list with status filters, merged urgent/respond button
+- `CaseDetail.jsx` — Timeline, evidence with "Auto-Collect" button, fraud indicators, submit/arbitration, document upload
+- `Analytics.jsx` — Charts, trends, performance reports
+- `Reservations.jsx` — Multi-PMS tabs, reservation search, evidence collection
+- `PMSIntegration.jsx` — 30 PMS systems, portal sign-in, configure, connect/disconnect
+- `DisputeIntegration.jsx` — 27 dispute processors, portal sign-in, configure, two-way sync
+- `OTAIntegration.jsx` — 9 OTA channels, portal sign-in, configure
+- `Settings.jsx` — System config, AI defense, notifications, user management
+- `Tutorial.jsx` — Interactive 7-step onboarding
+- `Contact.jsx` — Support info
+
+Components:
+- `Layout.jsx` — Sidebar, top bar, notification bell, mobile bottom bar
+- `ChatHelp.jsx` — AI-powered contextual help assistant
+- `ReservationViewer.jsx` — Reservation detail modal with folio
+- `GuestFolioViewer.jsx` — Guest folio display
+
+## Integrations (66 Total)
+
+### PMS (30)
+Enterprise (15): AutoClerk (built-in emulator), Oracle Opera Cloud, Mews, Cloudbeds, Agilysys, Infor, Stayntouch, RoomKey, Maestro, Hotelogix, RMS Cloud, Protel, eZee, SIHOT, innRoad
+Boutique (6): Little Hotelier, Frontdesk Anywhere, WebRezPro, ThinkReservations, ResNexus, Guestline
+Vacation Rental (4): Guesty, Hostaway, Lodgify, Escapia
+Brand-Specific (5): Marriott GXP, Hilton OnQ, Hyatt Opera, IHG Concerto, Best Western BWR
+
+### Dispute Processors (27)
+Prevention Networks (3): Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink
+Hospitality Services (9): StaySettle, Canary Technologies, Chargeback Gurus, ChargebackHelp, Clearview, Chargeblast, Chargebacks911, Midigator, Riskified
+Card Network Portals (4): Visa VROL, Mastercom, AMEX Merchant, Discover Dispute
+Merchant Processors (9): Chase Merchant, Stripe Disputes, Elavon, Fiserv, Global Payments, TSYS, Square, Authorize.net, Worldpay
+Fraud Prevention (2): Kount, Signifyd
+
+### OTA (9)
+Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Engine
 
 ## Arbitration Workflow
 
@@ -100,23 +121,6 @@ Lost cases may be eligible for arbitration (card network appeal):
 - Document upload via drag-and-drop (PDF, DOC, images, spreadsheets)
 - Deadline and filing fee tracking ($500 non-refundable)
 - Status progression: AVAILABLE -> FILED -> card network binding decision
-
-## PMS Integrations (30)
-
-Enterprise: AutoClerk (built-in emulator), Oracle Opera Cloud, Mews, Cloudbeds, Agilysys, Infor, Stayntouch, RoomKey, Maestro, Hotelogix, RMS Cloud, Protel, eZee, SIHOT, innRoad
-Boutique: Little Hotelier, Frontdesk Anywhere, WebRezPro, ThinkReservations, ResNexus, Guestline
-Vacation Rental: Guesty, Hostaway, Lodgify, Escapia
-Brand-Specific: Marriott GXP, Hilton OnQ, Hyatt Opera, IHG Concerto, Best Western BWR
-
-## Dispute Processors (29)
-
-All companies include portal sign-in links, API configuration modal, and two-way sync badges.
-
-Prevention Networks: Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink
-Hospitality Services: StaySettle, Canary Technologies, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
-Card Network Portals: Visa VROL, Mastercom, AMEX Merchant, Discover Dispute
-Merchant Processors: Chase Merchant, Stripe Disputes, Elavon, Fiserv, Global Payments, TSYS, Square, Authorize.net, Worldpay
-Fraud Prevention: Kount, Signifyd
 
 ## Security
 
@@ -129,7 +133,7 @@ Fraud Prevention: Kount, Signifyd
 
 ## Demo Mode
 
-Fully functional without PostgreSQL or Redis. Activated automatically when database is unavailable or via `DEMO_MODE=true`. Uses in-memory mock data with 9 demo cases, 12 reservations, and pre-configured integrations.
+Fully functional without PostgreSQL or Redis. Activated automatically when database is unavailable or via `DEMO_MODE=true`. Uses in-memory mock data with 9 demo cases, 13 reservations, and pre-configured integrations. All 50 endpoints return meaningful demo data — zero 500 errors.
 
 Demo credentials:
 - Admin: admin@disputeai.com / DisputeAdmin123!

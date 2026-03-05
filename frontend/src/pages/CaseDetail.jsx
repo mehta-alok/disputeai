@@ -117,6 +117,8 @@ export default function CaseDetail() {
   const [caseDocuments, setCaseDocuments] = useState([]);
   const [uploadingCaseDoc, setUploadingCaseDoc] = useState(false);
   const [caseDragOver, setCaseDragOver] = useState(false);
+  const [autoCollecting, setAutoCollecting] = useState(false);
+  const [autoCollectResult, setAutoCollectResult] = useState(null);
 
   useEffect(() => {
     const fetchCase = async () => {
@@ -173,6 +175,57 @@ export default function CaseDetail() {
       console.error('Failed to submit response:', err);
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleAutoCollect = async () => {
+    if (autoCollecting) return;
+    setAutoCollecting(true);
+    setAutoCollectResult(null);
+    try {
+      const response = await api.post(`/cases/${id}/auto-collect`);
+      const result = response.data || response;
+      setAutoCollectResult(result);
+
+      // Refresh evidence list
+      try {
+        const evResponse = await api.get(`/evidence/${id}`);
+        const evData = evResponse.data || evResponse;
+        setEvidence(evData.evidence || evData || []);
+      } catch (evErr) {
+        console.error('Failed to refresh evidence:', evErr);
+      }
+
+      // Update case data with new analysis if available
+      if (result.analysis) {
+        setCaseData(prev => ({
+          ...prev,
+          confidenceScore: result.analysis.confidenceScore,
+          recommendation: result.analysis.recommendation,
+          fraudIndicators: result.analysis.fraudIndicators,
+        }));
+      }
+
+      // Refresh case timeline
+      try {
+        const caseResponse = await api.get(`/cases/${id}`);
+        const caseResult = caseResponse.data || caseResponse;
+        const c = caseResult.chargeback || caseResult.case || caseResult;
+        if (c.timeline) setTimeline(c.timeline);
+      } catch (tlErr) {
+        // If timeline refresh fails, add the pipeline timeline events
+        if (result.timeline) {
+          setTimeline(prev => [
+            ...result.timeline.map((t, i) => ({ id: `auto-${Date.now()}-${i}`, ...t, createdAt: t.timestamp })),
+            ...prev,
+          ]);
+        }
+      }
+    } catch (err) {
+      console.error('Auto-collect failed:', err);
+      setAutoCollectResult({ success: false, message: 'Auto-collection failed. Please try again.' });
+    } finally {
+      setAutoCollecting(false);
     }
   };
 
@@ -626,15 +679,31 @@ export default function CaseDetail() {
                   </span>
                 )}
               </div>
-              {isActionable && (
-                <Link
-                  to={`/reservations?caseId=${id}`}
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
-                >
-                  <Upload className="w-4 h-4" />
-                  Collect Evidence
-                </Link>
-              )}
+              <div className="flex items-center gap-2">
+                {isActionable && (
+                  <button
+                    onClick={handleAutoCollect}
+                    disabled={autoCollecting}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-emerald-600 hover:text-emerald-700 transition-colors disabled:opacity-50"
+                  >
+                    {autoCollecting ? (
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Shield className="w-4 h-4" />
+                    )}
+                    {autoCollecting ? 'Collecting...' : 'Auto-Collect'}
+                  </button>
+                )}
+                {isActionable && (
+                  <Link
+                    to={`/reservations?caseId=${id}`}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                  >
+                    <Upload className="w-4 h-4" />
+                    Manual
+                  </Link>
+                )}
+              </div>
             </div>
             <div className="p-6">
               {evidenceLoading ? (
@@ -1340,6 +1409,58 @@ export default function CaseDetail() {
                 <h2 className="text-base font-semibold text-gray-900">Actions</h2>
               </div>
               <div className="p-6 space-y-3">
+                {/* Auto-Submit Readiness Banner */}
+                {caseData.recommendation === 'AUTO_SUBMIT' && evidence.length > 0 && (
+                  <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg mb-1">
+                    <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs font-semibold text-green-800">Ready for Auto-Submit</p>
+                      <p className="text-xs text-green-600">
+                        {caseData.confidenceScore}% confidence — {evidence.length} evidence documents
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Auto-Collect Result Banner */}
+                {autoCollectResult && (
+                  <div className={`flex items-start gap-2 p-3 rounded-lg border mb-1 ${
+                    autoCollectResult.success
+                      ? 'bg-blue-50 border-blue-200'
+                      : 'bg-red-50 border-red-200'
+                  }`}>
+                    {autoCollectResult.success ? (
+                      <CheckCircle className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                    ) : (
+                      <AlertTriangle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                    )}
+                    <div className="min-w-0">
+                      <p className={`text-xs font-medium ${autoCollectResult.success ? 'text-blue-800' : 'text-red-800'}`}>
+                        {autoCollectResult.message}
+                      </p>
+                      {autoCollectResult.matched && autoCollectResult.reservation && (
+                        <p className="text-xs text-blue-600 mt-0.5">
+                          Matched: {autoCollectResult.reservation.confirmationNumber} ({autoCollectResult.matchStrategy?.replace(/_/g, ' ')})
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Auto-Collect Evidence Button */}
+                <button
+                  onClick={handleAutoCollect}
+                  disabled={autoCollecting}
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {autoCollecting ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Shield className="w-4 h-4" />
+                  )}
+                  {autoCollecting ? 'Collecting Evidence...' : 'Auto-Collect Evidence'}
+                </button>
+
                 <button
                   onClick={handleSubmitResponse}
                   disabled={submitting || evidence.length === 0}
@@ -1352,9 +1473,9 @@ export default function CaseDetail() {
                   )}
                   {submitting ? 'Submitting...' : 'Submit Response'}
                 </button>
-                {evidence.length === 0 && (
+                {evidence.length === 0 && !autoCollecting && (
                   <p className="text-xs text-amber-600 text-center">
-                    Collect evidence before submitting a response.
+                    Click "Auto-Collect Evidence" to gather evidence from PMS automatically.
                   </p>
                 )}
 
@@ -1363,7 +1484,7 @@ export default function CaseDetail() {
                   className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <Package className="w-4 h-4" />
-                  Collect Evidence
+                  Manual Evidence Collection
                 </Link>
               </div>
             </div>

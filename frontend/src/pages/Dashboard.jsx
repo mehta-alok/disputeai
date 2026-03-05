@@ -48,7 +48,7 @@ function StatusBadge({ status }) {
 /* ------------------------------------------------------------------ */
 /*  KPI card                                                           */
 /* ------------------------------------------------------------------ */
-function KPICard({ title, value, subtitle, icon: Icon, trend, color = 'blue' }) {
+function KPICard({ title, value, subtitle, icon: Icon, trend, color = 'blue', onClick }) {
   const colorMap = {
     blue: 'bg-blue-50 text-blue-600',
     emerald: 'bg-emerald-50 text-emerald-600',
@@ -58,7 +58,10 @@ function KPICard({ title, value, subtitle, icon: Icon, trend, color = 'blue' }) 
   const iconColors = colorMap[color] || colorMap.blue;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
+    <div
+      onClick={onClick}
+      className={`bg-white rounded-xl border border-gray-200 p-5 hover:shadow-md transition-shadow ${onClick ? 'cursor-pointer' : ''}`}
+    >
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-500 truncate">{title}</p>
@@ -213,11 +216,24 @@ export default function Dashboard() {
             Refresh
           </button>
           <button
-            onClick={() => navigate('/cases/new')}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm transition-colors"
+            onClick={() => navigate('/cases?status=PENDING')}
+            className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm transition-colors ${
+              (summary.urgentCases ?? 0) > 0
+                ? 'bg-red-600 hover:bg-red-700'
+                : 'bg-blue-600 hover:bg-blue-700'
+            }`}
           >
-            <Plus className="w-4 h-4" />
-            New Case
+            {(summary.urgentCases ?? 0) > 0 ? (
+              <AlertTriangle className="w-4 h-4" />
+            ) : (
+              <Shield className="w-4 h-4" />
+            )}
+            Respond to Cases
+            {(summary.urgentCases ?? 0) > 0 && (
+              <span className="ml-1 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold bg-white/25 rounded-full">
+                {summary.urgentCases}
+              </span>
+            )}
           </button>
         </div>
       </div>
@@ -284,6 +300,7 @@ export default function Dashboard() {
           subtitle="Require immediate attention"
           icon={AlertTriangle}
           color={summary.urgentCases > 0 ? 'red' : 'amber'}
+          onClick={() => navigate('/cases?status=PENDING')}
         />
       </div>
 
@@ -381,13 +398,7 @@ export default function Dashboard() {
         {recentCases.length === 0 ? (
           <div className="p-8 text-center">
             <FileText className="mx-auto w-10 h-10 text-gray-300" />
-            <p className="mt-3 text-sm text-gray-500">No cases yet.</p>
-            <button
-              onClick={() => navigate('/cases/new')}
-              className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
-            >
-              <Plus className="w-4 h-4" /> Create your first case
-            </button>
+            <p className="mt-3 text-sm text-gray-500">No cases yet. Cases appear automatically when chargebacks are received.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -455,10 +466,10 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           {
-            label: 'New Case',
-            description: 'Create a chargeback defense case',
-            icon: Plus,
-            to: '/cases/new',
+            label: 'Respond to Cases',
+            description: 'Review and respond to pending chargebacks',
+            icon: Shield,
+            to: '/cases?status=PENDING',
             color: 'bg-blue-600 hover:bg-blue-700',
           },
           {

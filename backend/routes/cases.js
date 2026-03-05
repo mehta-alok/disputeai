@@ -8,6 +8,8 @@ const { prisma } = require('../config/database');
 const { authenticateToken, requireRole, requirePropertyAccess } = require('../middleware/auth');
 const { createCaseSchema, updateCaseSchema, updateCaseStatusSchema, caseFilterSchema } = require('../utils/validators');
 const { analyzeChargeback } = require('../services/fraudDetection');
+const { collectEvidenceForCase } = require('../services/autoEvidenceCollector');
+const { autoclerk } = require('../services/autoclerkEmulator');
 const logger = require('../utils/logger');
 const { addDemoNotification } = require('../controllers/notificationsController');
 
@@ -590,12 +592,27 @@ router.get('/:id', async (req, res) => {
       });
     }
 
-    // Add evidence array
-    demoCase.evidence = [
-      { id: `ev-${caseId}-1`, fileName: 'guest_id_scan.jpg', type: 'ID_SCAN', description: 'Government-issued photo ID', verified: true, downloadUrl: null, createdAt: new Date(Date.now() - 3*3600000).toISOString() },
-      { id: `ev-${caseId}-2`, fileName: 'folio_invoice.pdf', type: 'FOLIO', description: 'Guest folio with itemized charges', verified: true, downloadUrl: null, createdAt: new Date(Date.now() - 3*3600000).toISOString() },
-      { id: `ev-${caseId}-3`, fileName: 'registration_card.pdf', type: 'AUTH_SIGNATURE', description: 'Signed registration card with authorization', verified: false, downloadUrl: null, createdAt: new Date(Date.now() - 2*3600000).toISOString() },
-    ];
+    // Add evidence array — check if auto-collected evidence exists
+    const autoCollectedEvidence = autoclerk.getCaseEvidence(caseId);
+    if (autoCollectedEvidence.length > 0) {
+      demoCase.evidence = autoCollectedEvidence.map(e => ({
+        id: e.id,
+        fileName: e.fileName,
+        type: e.type,
+        label: e.label,
+        description: e.description,
+        verified: true,
+        source: e.source || 'AutoClerk PMS',
+        downloadUrl: null,
+        createdAt: e.generatedAt || e.attachedAt || new Date().toISOString()
+      }));
+    } else {
+      demoCase.evidence = [
+        { id: `ev-${caseId}-1`, fileName: 'guest_id_scan.jpg', type: 'ID_SCAN', description: 'Government-issued photo ID', verified: true, downloadUrl: null, createdAt: new Date(Date.now() - 3*3600000).toISOString() },
+        { id: `ev-${caseId}-2`, fileName: 'folio_invoice.pdf', type: 'FOLIO', description: 'Guest folio with itemized charges', verified: true, downloadUrl: null, createdAt: new Date(Date.now() - 3*3600000).toISOString() },
+        { id: `ev-${caseId}-3`, fileName: 'registration_card.pdf', type: 'AUTH_SIGNATURE', description: 'Signed registration card with authorization', verified: false, downloadUrl: null, createdAt: new Date(Date.now() - 2*3600000).toISOString() },
+      ];
+    }
 
     // Add timeline
     demoCase.timeline = [
@@ -1471,6 +1488,60 @@ router.post('/:id/documents', requireRole('ADMIN', 'MANAGER', 'STAFF'), async (r
 });
 
 /**
+ * POST /api/cases/:id/auto-collect
+ * Trigger automatic evidence collection pipeline for a case.
+ * Matches the case to a PMS reservation, collects all evidence,
+ * and runs AI confidence scoring.
+ */
+router.post('/:id/auto-collect', requireRole('ADMIN', 'MANAGER', 'STAFF'), async (req, res) => {
+  try {
+    const caseId = req.params.id;
+
+    // Try to get case data from DB first
+    let caseData;
+    try {
+      caseData = await prisma.chargeback.findFirst({
+        where: { id: caseId, ...req.propertyFilter },
+        include: { property: true, provider: true }
+      });
+    } catch (dbError) {
+      // DB unavailable — use demo case lookup
+      caseData = null;
+    }
+
+    // Fallback to demo case data if DB not available
+    if (!caseData) {
+      caseData = _getDemoCaseData(caseId);
+      if (!caseData) {
+        return res.status(404).json({ error: 'Not Found', message: 'Case not found' });
+      }
+    }
+
+    logger.info(`Auto-collect triggered for case ${caseId} by ${req.user?.email || 'demo user'}`);
+
+    // Run the auto-evidence collection pipeline
+    const result = await collectEvidenceForCase(caseData);
+
+    res.json({
+      success: result.success,
+      message: result.matched
+        ? `Auto-collected ${result.evidenceCollected} evidence documents. Confidence: ${result.analysis?.confidenceScore || 0}%`
+        : 'No matching reservation found. Manual evidence collection recommended.',
+      ...result
+    });
+
+  } catch (error) {
+    logger.warn('Auto-collect error:', error.message);
+    res.json({
+      success: false,
+      message: 'Auto-evidence collection encountered an error',
+      error: error.message,
+      isDemo: true
+    });
+  }
+});
+
+/**
  * GET /api/cases/:id/documents
  * Get uploaded supporting documents for a case
  */
@@ -1548,5 +1619,24 @@ router.delete('/:id', requireRole('ADMIN'), async (req, res) => {
     });
   }
 });
+
+// ============================================================================
+// DEMO CASE DATA LOOKUP (for auto-collect when DB is unavailable)
+// ============================================================================
+
+function _getDemoCaseData(caseId) {
+  const demoCases = {
+    'demo-1': { id: 'demo-1', caseNumber: 'CB-2026-0247', confirmationNumber: 'RES-2026-88421', guestName: 'James Wilson', guestEmail: 'james.wilson@gmail.com', amount: 1250.00, cardLastFour: '2345', cardBrand: 'VISA', reasonCode: '10.4', reasonDescription: 'Other Fraud - Card Absent Environment', checkInDate: new Date(Date.now() - 20*86400000).toISOString(), checkOutDate: new Date(Date.now() - 17*86400000).toISOString(), fraudIndicators: { positive: ['VALID_ID_SCAN', 'MATCHING_ADDRESS', 'CHIP_TRANSACTION', 'LOYALTY_MEMBER'], negative: ['FIRST_TIME_GUEST'] } },
+    'demo-2': { id: 'demo-2', caseNumber: 'CB-2026-0246', confirmationNumber: 'RES-2026-77530', guestName: 'Sarah Chen', guestEmail: 'sarah.chen@outlook.com', amount: 890.50, cardLastFour: '6789', cardBrand: 'MASTERCARD', reasonCode: '13.1', reasonDescription: 'Merchandise/Services Not Received', checkInDate: new Date(Date.now() - 25*86400000).toISOString(), checkOutDate: new Date(Date.now() - 22*86400000).toISOString(), fraudIndicators: { positive: ['VALID_ID_SCAN', 'KEY_CARD_USED'], negative: ['NO_SIGNATURE', 'EARLY_CHECKOUT'] } },
+    'demo-3': { id: 'demo-3', caseNumber: 'CB-2026-0245', confirmationNumber: 'RES-2026-66201', guestName: 'Michael Brown', amount: 2100.00, cardLastFour: '1234', cardBrand: 'VISA', reasonCode: '10.4', checkInDate: new Date(Date.now() - 45*86400000).toISOString(), checkOutDate: new Date(Date.now() - 40*86400000).toISOString(), fraudIndicators: { positive: ['VALID_ID_SCAN', 'MATCHING_ADDRESS', 'CHIP_TRANSACTION', 'LOYALTY_MEMBER', 'RETURN_GUEST'], negative: [] } },
+    'demo-4': { id: 'demo-4', caseNumber: 'CB-2026-0244', confirmationNumber: 'RES-2026-55123', guestName: 'Emily Rodriguez', amount: 475.25, cardLastFour: '6677', cardBrand: 'MASTERCARD', reasonCode: '4837', checkInDate: new Date(Date.now() - 18*86400000).toISOString(), checkOutDate: new Date(Date.now() - 16*86400000).toISOString(), fraudIndicators: { positive: ['VALID_ID_SCAN', 'CHIP_TRANSACTION', 'MATCHING_ADDRESS'], negative: ['DISPUTED_BEFORE'] } },
+    'demo-5': { id: 'demo-5', caseNumber: 'CB-2026-0243', confirmationNumber: 'RES-2026-44890', guestName: 'David Thompson', amount: 3200.00, cardLastFour: '9012', cardBrand: 'AMEX', reasonCode: '10.4', checkInDate: new Date(Date.now() - 14*86400000).toISOString(), checkOutDate: new Date(Date.now() - 9*86400000).toISOString(), fraudIndicators: { positive: ['LOYALTY_MEMBER'], negative: ['NO_ID_SCAN', 'MISMATCH_ADDRESS', 'HIGH_AMOUNT'] } },
+    'demo-6': { id: 'demo-6', caseNumber: 'CB-2026-0242', confirmationNumber: 'RES-2026-33678', guestName: 'Lisa Anderson', amount: 1875.00, cardLastFour: '3456', cardBrand: 'VISA', reasonCode: '13.6', checkInDate: new Date(Date.now() - 50*86400000).toISOString(), checkOutDate: new Date(Date.now() - 45*86400000).toISOString(), fraudIndicators: { positive: ['VALID_ID_SCAN', 'MATCHING_ADDRESS', 'RETURN_GUEST', 'CHIP_TRANSACTION'], negative: [] } },
+    'demo-7': { id: 'demo-7', caseNumber: 'CB-2026-0241', confirmationNumber: 'RES-2026-22456', guestName: 'Robert Kim', amount: 560.75, cardLastFour: '5678', cardBrand: 'DISCOVER', reasonCode: '10.1', checkInDate: new Date(Date.now() - 55*86400000).toISOString(), checkOutDate: new Date(Date.now() - 53*86400000).toISOString(), fraudIndicators: { positive: [], negative: ['NO_ID_SCAN', 'NO_SIGNATURE', 'SWIPED_NOT_CHIP', 'FIRST_TIME_GUEST'] } },
+    'demo-8': { id: 'demo-8', caseNumber: 'CB-2026-0240', confirmationNumber: 'RES-2026-11234', guestName: 'Jennifer Lee', amount: 1450.00, cardLastFour: '2345', cardBrand: 'MASTERCARD', reasonCode: '4853', checkInDate: new Date(Date.now() - 22*86400000).toISOString(), checkOutDate: new Date(Date.now() - 19*86400000).toISOString(), fraudIndicators: { positive: ['VALID_ID_SCAN', 'KEY_CARD_USED', 'MATCHING_ADDRESS'], negative: ['COMPLAINT_FILED'] } },
+    'demo-9': { id: 'demo-9', caseNumber: 'CB-2026-0239', confirmationNumber: 'RES-2026-10987', guestName: 'Patricia Moore', amount: 1820.00, cardLastFour: '7890', cardBrand: 'VISA', reasonCode: '13.1', checkInDate: new Date(Date.now() - 60*86400000).toISOString(), checkOutDate: new Date(Date.now() - 57*86400000).toISOString(), fraudIndicators: { positive: ['MATCHING_ADDRESS'], negative: ['NO_ID_SCAN', 'EARLY_CHECKOUT', 'NO_SIGNATURE'] } },
+  };
+  return demoCases[caseId] || null;
+}
 
 module.exports = router;

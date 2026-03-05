@@ -13,7 +13,7 @@
 - backend/server.js - Main entry, Express app with graceful demo mode
 - backend/config/ - database.js (Prisma deferred proxy), redis.js, s3.js, storage.js
 - backend/routes/ - 11 route files (auth, cases, evidence, analytics, webhooks, admin, pms, notifications, disputes, reservations, sync)
-- backend/services/ - AI agents, AutoClerk PMS emulator, dispute companies, PMS integration, fraud detection
+- backend/services/ - AI agents, AutoClerk PMS emulator, dispute companies, PMS integration, fraud detection, reservation matcher, auto evidence collector
 - backend/services/pms/ - 30 PMS adapter modules
 - backend/services/disputes/ - 27 dispute processor adapter modules
 - backend/services/queue/ - BullMQ job queue & workers
@@ -38,7 +38,7 @@
 - .github/workflows/ci.yml - CI pipeline (lint, test, build, Docker build)
 - .github/workflows/deploy.yml - CD pipeline (ECR push, ECS deploy)
 
-## Integrations (68 Total)
+## Integrations (66 Total)
 
 ### PMS Integrations (30)
 Enterprise (15): AutoClerk (built-in emulator, portal: bwh.autoclerkcloud.com/logon.do2), Oracle Opera Cloud, Mews, Cloudbeds, Agilysys, Infor, Stayntouch, RoomKey, Maestro, Hotelogix, RMS Cloud, Protel, eZee, SIHOT, innRoad
@@ -46,9 +46,9 @@ Boutique (6): Little Hotelier, Frontdesk Anywhere, WebRezPro, ThinkReservations,
 Vacation Rental (4): Guesty, Hostaway, Lodgify, Escapia
 Brand-Specific (5): Marriott GXP, Hilton OnQ, Hyatt Opera, IHG Concerto, Best Western BWR
 
-### Dispute Processors (29)
+### Dispute Processors (27)
 Prevention Networks (3): Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink
-Hospitality Services (11): StaySettle, Canary Technologies, Chargeback Gurus, ChargebackHelp, Clearview, CAVU, TailoredPay, Chargeblast, Chargebacks911, Midigator, Riskified
+Hospitality Services (9): StaySettle, Canary Technologies, Chargeback Gurus, ChargebackHelp, Clearview, Chargeblast, Chargebacks911, Midigator, Riskified
 Card Network Portals (4): Visa VROL, Mastercom, AMEX Merchant, Discover Dispute
 Merchant Processors (9): Chase Merchant, Stripe Disputes, Elavon, Fiserv, Global Payments, TSYS, Square, Authorize.net, Worldpay
 Fraud Prevention (2): Kount, Signifyd
@@ -56,10 +56,22 @@ Fraud Prevention (2): Kount, Signifyd
 ### OTA Integrations (9)
 Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, Engine
 
+## Auto-Evidence Pipeline (NEW)
+Chargeback cases are automatically matched to PMS reservations and evidence is collected:
+1. reservationMatcher.js - Multi-strategy matching (confirmation#, card+dates, name+dates, card-only, name-only, email)
+2. autoclerkEmulator.js - 10 guests, 13 reservations, 7 evidence types (folio, registration_card, payment_receipt, guest_signature, id_scan, reservation, audit_trail)
+3. fraudDetection.js - Rule-based confidence scoring (15 positive + 10 negative factors, base score 50)
+4. autoEvidenceCollector.js - Pipeline orchestrator: Match → Collect → Score → Notify
+- Thresholds: >=85% AUTO_SUBMIT, >=70% REVIEW_RECOMMENDED, >=50% GATHER_MORE_EVIDENCE, <50% UNLIKELY_TO_WIN
+- CaseDetail.jsx has "Auto-Collect Evidence" button that triggers the full pipeline
+- "Respond to Cases" button replaces old "New Case" (chargebacks are received, not created)
+- Dashboard + Cases header buttons turn red with urgent count badge when urgent cases exist
+
 ## Key Patterns
 - Demo mode: DEMO_MODE=true in .env skips DB/Redis, uses mock data
+- ALL backend catch blocks have demo fallbacks - zero 500 errors in demo mode
 - Prisma deferred proxy: database.js uses JS Proxy to lazy-load PrismaClient
-- AutoClerk PMS emulator: 10 guests, 12 reservations, 7 evidence types
+- AutoClerk PMS emulator: 10 guests, 13 reservations, 7 evidence types
 - Global search: OR-logic across name, email, confirmation#, room, card, loyalty, room type, booking source
 - Color palette: omni (blue) and omni-gold (amber) in tailwind.config.cjs
 - Use .cjs extension for tailwind config (not .js)
@@ -73,30 +85,57 @@ Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, E
 - PMS page: Multi-PMS banner showing all connected PMS systems
 - Login response structure: { message, user, tokens: { accessToken, refreshToken }, isDemo }
 
-## API Endpoints
+## API Endpoints (50 verified)
+
+### Auth
 - POST /api/auth/login - JWT authentication (returns tokens.accessToken)
 - POST /api/auth/register - User registration
 - POST /api/auth/refresh - Refresh token rotation
-- GET /api/cases - List chargeback cases
-- GET /api/cases/:id - Case detail
+- GET /api/auth/providers - Auth provider list
+- GET /api/auth/sessions - Active sessions
+- POST /api/auth/logout - Logout
+
+### Cases
+- GET /api/cases - List chargeback cases (pagination, filters)
+- GET /api/cases/:id - Case detail (includes auto-collected evidence)
+- POST /api/cases/:id/submit - Submit case response to processor
+- POST /api/cases/:id/notes - Add case note
 - POST /api/cases/:id/arbitration - File arbitration for lost case
-- POST /api/cases/:id/documents - Upload arbitration documents
-- GET /api/evidence - List evidence
-- POST /api/evidence/collect/:caseId - Collect evidence from PMS
+- POST /api/cases/:id/auto-collect - Auto-collect evidence pipeline (match→collect→score)
+- GET /api/cases/:id/documents - Uploaded supporting documents
+
+### Evidence
+- GET /api/evidence - All evidence across cases
+- GET /api/evidence/:caseId - Evidence for specific case
+- POST /api/evidence/:caseId/collect - Collect from PMS (returns analysis)
+- POST /api/evidence/:caseId/upload - Manual evidence upload
+- GET /api/evidence/:caseId/summary - Evidence completeness summary
+
+### Analytics
 - GET /api/analytics/dashboard - Dashboard KPIs
 - GET /api/analytics/trends - Trend data
-- GET /api/pms/status - PMS integration status
-- GET /api/pms/connected - List of connected PMS systems (multi-property)
-- GET /api/reservations?pmsSource=X - Reservations from specific PMS (autoclerk, mews, opera-cloud)
-- GET /api/reservations/pms/status?pmsSource=X - PMS status for specific source
-- GET /api/disputes/companies - Dispute processor list (29 companies)
-- GET /api/reservations - List reservations
-- GET /api/reservations/search/live - Real-time PMS search
-- GET /api/notifications - User notifications
-- POST /api/webhooks/stripe - Stripe webhook
-- POST /api/webhooks/adyen - Adyen webhook
-- GET /health - Health check
-- GET /ready - Readiness check (DB + Redis)
+
+### PMS
+- GET /api/pms/connected - Connected PMS systems
+- POST /api/pms/connect - Connect a PMS
+- POST /api/pms/sync - Trigger PMS sync
+- PUT /api/pms/config - Configure PMS settings
+- POST /api/pms/disconnect - Disconnect PMS
+
+### Reservations
+- GET /api/reservations/pms/status - PMS connection status
+- GET /api/reservations - List reservations (?pmsSource= for multi-PMS)
+- GET /api/reservations/:id - Reservation detail
+- GET /api/reservations/:id/evidence - Evidence for reservation
+
+### Other
+- GET /api/disputes/companies - 27 dispute processor companies
+- GET /api/notifications/unread-count - Notification count
+- GET /api/admin/users - User management
+- GET /api/admin/properties - Property management
+- GET /api/admin/agents - AI agent list (4 agents)
+- PUT /api/admin/settings/* - Settings (general, notifications, ai-defense, integrations, password)
+- GET /api/sync/status - Sync status
 
 ## Conventions
 - All routes return JSON with consistent error format
@@ -105,7 +144,8 @@ Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, E
 - React functional components with hooks only
 - JWT tokens stored in localStorage via useAuth context
 - Node 20 LTS required (Node 25 has severe CJS performance issues)
-- Backend startup loads 66 integrations, takes ~24s in demo mode
+- Backend startup loads 66 integrations
+- Chargebacks are RECEIVED from processors, not created by users — no "New Case" UI
 
 ## Demo Credentials
 - admin@disputeai.com / DisputeAdmin123!
@@ -120,6 +160,8 @@ Booking.com, Expedia, Airbnb, Hotels.com, TripAdvisor, VRBO, Agoda, Priceline, E
 - Never use Node 25 for this project (require() is extremely slow)
 - Always use .cjs extension for tailwind.config
 - JWT_SECRET must be set in backend .env or login returns 500
-- After clean npm install, Vite needs ~30s warmup before first request
+- After clean npm install, delete .vite/.vite-temp/node_modules/.vite before building
 - AutoClerk portal URL: https://www.bwh.autoclerkcloud.com/logon.do2
 - GitHub repo: github.com/mehta-alok/disputeai
+- ALWAYS copy modified backend files to backend-deploy/ after editing
+- ALWAYS sync frontend/dist/ to frontend-deploy/dist/ after building
