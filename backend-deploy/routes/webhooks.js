@@ -1,12 +1,7 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
+const logger = require('../utils/logger');
 
-router.post('/stripe', async (req, res) => {
-  res.json({ received: true });
-});
-
-router.post('/adyen', async (req, res) => {
-  res.json({ received: true });
-});
-
-module.exports = router;
+// =============================================================================
+// SHIFT4 WEBHOOK (Primary pay

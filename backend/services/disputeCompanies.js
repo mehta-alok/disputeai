@@ -376,6 +376,20 @@ const DISPUTE_COMPANIES = {
     apiBaseUrl: 'https://api.stripe.com/v1',
     description: 'Stripe integrated dispute management with automatic evidence submission and webhook alerts'
   },
+  SHIFT4: {
+    name: 'Shift4',
+    fullName: 'Shift4 Payment Processing',
+    type: 'processor',
+    category: 'processor',
+    twoWaySync: true,
+    logo: '🔶',
+    portalUrl: 'https://myportal.shift4.com/',
+    features: ['Shift4 Merchant Portal', 'Dispute Management via Merlink', 'Webhook Notifications', 'Transaction Search', 'Evidence Submission'],
+    requiredConfig: ['secretKey', 'webhookSecret'],
+    optionalConfig: ['merchantId', 'autoNotify'],
+    apiBaseUrl: 'https://api.shift4.com/v1',
+    description: 'Shift4 payment processing with integrated dispute management through Merlink platform'
+  },
   ELAVON: {
     name: 'Elavon',
     fullName: 'Elavon Merchant Services',

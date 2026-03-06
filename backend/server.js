@@ -40,6 +40,48 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 // =============================================================================
+// STARTUP ENVIRONMENT VALIDATION
+// =============================================================================
+function validateEnvironment() {
+  const warnings = [];
+  const isProduction = process.env.NODE_ENV === 'production';
+  const isDemoMode = process.env.DEMO_MODE === 'true';
+
+  // JWT_SECRET is always required
+  if (!process.env.JWT_SECRET) {
+    logger.error('FATAL: JWT_SECRET is not set. Server cannot start.');
+    process.exit(1);
+  }
+  if (isProduction && process.env.JWT_SECRET.length < 32) {
+    logger.error('FATAL: JWT_SECRET must be at least 32 characters in production.');
+    process.exit(1);
+  }
+  if (process.env.JWT_SECRET.includes('change-in-production') || process.env.JWT_SECRET.includes('dev-only')) {
+    warnings.push('JWT_SECRET appears to be a placeholder — change before production deployment');
+  }
+
+  // DATABASE_URL required in production (unless demo mode)
+  if (isProduction && !isDemoMode && !process.env.DATABASE_URL) {
+    logger.error('FATAL: DATABASE_URL is required in production mode.');
+    process.exit(1);
+  }
+
+  // CORS origins warning
+  if (isProduction && !process.env.CORS_ORIGINS) {
+    warnings.push('CORS_ORIGINS not set — defaulting to localhost. Set explicitly for production.');
+  }
+
+  // Shift4 config check
+  if (process.env.SHIFT4_SECRET_KEY && !process.env.SHIFT4_WEBHOOK_SECRET) {
+    warnings.push('SHIFT4_SECRET_KEY set but SHIFT4_WEBHOOK_SECRET missing — webhooks won\'t validate');
+  }
+
+  warnings.forEach(w => logger.warn(`ENV WARNING: ${w}`));
+}
+
+validateEnvironment();
+
+// =============================================================================
 // MIDDLEWARE CONFIGURATION
 // =============================================================================
 
@@ -323,9 +365,9 @@ async function startServer() {
 ║     AI Agents: ${(aiAgentsInitialized ? '8 Active' : 'Disabled').padEnd(21)}                    ║
 ║     AI Provider: ${(process.env.AI_MODEL_PROVIDER || 'none').padEnd(18)}                    ║
 ║     PMS Adapters: 30 loaded                                   ║
-║     Dispute Adapters: 27 loaded                               ║
+║     Dispute Adapters: 28 loaded                               ║
 ║     OTA Integrations: 9 loaded                                ║
-║     Total Integrations: 66                                    ║
+║     Total Integrations: 67                                    ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
       `);
