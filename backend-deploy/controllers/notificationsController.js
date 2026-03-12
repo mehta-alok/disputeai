@@ -12,6 +12,13 @@ const logger = require('../utils/logger');
 const { v4: uuidv4 } = require('uuid');
 
 // =============================================================================
+// DATABASE AVAILABILITY FLAG
+// Prevents Prisma from spamming internal error logs every 30s when no DB exists.
+// After first failed query, all subsequent calls go straight to demo data.
+// =============================================================================
+let _dbAvailable = null; // null = unknown, true = connected, false = unavailable
+
+// =============================================================================
 // IN-MEMORY DEMO NOTIFICATION STORE
 // =============================================================================
 
@@ -64,6 +71,18 @@ const getDemoUnreadCount = () => demoStore.filter(n => !n.isRead).length;
  * Get all notifications for the current user
  */
 const getNotifications = async (req, res) => {
+  // Skip Prisma entirely if DB is known to be unavailable
+  if (_dbAvailable === false) {
+    const all = getDemoNotifications();
+    return res.json({
+      success: true,
+      notifications: all,
+      total: all.length,
+      unreadCount: getDemoUnreadCount(),
+      isDemo: true
+    });
+  }
+
   try {
     const userId = req.user.id;
     const { limit = 20, unreadOnly = false, offset = 0 } = req.query;
@@ -86,6 +105,7 @@ const getNotifications = async (req, res) => {
       })
     ]);
 
+    _dbAvailable = true;
     res.json({
       success: true,
       notifications: notifications.map(n => ({
@@ -104,7 +124,11 @@ const getNotifications = async (req, res) => {
       unreadCount
     });
   } catch (error) {
-    // Demo mode fallback — use in-memory store
+    // DB unavailable — flag it to skip Prisma on future calls
+    if (_dbAvailable === null) {
+      _dbAvailable = false;
+      logger.warn('Database unavailable — notifications using demo mode (this message appears once)');
+    }
     const all = getDemoNotifications();
     res.json({
       success: true,
@@ -120,14 +144,23 @@ const getNotifications = async (req, res) => {
  * Get unread notification count
  */
 const getUnreadCount = async (req, res) => {
+  // Skip Prisma entirely if DB is known to be unavailable (polled every 30s)
+  if (_dbAvailable === false) {
+    return res.json({ success: true, count: getDemoUnreadCount(), isDemo: true });
+  }
+
   try {
     const userId = req.user.id;
     const count = await prisma.notification.count({
       where: { userId, isRead: false }
     });
+    _dbAvailable = true;
     res.json({ success: true, count });
   } catch (error) {
-    // Demo mode fallback
+    if (_dbAvailable === null) {
+      _dbAvailable = false;
+      logger.warn('Database unavailable — notifications using demo mode (this message appears once)');
+    }
     res.json({ success: true, count: getDemoUnreadCount(), isDemo: true });
   }
 };
@@ -136,35 +169,30 @@ const getUnreadCount = async (req, res) => {
  * Mark notification as read
  */
 const markAsRead = async (req, res) => {
+  const { id } = req.params;
+
+  if (_dbAvailable === false) {
+    const notif = demoStore.find(n => n.id === id);
+    if (notif) { notif.isRead = true; notif.readAt = new Date().toISOString(); }
+    return res.json({ success: true, notification: { id, isRead: true }, isDemo: true });
+  }
+
   try {
-    const { id } = req.params;
     const userId = req.user.id;
-
-    const notification = await prisma.notification.findFirst({
-      where: { id, userId }
-    });
-
+    const notification = await prisma.notification.findFirst({ where: { id, userId } });
     if (!notification) {
       return res.status(404).json({ success: false, error: 'Notification not found' });
     }
-
     const updated = await prisma.notification.update({
       where: { id },
       data: { isRead: true, readAt: new Date() }
     });
-
-    res.json({
-      success: true,
-      notification: { id: updated.id, isRead: updated.isRead, readAt: updated.readAt }
-    });
+    _dbAvailable = true;
+    res.json({ success: true, notification: { id: updated.id, isRead: updated.isRead, readAt: updated.readAt } });
   } catch (error) {
-    // Demo mode: update in-memory store
-    const { id } = req.params;
+    if (_dbAvailable === null) { _dbAvailable = false; logger.warn('Database unavailable — notifications using demo mode (this message appears once)'); }
     const notif = demoStore.find(n => n.id === id);
-    if (notif) {
-      notif.isRead = true;
-      notif.readAt = new Date().toISOString();
-    }
+    if (notif) { notif.isRead = true; notif.readAt = new Date().toISOString(); }
     res.json({ success: true, notification: { id, isRead: true }, isDemo: true });
   }
 };
@@ -173,15 +201,21 @@ const markAsRead = async (req, res) => {
  * Mark all notifications as read
  */
 const markAllAsRead = async (req, res) => {
+  if (_dbAvailable === false) {
+    demoStore.forEach(n => { n.isRead = true; n.readAt = new Date().toISOString(); });
+    return res.json({ success: true, message: 'All notifications marked as read', isDemo: true });
+  }
+
   try {
     const userId = req.user.id;
     await prisma.notification.updateMany({
       where: { userId, isRead: false },
       data: { isRead: true, readAt: new Date() }
     });
+    _dbAvailable = true;
     res.json({ success: true, message: 'All notifications marked as read' });
   } catch (error) {
-    // Demo mode: mark all in-memory as read
+    if (_dbAvailable === null) { _dbAvailable = false; logger.warn('Database unavailable — notifications using demo mode (this message appears once)'); }
     demoStore.forEach(n => { n.isRead = true; n.readAt = new Date().toISOString(); });
     res.json({ success: true, message: 'All notifications marked as read', isDemo: true });
   }
@@ -191,22 +225,24 @@ const markAllAsRead = async (req, res) => {
  * Delete a notification
  */
 const deleteNotification = async (req, res) => {
+  const { id } = req.params;
+
+  if (_dbAvailable === false) {
+    demoStore = demoStore.filter(n => n.id !== id);
+    return res.json({ success: true, message: 'Notification deleted', isDemo: true });
+  }
+
   try {
-    const { id } = req.params;
     const userId = req.user.id;
-
-    const notification = await prisma.notification.findFirst({
-      where: { id, userId }
-    });
-
+    const notification = await prisma.notification.findFirst({ where: { id, userId } });
     if (!notification) {
       return res.status(404).json({ success: false, error: 'Notification not found' });
     }
-
     await prisma.notification.delete({ where: { id } });
+    _dbAvailable = true;
     res.json({ success: true, message: 'Notification deleted' });
   } catch (error) {
-    const { id } = req.params;
+    if (_dbAvailable === null) { _dbAvailable = false; logger.warn('Database unavailable — notifications using demo mode (this message appears once)'); }
     demoStore = demoStore.filter(n => n.id !== id);
     res.json({ success: true, message: 'Notification deleted', isDemo: true });
   }
@@ -216,11 +252,18 @@ const deleteNotification = async (req, res) => {
  * Clear all notifications
  */
 const clearAll = async (req, res) => {
+  if (_dbAvailable === false) {
+    demoStore = [];
+    return res.json({ success: true, message: 'All notifications cleared', isDemo: true });
+  }
+
   try {
     const userId = req.user.id;
     await prisma.notification.deleteMany({ where: { userId } });
+    _dbAvailable = true;
     res.json({ success: true, message: 'All notifications cleared' });
   } catch (error) {
+    if (_dbAvailable === null) { _dbAvailable = false; logger.warn('Database unavailable — notifications using demo mode (this message appears once)'); }
     demoStore = [];
     res.json({ success: true, message: 'All notifications cleared', isDemo: true });
   }
@@ -230,6 +273,10 @@ const clearAll = async (req, res) => {
  * Create a notification (internal use — production DB)
  */
 const createNotification = async (userId, data) => {
+  if (_dbAvailable === false) {
+    return addDemoNotification(data);
+  }
+
   try {
     const notification = await prisma.notification.create({
       data: {
@@ -244,10 +291,11 @@ const createNotification = async (userId, data) => {
         expiresAt: data.expiresAt || null
       }
     });
+    _dbAvailable = true;
     logger.info(`Notification created for user ${userId}: ${data.title}`);
     return notification;
   } catch (error) {
-    // In demo mode, fall back to in-memory store
+    if (_dbAvailable === null) { _dbAvailable = false; }
     return addDemoNotification(data);
   }
 };
@@ -256,6 +304,10 @@ const createNotification = async (userId, data) => {
  * Create notifications for multiple users
  */
 const createBulkNotifications = async (userIds, data) => {
+  if (_dbAvailable === false) {
+    return addDemoNotification(data);
+  }
+
   try {
     const notifications = await prisma.notification.createMany({
       data: userIds.map(userId => ({
@@ -270,10 +322,11 @@ const createBulkNotifications = async (userIds, data) => {
         expiresAt: data.expiresAt || null
       }))
     });
+    _dbAvailable = true;
     logger.info(`Bulk notifications created for ${userIds.length} users: ${data.title}`);
     return notifications;
   } catch (error) {
-    // In demo mode, fall back to in-memory store
+    if (_dbAvailable === null) { _dbAvailable = false; }
     return addDemoNotification(data);
   }
 };

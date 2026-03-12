@@ -3,6 +3,20 @@ const crypto = require('crypto');
 const router = express.Router();
 const logger = require('../utils/logger');
 
+// Helper: parse webhook body (handles Buffer from express.raw, string, or object)
+function parseBody(body) {
+  if (Buffer.isBuffer(body)) return JSON.parse(body.toString());
+  if (typeof body === 'string') return JSON.parse(body);
+  return body;
+}
+
+// Helper: get raw payload string for signature validation
+function getRawPayload(body) {
+  if (Buffer.isBuffer(body)) return body.toString();
+  if (typeof body === 'string') return body;
+  return JSON.stringify(body);
+}
+
 // =============================================================================
 // SHIFT4 WEBHOOK (Primary payment processor)
 // =============================================================================
@@ -13,7 +27,7 @@ router.post('/shift4', async (req, res) => {
 
     // Validate signature if webhook secret is configured
     if (webhookSecret && signature) {
-      const payload = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+      const payload = getRawPayload(req.body);
       const expectedSig = crypto
         .createHmac('sha256', webhookSecret)
         .update(payload)
@@ -25,7 +39,7 @@ router.post('/shift4', async (req, res) => {
       }
     }
 
-    const event = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const event = parseBody(req.body);
     const eventType = event.type || event.eventType;
 
     logger.info(`Shift4 webhook received: ${eventType}`);
@@ -78,7 +92,7 @@ router.post('/merlink', async (req, res) => {
     const webhookSecret = process.env.MERLINK_WEBHOOK_SECRET;
 
     if (webhookSecret && signature) {
-      const payload = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+      const payload = getRawPayload(req.body);
       const expectedSig = crypto
         .createHmac('sha256', webhookSecret)
         .update(payload)
@@ -90,7 +104,7 @@ router.post('/merlink', async (req, res) => {
       }
     }
 
-    const event = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const event = parseBody(req.body);
     const eventType = event.type || event.eventType || event.action;
 
     logger.info(`Merlink webhook received: ${eventType}`);
@@ -135,7 +149,7 @@ router.post('/merlink', async (req, res) => {
 // =============================================================================
 router.post('/stripe', async (req, res) => {
   try {
-    const event = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const event = parseBody(req.body);
     logger.info(`Stripe webhook received: ${event.type}`);
     res.json({ received: true });
   } catch (error) {
@@ -149,7 +163,7 @@ router.post('/stripe', async (req, res) => {
 // =============================================================================
 router.post('/adyen', async (req, res) => {
   try {
-    const event = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const event = parseBody(req.body);
     logger.info(`Adyen webhook received: ${event.notificationItems?.[0]?.NotificationRequestItem?.eventCode || 'unknown'}`);
     res.json({ received: true });
   } catch (error) {

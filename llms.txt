@@ -105,7 +105,7 @@ Vacation Rental (4): Guesty, Hostaway, Lodgify, Escapia
 Brand-Specific (5): Marriott GXP, Hilton OnQ, Hyatt Opera, IHG Concerto, Best Western BWR
 
 ### Dispute Processors (27)
-Prevention Networks (3): Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink
+Prevention Networks (3): Verifi (Visa CDRN/RDR), Ethoca (Mastercard), Merlink( Shift 4)
 Hospitality Services (9): StaySettle, Canary Technologies, Chargeback Gurus, ChargebackHelp, Clearview, Chargeblast, Chargebacks911, Midigator, Riskified
 Card Network Portals (4): Visa VROL, Mastercom, AMEX Merchant, Discover Dispute
 Merchant Processors (9): Chase Merchant, Stripe Disputes, Elavon, Fiserv, Global Payments, TSYS, Square, Authorize.net, Worldpay

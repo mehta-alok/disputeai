@@ -360,4 +360,42 @@ async function startServer() {
 ║     Environment: ${(process.env.NODE_ENV || 'development').padEnd(16)}                    ║
 ║     Mode: ${mode.padEnd(23)}                    ║
 ║     Database: ${(dbConnected ? 'Connected' : 'Demo Mode').padEnd(20)}                    ║
-║     Redis: 
+║     Redis: ${(redisConnected ? 'Connected' : 'Disabled').padEnd(23)}                    ║
+║     S3: ${(s3Initialized ? 'Connected' : 'Disabled').padEnd(26)}                    ║
+║     AI Agents: ${(aiAgentsInitialized ? '8 Active' : 'Disabled').padEnd(21)}                    ║
+║     AI Provider: ${(process.env.AI_MODEL_PROVIDER || 'none').padEnd(18)}                    ║
+║     PMS Adapters: 30 loaded                                   ║
+║     Dispute Adapters: 28 loaded                               ║
+║     OTA Integrations: 9 loaded                                ║
+║     Total Integrations: 67                                    ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+      `);
+    });
+
+  } catch (error) {
+    logger.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+  logger.info('SIGTERM received, shutting down gracefully...');
+  try { await shutdownWorkers(); } catch (e) { /* ignore */ }
+  const { prisma } = require('./config/database');
+  await prisma.$disconnect();
+  process.exit(0);
+});
+
+process.on('SIGINT', async () => {
+  logger.info('SIGINT received, shutting down gracefully...');
+  try { await shutdownWorkers(); } catch (e) { /* ignore */ }
+  const { prisma } = require('./config/database');
+  await prisma.$disconnect();
+  process.exit(0);
+});
+
+startServer();
+
+module.exports = app;
